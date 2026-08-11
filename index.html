@@ -80,7 +80,7 @@
           </div>
         </div>
 
-        <!-- VALORES PAGADOS EN ORDEN SOLICITADO -->
+        <!-- VALORES PAGADOS -->
         <h5 class="text-primary border-bottom pb-2 mb-3">Liquidación de Pagos</h5>
         <div class="row g-3 mb-3">
           <div class="col-md-12">
@@ -140,16 +140,16 @@
 </div>
 
 <script>
-  // URL de tu aplicación Google Apps Script (Sustituye por la tuya si cambia)
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwxNOkoiyi4MKEmx1TS11nR--wKNPhHGdbKOCLG3O4JEALVc9idiPjDi0thUyd69np_/exec'; 
+  // Reemplazar con la URL /exec de tu Web App de Google Apps Script
+  const WEB_APP_URL = 'TU_URL_DE_APPS_SCRIPT_AQUI';
 
   let pagadorModificadoManualmente = false;
 
   document.addEventListener('DOMContentLoaded', () => {
-    // Establecer fecha de hoy por defecto
+    // 1. Asignar fecha por defecto
     document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
 
-    // 1. AUTO-LLENADO DE CÉDULA DE PAGADOR DESDE INFRACTOR
+    // 2. Auto-llenar cédula del pagador con la del infractor
     const inputInfractor = document.getElementById('cedulaInfractor');
     const inputPagador = document.getElementById('cedulaPagador');
 
@@ -163,13 +163,12 @@
       }
     });
 
-    // 2. CÁLCULO AUTOMÁTICO DE TOTAL PAGADO
-    const inputsValor = document.querySelectorAll('.val-calculo');
-    inputsValor.forEach(input => {
+    // 3. Recalcular total
+    document.querySelectorAll('.val-calculo').forEach(input => {
       input.addEventListener('input', calcularTotal);
     });
 
-    // 3. CARGAR LISTAS DESPLEGABLES
+    // 4. Cargar opciones en los select
     cargarDesplegables();
   });
 
@@ -180,47 +179,97 @@
     document.getElementById('totalPagado').value = total.toLocaleString('es-CO');
   }
 
-  // Cargar opciones consumiendo la API de Apps Script
+  // Cargar datos desde Google Sheets vía GET
   async function cargarDesplegables() {
     const selectInf = document.getElementById('tipoInfraccion');
     const selectFunc = document.getElementById('nombreFuncionario');
 
     try {
-      // Petición GET al endpoint con ?api=opciones
       const response = await fetch(`${WEB_APP_URL}?api=opciones`);
       const res = await response.json();
 
       if (res.success) {
-        // Llenar Infracciones
         selectInf.innerHTML = '<option value="">Seleccione una opción...</option>';
-        if (res.infracciones && res.infracciones.length > 0) {
-          res.infracciones.forEach(item => {
-            selectInf.innerHTML += `<option value="${item}">${item}</option>`;
-          });
-        } else {
-          selectInf.innerHTML = '<option value="">No hay infracciones registradas</option>';
-        }
+        (res.infracciones || []).forEach(item => {
+          selectInf.innerHTML += `<option value="${item}">${item}</option>`;
+        });
 
-        // Llenar Funcionarios
         selectFunc.innerHTML = '<option value="">Seleccione un funcionario...</option>';
-        if (res.funcionarios && res.funcionarios.length > 0) {
-          res.funcionarios.forEach(item => {
-            selectFunc.innerHTML += `<option value="${item}">${item}</option>`;
-          });
-        } else {
-          selectFunc.innerHTML = '<option value="">No hay funcionarios registrados</option>';
-        }
-
+        (res.funcionarios || []).forEach(item => {
+          selectFunc.innerHTML += `<option value="${item}">${item}</option>`;
+        });
       } else {
-        throw new Error(res.message || 'Error al obtener opciones');
+        throw new Error(res.message);
       }
-
     } catch (error) {
       console.error('Error cargando desplegables:', error);
       selectInf.innerHTML = '<option value="">Error al cargar opciones</option>';
       selectFunc.innerHTML = '<option value="">Error al cargar opciones</option>';
     }
   }
+
+  // Enviar formulario a Google Apps Script vía POST
+  document.getElementById('formRegistro').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    if (!this.checkValidity()) {
+      e.stopPropagation();
+      this.classList.add('was-validated');
+      return;
+    }
+
+    const btnGuardar = document.getElementById('btnGuardar');
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Procesando y generando PDF...';
+
+    try {
+      const formData = new FormData(this);
+      const dataObj = {};
+      formData.forEach((value, key) => {
+        dataObj[key] = value;
+      });
+
+      // Se usa text/plain para omitir las restricciones preflight CORS de Apps Script
+      const response = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(dataObj)
+      });
+
+      const res = await response.json();
+
+      if (res.success) {
+        alert('✅ Registro guardado con éxito.');
+
+        // Forzar descarga del PDF si viene en Base64
+        if (res.pdfBase64) {
+          const link = document.createElement('a');
+          link.href = 'data:application/pdf;base64,' + res.pdfBase64;
+          link.download = res.pdfNombre || 'Registro_Pago.pdf';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
+        this.reset();
+        this.classList.remove('was-validated');
+        document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+        pagadorModificadoManualmente = false;
+        calcularTotal();
+
+      } else {
+        throw new Error(res.message || 'Error guardando los datos.');
+      }
+
+    } catch (error) {
+      console.error('Error enviando datos:', error);
+      alert('❌ Ocurrió un error: ' + error.message);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar y Generar PDF';
+    }
+  });
 </script>
 
 </body>
