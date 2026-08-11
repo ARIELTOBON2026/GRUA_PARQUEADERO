@@ -140,11 +140,13 @@
 </div>
 
 <script>
+  // URL de tu aplicación Google Apps Script (Sustituye por la tuya si cambia)
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwxNOkoiyi4MKEmx1TS11nR--wKNPhHGdbKOCLG3O4JEALVc9idiPjDi0thUyd69np_/exec'; 
+
   let pagadorModificadoManualmente = false;
 
   document.addEventListener('DOMContentLoaded', () => {
     // Establecer fecha de hoy por defecto
-    document.getElementById('fecha').valueToDate = new Date();
     document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
 
     // 1. AUTO-LLENADO DE CÉDULA DE PAGADOR DESDE INFRACTOR
@@ -167,7 +169,7 @@
       input.addEventListener('input', calcularTotal);
     });
 
-    // 3. CARGAR LISTAS DESPLEGABLES (INFRACCIONES Y FUNCIONARIOS)
+    // 3. CARGAR LISTAS DESPLEGABLES
     cargarDesplegables();
   });
 
@@ -178,30 +180,46 @@
     document.getElementById('totalPagado').value = total.toLocaleString('es-CO');
   }
 
-  function cargarDesplegables() {
-    if (typeof google !== 'undefined' && google.script && google.script.run) {
-      google.script.run
-        .withSuccessHandler(llenarSelects)
-        .withFailureHandler(err => console.error("Error al cargar opciones:", err))
-        .obtenerOpcionesDesplegables();
-    }
-  }
-
-  function llenarSelects(res) {
-    if (!res || !res.success) return;
-
+  // Cargar opciones consumiendo la API de Apps Script
+  async function cargarDesplegables() {
     const selectInf = document.getElementById('tipoInfraccion');
     const selectFunc = document.getElementById('nombreFuncionario');
 
-    selectInf.innerHTML = '<option value="">Seleccione...</option>';
-    res.infracciones.forEach(item => {
-      selectInf.innerHTML += `<option value="${item}">${item}</option>`;
-    });
+    try {
+      // Petición GET al endpoint con ?api=opciones
+      const response = await fetch(`${WEB_APP_URL}?api=opciones`);
+      const res = await response.json();
 
-    selectFunc.innerHTML = '<option value="">Seleccione...</option>';
-    res.funcionarios.forEach(item => {
-      selectFunc.innerHTML += `<option value="${item}">${item}</option>`;
-    });
+      if (res.success) {
+        // Llenar Infracciones
+        selectInf.innerHTML = '<option value="">Seleccione una opción...</option>';
+        if (res.infracciones && res.infracciones.length > 0) {
+          res.infracciones.forEach(item => {
+            selectInf.innerHTML += `<option value="${item}">${item}</option>`;
+          });
+        } else {
+          selectInf.innerHTML = '<option value="">No hay infracciones registradas</option>';
+        }
+
+        // Llenar Funcionarios
+        selectFunc.innerHTML = '<option value="">Seleccione un funcionario...</option>';
+        if (res.funcionarios && res.funcionarios.length > 0) {
+          res.funcionarios.forEach(item => {
+            selectFunc.innerHTML += `<option value="${item}">${item}</option>`;
+          });
+        } else {
+          selectFunc.innerHTML = '<option value="">No hay funcionarios registrados</option>';
+        }
+
+      } else {
+        throw new Error(res.message || 'Error al obtener opciones');
+      }
+
+    } catch (error) {
+      console.error('Error cargando desplegables:', error);
+      selectInf.innerHTML = '<option value="">Error al cargar opciones</option>';
+      selectFunc.innerHTML = '<option value="">Error al cargar opciones</option>';
+    }
   }
 </script>
 
