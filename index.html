@@ -20,6 +20,7 @@
       --text: #1a2b3c;
       --text-muted: #6b7a8f;
       --success: #10b981;
+      --danger: #ef4444;
       --shadow-sm: 0 1px 3px rgba(10, 61, 98, 0.08);
       --shadow-md: 0 4px 16px rgba(10, 61, 98, 0.1);
       --shadow-lg: 0 12px 40px rgba(10, 61, 98, 0.15);
@@ -36,7 +37,6 @@
       padding: 2rem 0;
     }
 
-    /* === PATRÓN DECORATIVO DE FONDO === */
     body::before {
       content: "";
       position: fixed;
@@ -57,7 +57,7 @@
       box-shadow: var(--shadow-lg);
       overflow: hidden;
       background: var(--surface);
-      transition: transform 0.3s ease;
+      animation: fadeInUp 0.6s ease-out;
     }
 
     /* === ENCABEZADO === */
@@ -111,14 +111,13 @@
       border: 1px solid rgba(255,255,255,0.2);
     }
 
-    /* === CUERPO DEL FORMULARIO === */
     .card-body { padding: 2.5rem; }
 
     @media (max-width: 576px) {
       .card-body { padding: 1.5rem; }
     }
 
-    /* === ENCABEZADOS DE SECCIÓN === */
+    /* === SECCIONES === */
     .section-header {
       display: flex;
       align-items: center;
@@ -149,12 +148,9 @@
       flex-grow: 1;
     }
 
-    .section-icon {
-      color: var(--accent);
-      font-size: 1.25rem;
-    }
+    .section-icon { color: var(--accent); font-size: 1.25rem; }
 
-    /* === CAMPOS DE FORMULARIO === */
+    /* === CAMPOS === */
     .form-label {
       font-size: 0.825rem;
       font-weight: 500;
@@ -189,7 +185,6 @@
       outline: none;
     }
 
-    /* === INPUT GROUP (Valores $) === */
     .input-group-text {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       color: white;
@@ -203,7 +198,7 @@
       border-radius: 0 10px 10px 0 !important;
     }
 
-    /* === TARJETA DE TOTALES === */
+    /* === TOTAL === */
     .total-card {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
       border-radius: 14px;
@@ -245,7 +240,6 @@
 
     .total-amount::before { content: "$ "; opacity: 0.8; }
 
-    /* === CAMPOS DESTACADOS (grúa y parqueadero) === */
     .payment-field {
       background: var(--surface-alt);
       padding: 1.25rem;
@@ -261,7 +255,7 @@
       box-shadow: var(--shadow-md);
     }
 
-    /* === BOTÓN PRINCIPAL === */
+    /* === BOTÓN === */
     .btn-primary-custom {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       color: white;
@@ -286,30 +280,19 @@
       background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
     }
 
-    .btn-primary-custom:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-    }
+    .btn-primary-custom:disabled { opacity: 0.7; cursor: not-allowed; }
 
-    /* === VALIDACIÓN === */
     .was-validated .form-control:valid,
-    .was-validated .form-select:valid {
-      border-color: var(--success);
-    }
+    .was-validated .form-select:valid { border-color: var(--success); }
 
     .was-validated .form-control:invalid,
     .was-validated .form-select:invalid {
-      border-color: #ef4444;
+      border-color: var(--danger);
       background-image: none;
     }
 
-    /* === BADGE OBLIGATORIO === */
-    .required-dot {
-      color: #ef4444;
-      font-weight: bold;
-    }
+    .required-dot { color: var(--danger); font-weight: bold; }
 
-    /* === FOOTER === */
     .form-footer {
       background: var(--surface-alt);
       padding: 1rem 2.5rem;
@@ -325,15 +308,109 @@
 
     .form-footer i { color: var(--accent); }
 
-    /* === ANIMACIONES === */
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ============================================
+       NOTIFICACIONES TOAST (reemplazan los alert)
+       ============================================ */
+    .toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
     }
 
-    .card { animation: fadeInUp 0.6s ease-out; }
+    .custom-toast {
+      min-width: 340px;
+      max-width: 440px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(10, 61, 98, 0.25);
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+      position: relative;
+      pointer-events: auto;
+      animation: toastIn 0.45s cubic-bezier(0.21, 1.02, 0.73, 1);
+    }
 
-    /* === SCROLLBAR PERSONALIZADO === */
+    .custom-toast.hiding { animation: toastOut 0.3s ease forwards; }
+
+    .toast-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      font-size: 1.6rem;
+      color: white;
+      flex-shrink: 0;
+    }
+
+    .toast-success .toast-icon { background: linear-gradient(135deg, #10b981, #059669); }
+    .toast-error .toast-icon   { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+    .toast-body-custom { padding: 14px 16px; flex-grow: 1; }
+
+    .toast-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .toast-message { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      cursor: pointer;
+      align-self: flex-start;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .toast-close:hover { color: var(--text); }
+
+    .toast-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      animation: toastProgress 4.5s linear forwards;
+    }
+
+    .toast-success .toast-progress { background: var(--success); }
+    .toast-error .toast-progress   { background: var(--danger); }
+
+    @media (max-width: 576px) {
+      .toast-container { left: 16px; right: 16px; }
+      .custom-toast { min-width: 0; width: 100%; max-width: 100%; }
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateX(120%); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes toastOut {
+      from { opacity: 1; transform: translateX(0); }
+      to   { opacity: 0; transform: translateX(120%); }
+    }
+
+    @keyframes toastProgress {
+      from { width: 100%; }
+      to   { width: 0%; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
     ::-webkit-scrollbar { width: 10px; }
     ::-webkit-scrollbar-track { background: var(--surface-alt); }
     ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
@@ -342,10 +419,12 @@
 </head>
 <body>
 
+<!-- CONTENEDOR DE NOTIFICACIONES -->
+<div class="toast-container" id="toastContainer"></div>
+
 <div class="container my-4">
   <div class="card mx-auto" style="max-width: 850px;">
     
-    <!-- ENCABEZADO -->
     <div class="header-title text-center">
       <div class="header-icon mx-auto">
         <i class="bi bi-shield-check"></i>
@@ -360,7 +439,6 @@
     <div class="card-body">
       <form id="formRegistro" class="needs-validation" novalidate>
         
-        <!-- SECCIÓN 1: DATOS DEL SOLICITANTE -->
         <div class="section-header">
           <span class="section-number">1</span>
           <h5>Datos del Solicitante e Infractor</h5>
@@ -412,7 +490,6 @@
           </div>
         </div>
 
-        <!-- SECCIÓN 2: INFRACCIÓN -->
         <div class="section-header">
           <span class="section-number">2</span>
           <h5>Datos de la Infracción</h5>
@@ -448,7 +525,6 @@
           </div>
         </div>
 
-        <!-- SECCIÓN 3: LIQUIDACIÓN -->
         <div class="section-header">
           <span class="section-number">3</span>
           <h5>Liquidación de Pagos</h5>
@@ -475,16 +551,14 @@
           </div>
         </div>
 
-        <!-- TOTAL -->
         <div class="total-card">
           <div class="total-label">
             <i class="bi bi-receipt"></i> Total Pagado
           </div>
-          <div class="total-amount" id="totalPagado" data-name="TOTAL PAGADO">0</div>
+          <div class="total-amount" id="totalPagado">0</div>
           <input type="hidden" id="totalPagadoHidden" name="TOTAL PAGADO" value="0">
         </div>
 
-        <!-- SECCIÓN 4: SOPORTES -->
         <div class="section-header mt-4">
           <span class="section-number">4</span>
           <h5>Soportes y Registro</h5>
@@ -535,16 +609,52 @@
 </div>
 
 <script>
-  // Reemplazar con la URL /exec de tu Web App de Google Apps Script
   const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwxNOkoiyi4MKEmx1TS11nR--wKNPhHGdbKOCLG3O4JEALVc9idiPjDi0thUyd69np_/exec';
 
   let pagadorModificadoManualmente = false;
 
+  /* ============================================
+     SISTEMA DE NOTIFICACIONES TOAST
+     ============================================ */
+  function mostrarToast(tipo, titulo, mensaje) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `custom-toast toast-${tipo}`;
+
+    const icon = tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+
+    toast.innerHTML = `
+      <div class="toast-icon"><i class="bi ${icon}"></i></div>
+      <div class="toast-body-custom">
+        <div class="toast-title">${titulo}</div>
+        <div class="toast-message">${mensaje}</div>
+      </div>
+      <button class="toast-close" onclick="cerrarToast(this)" title="Cerrar">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <div class="toast-progress"></div>
+    `;
+
+    container.appendChild(toast);
+
+    // Se cierra solo después de 4.5 segundos
+    setTimeout(() => {
+      if (toast.parentNode) {
+        toast.classList.add('hiding');
+        setTimeout(() => toast.remove(), 300);
+      }
+    }, 4500);
+  }
+
+  function cerrarToast(btn) {
+    const toast = btn.closest('.custom-toast');
+    toast.classList.add('hiding');
+    setTimeout(() => toast.remove(), 300);
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
-    // 1. Asignar fecha por defecto
     document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
 
-    // 2. Auto-llenar cédula del pagador con la del infractor
     const inputInfractor = document.getElementById('cedulaInfractor');
     const inputPagador = document.getElementById('cedulaPagador');
 
@@ -558,12 +668,10 @@
       }
     });
 
-    // 3. Recalcular total
     document.querySelectorAll('.val-calculo').forEach(input => {
       input.addEventListener('input', calcularTotal);
     });
 
-    // 4. Cargar opciones en los select
     cargarDesplegables();
   });
 
@@ -575,7 +683,6 @@
     document.getElementById('totalPagadoHidden').value = total;
   }
 
-  // Cargar datos desde Google Sheets vía GET
   async function cargarDesplegables() {
     const selectInf = document.getElementById('tipoInfraccion');
     const selectFunc = document.getElementById('nombreFuncionario');
@@ -604,13 +711,13 @@
     }
   }
 
-  // Enviar formulario a Google Apps Script vía POST
   document.getElementById('formRegistro').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     if (!this.checkValidity()) {
       e.stopPropagation();
       this.classList.add('was-validated');
+      mostrarToast('error', 'Campos incompletos', 'Por favor diligencia todos los campos obligatorios marcados con *.');
       return;
     }
 
@@ -625,7 +732,6 @@
         dataObj[key] = value;
       });
 
-      // Se usa text/plain para omitir las restricciones preflight CORS de Apps Script
       const response = await fetch(WEB_APP_URL, {
         method: 'POST',
         mode: 'cors',
@@ -636,9 +742,9 @@
       const res = await response.json();
 
       if (res.success) {
-        alert('✅ Registro guardado con éxito.');
+        // ✅ NUEVO MENSAJE: toast moderno en lugar del alert nativo
+        mostrarToast('success', '¡Registro guardado con éxito!', 'Los datos fueron almacenados correctamente. El PDF se descargará en unos segundos.');
 
-        // Forzar descarga del PDF si viene en Base64
         if (res.pdfBase64) {
           const link = document.createElement('a');
           link.href = 'data:application/pdf;base64,' + res.pdfBase64;
@@ -660,7 +766,7 @@
 
     } catch (error) {
       console.error('Error enviando datos:', error);
-      alert('❌ Ocurrió un error: ' + error.message);
+      mostrarToast('error', 'Ocurrió un error', error.message);
     } finally {
       btnGuardar.disabled = false;
       btnGuardar.innerHTML = '<i class="bi bi-file-earmark-pdf"></i> Guardar y Generar PDF';
