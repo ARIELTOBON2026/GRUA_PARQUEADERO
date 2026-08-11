@@ -294,7 +294,7 @@
 <div class="container">
 
     <header>
-        <h1>Secretaría de Movilidad V1</h1>
+        <h1>Secretaría de Movilidad</h1>
         <h2>
             FORMATO DE REGISTRO DE PAGOS POR CONCEPTO DEL
             SERVICIO DE GRÚA Y PARQUEADERO
@@ -691,20 +691,15 @@ function cargarDesplegables() {
 
         google.script.run
             .withSuccessHandler(function (datos) {
-
                 ocultarLoader();
                 poblarDesplegables(datos);
-
             })
             .withFailureHandler(function (error) {
-
                 ocultarLoader();
-
                 mostrarError(
                     'No se pudieron cargar los menús: ' +
                     obtenerMensajeError(error)
                 );
-
                 marcarDesplegablesComoError();
             })
             .obtenerOpcionesDesplegables();
@@ -717,9 +712,6 @@ function cargarDesplegables() {
         '?api=opciones&_=' +
         Date.now();
 
-    console.log('=== Cargando opciones desde ===');
-    console.log(url);
-
     fetch(url, {
         method: 'GET',
         redirect: 'follow'
@@ -728,19 +720,8 @@ function cargarDesplegables() {
 
         const texto = await response.text();
 
-        console.log('=== Estado HTTP ===');
-        console.log(response.status);
-
-        console.log('=== URL final ===');
-        console.log(response.url);
-
-        console.log('=== Primeros 500 caracteres de respuesta ===');
-        console.log(texto.substring(0, 500));
-
         if (!response.ok) {
-            throw new Error(
-                'HTTP ' + response.status
-            );
+            throw new Error('HTTP status ' + response.status);
         }
 
         let datos;
@@ -748,44 +729,40 @@ function cargarDesplegables() {
         try {
             datos = JSON.parse(texto);
         } catch (error) {
+            if (texto.includes('<!DOCTYPE html>') || texto.includes('accounts.google.com')) {
+                throw new Error(
+                    'La aplicación web de Apps Script requiere autenticación. ' +
+                    'Asegúrate de cambiar "Quién tiene acceso" a "Cualquier persona" en el menú de despliegue.'
+                );
+            }
             throw new Error(
-                'La respuesta no es JSON. Inicio recibido: ' +
-                texto.substring(0, 180)
+                'La respuesta del servidor no es un JSON válido.'
             );
         }
 
         return datos;
     })
     .then(function (datos) {
-
         ocultarLoader();
         poblarDesplegables(datos);
-
     })
     .catch(function (error) {
-
         ocultarLoader();
+        console.error('=== Error cargando menús ===', error);
 
-        console.error('=== Error cargando menús ===');
-        console.error(error);
-
-        let mensaje =
-            obtenerMensajeError(error);
+        let mensaje = obtenerMensajeError(error);
 
         if (
             error instanceof TypeError &&
             mensaje.toLowerCase().includes('failed to fetch')
         ) {
             mensaje =
-                'Failed to fetch. El navegador bloqueó la solicitud. ' +
-                'Revisa que la Web App esté desplegada como ' +
-                '"Cualquier persona", que la URL termine en /exec ' +
-                'y que no estés abriendo el HTML con file://.';
+                'Failed to fetch (Bloqueo CORS). Asegúrate de que la Web App en Apps Script ' +
+                'esté desplegada con acceso a "Cualquier persona" y que estés usando la URL /exec.';
         }
 
         mostrarError(
-            'No se pudieron cargar los menús. ' +
-            mensaje
+            'No se pudieron cargar los menús desplegables: ' + mensaje
         );
 
         marcarDesplegablesComoError();
@@ -815,37 +792,24 @@ function poblarDesplegables(datos) {
         return;
     }
 
-    const selInf =
-        document.getElementById('tipoInfraccion');
+    const selInf = document.getElementById('tipoInfraccion');
+    const selFun = document.getElementById('funcionario');
 
-    const selFun =
-        document.getElementById('funcionario');
-
-    selInf.innerHTML =
-        '<option value="">Seleccione...</option>';
+    selInf.innerHTML = '<option value="">Seleccione...</option>';
 
     (datos.infracciones || []).forEach(function (item) {
-
-        const option =
-            document.createElement('option');
-
+        const option = document.createElement('option');
         option.value = item;
         option.textContent = item;
-
         selInf.appendChild(option);
     });
 
-    selFun.innerHTML =
-        '<option value="">Seleccione...</option>';
+    selFun.innerHTML = '<option value="">Seleccione...</option>';
 
     (datos.funcionarios || []).forEach(function (item) {
-
-        const option =
-            document.createElement('option');
-
+        const option = document.createElement('option');
         option.value = item;
         option.textContent = item;
-
         selFun.appendChild(option);
     });
 
@@ -854,8 +818,8 @@ function poblarDesplegables(datos) {
         !(datos.funcionarios || []).length
     ) {
         mostrarError(
-            'Los menús están vacíos. Revise las hojas ' +
-            'INFRACCION/INFRACCIONES y FUNCIONARIOS/FUNCIONARIO.'
+            'Los menús están vacíos. Revisa las pestañas ' +
+            'INFRACCION y FUNCIONARIOS en la hoja de cálculo.'
         );
     }
 }
@@ -865,7 +829,6 @@ function poblarDesplegables(datos) {
 ========================================================== */
 
 function marcarDesplegablesComoError() {
-
     document.getElementById('tipoInfraccion').innerHTML =
         '<option value="">Error al cargar</option>';
 
@@ -912,71 +875,42 @@ function procesarFormulario(event) {
 
     ocultarAlertas();
 
-    const form =
-        document.getElementById('registroForm');
+    const form = document.getElementById('registroForm');
 
     if (!form.checkValidity()) {
-
         form.reportValidity();
-
         return;
     }
 
-    const btn =
-        document.getElementById('btnSubmit');
-
+    const btn = document.getElementById('btnSubmit');
     btn.disabled = true;
 
-    mostrarLoader(
-        'Guardando información y generando PDF...'
-    );
+    mostrarLoader('Guardando información y generando PDF...');
 
-    const formData =
-        new FormData(form);
-
+    const formData = new FormData(form);
     const data = {};
 
     formData.forEach(function (value, key) {
         data[key] = value;
     });
 
-    data['PLACA'] =
-        String(data['PLACA'] || '')
-            .trim()
-            .toUpperCase();
-
-    data['VALOR PAGADO GRÚA'] =
-        data['VALOR PAGADO GRÚA'] || '0';
-
-    data['VALOR PAGADO PARQUEADERO'] =
-        data['VALOR PAGADO PARQUEADERO'] || '0';
-
-    console.log('=== Datos a enviar ===');
-    console.log(data);
+    data['PLACA'] = String(data['PLACA'] || '').trim().toUpperCase();
+    data['VALOR PAGADO GRÚA'] = data['VALOR PAGADO GRÚA'] || '0';
+    data['VALOR PAGADO PARQUEADERO'] = data['VALOR PAGADO PARQUEADERO'] || '0';
 
     if (EN_GOOGLE) {
-
         google.script.run
             .withSuccessHandler(manejarRespuesta)
             .withFailureHandler(function (error) {
-
                 ocultarLoader();
                 btn.disabled = false;
-
-                mostrarError(
-                    obtenerMensajeError(error)
-                );
+                mostrarError(obtenerMensajeError(error));
             })
             .guardarYGenerarPDF(data);
 
         return;
     }
 
-    /*
-     * IMPORTANTE:
-     * No se establece Content-Type: application/json.
-     * Así el navegador evita un preflight CORS.
-     */
     fetch(APP_URL, {
         method: 'POST',
         redirect: 'follow',
@@ -986,16 +920,8 @@ function procesarFormulario(event) {
 
         const texto = await response.text();
 
-        console.log('=== Estado POST ===');
-        console.log(response.status);
-
-        console.log('=== Respuesta POST ===');
-        console.log(texto.substring(0, 500));
-
         if (!response.ok) {
-            throw new Error(
-                'HTTP ' + response.status
-            );
+            throw new Error('HTTP status ' + response.status);
         }
 
         let respuesta;
@@ -1003,11 +929,8 @@ function procesarFormulario(event) {
         try {
             respuesta = JSON.parse(texto);
         } catch (error) {
-
             throw new Error(
-                'El servidor no devolvió JSON válido. ' +
-                'Respuesta recibida: ' +
-                texto.substring(0, 180)
+                'El servidor no devolvió una respuesta JSON válida.'
             );
         }
 
@@ -1019,14 +942,11 @@ function procesarFormulario(event) {
     .catch(function (error) {
 
         ocultarLoader();
-
         btn.disabled = false;
 
-        console.error('=== Error enviando formulario ===');
-        console.error(error);
+        console.error('=== Error enviando formulario ===', error);
 
-        let mensaje =
-            obtenerMensajeError(error);
+        let mensaje = obtenerMensajeError(error);
 
         if (
             error instanceof TypeError &&
@@ -1034,15 +954,10 @@ function procesarFormulario(event) {
         ) {
             mensaje =
                 'Failed to fetch. El navegador bloqueó la solicitud. ' +
-                'Revisa que la Web App esté desplegada como ' +
-                '"Cualquier persona", que la URL termine en /exec ' +
-                'y que no estés abriendo el HTML con file://.';
+                'Asegúrate de que la Web App esté configurada para "Cualquier persona".';
         }
 
-        mostrarError(
-            'Error de conexión con Apps Script: ' +
-            mensaje
-        );
+        mostrarError('Error de conexión: ' + mensaje);
     });
 }
 
@@ -1053,46 +968,28 @@ function procesarFormulario(event) {
 function manejarRespuesta(respuesta) {
 
     ocultarLoader();
-
     document.getElementById('btnSubmit').disabled = false;
 
-    console.log('=== Respuesta del servidor ===');
-    console.log(respuesta);
-
-    if (
-        respuesta &&
-        respuesta.success === true
-    ) {
+    if (respuesta && respuesta.success === true) {
 
         mostrarExito(
             'Registro guardado correctamente. ' +
             'El PDF se descargará automáticamente.'
         );
 
-        if (
-            respuesta.pdfBase64 &&
-            respuesta.pdfNombre
-        ) {
-
+        if (respuesta.pdfBase64 && respuesta.pdfNombre) {
             descargarPDF(
                 respuesta.pdfBase64,
                 respuesta.pdfNombre
             );
         } else {
-
             mostrarError(
-                'El registro se guardó, pero el servidor ' +
-                'no devolvió el PDF.'
+                'El registro se guardó, pero no se generó el PDF.'
             );
         }
 
-        document
-            .getElementById('registroForm')
-            .reset();
-
-        document.getElementById(
-            'totalPagado'
-        ).value = '';
+        document.getElementById('registroForm').reset();
+        document.getElementById('totalPagado').value = '';
 
         establecerFechaActual();
 
@@ -1113,62 +1010,33 @@ function descargarPDF(base64Data, fileName) {
 
     try {
 
-        const limpio = String(base64Data || '')
-            .replace(/\s/g, '');
+        const limpio = String(base64Data || '').replace(/\s/g, '');
+        const binario = atob(limpio);
+        const bytes = new Uint8Array(binario.length);
 
-        const binario =
-            atob(limpio);
-
-        const bytes =
-            new Uint8Array(
-                binario.length
-            );
-
-        for (
-            let i = 0;
-            i < binario.length;
-            i++
-        ) {
-            bytes[i] =
-                binario.charCodeAt(i);
+        for (let i = 0; i < binario.length; i++) {
+            bytes[i] = binario.charCodeAt(i);
         }
 
-        const blob =
-            new Blob(
-                [bytes],
-                { type: 'application/pdf' }
-            );
-
-        const url =
-            window.URL.createObjectURL(blob);
-
-        const link =
-            document.createElement('a');
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
 
         link.href = url;
-        link.download =
-            fileName || 'Registro_Grúa_Parqueadero.pdf';
+        link.download = fileName || 'Registro_Grúa_Parqueadero.pdf';
 
         document.body.appendChild(link);
-
         link.click();
 
         setTimeout(function () {
-
             document.body.removeChild(link);
-
             window.URL.revokeObjectURL(url);
-
         }, 1000);
 
     } catch (error) {
-
-        console.error('=== Error descargando PDF ===');
-        console.error(error);
-
+        console.error('=== Error descargando PDF ===', error);
         mostrarError(
-            'El registro se guardó, pero falló la ' +
-            'descarga automática del PDF. ' +
+            'El registro se guardó, pero falló la descarga del PDF: ' +
             obtenerMensajeError(error)
         );
     }
@@ -1179,24 +1047,13 @@ function descargarPDF(base64Data, fileName) {
 ========================================================== */
 
 function mostrarLoader(mensaje) {
-
-    const loader =
-        document.getElementById('loader');
-
-    document.getElementById(
-        'loaderText'
-    ).textContent =
-        mensaje ||
-        'Procesando...';
-
+    const loader = document.getElementById('loader');
+    document.getElementById('loaderText').textContent = mensaje || 'Procesando...';
     loader.classList.add('active');
 }
 
 function ocultarLoader() {
-
-    document
-        .getElementById('loader')
-        .classList.remove('active');
+    document.getElementById('loader').classList.remove('active');
 }
 
 /* ==========================================================
@@ -1204,23 +1061,13 @@ function ocultarLoader() {
 ========================================================== */
 
 function ocultarAlertas() {
-
-    document.getElementById(
-        'alertBox'
-    ).style.display = 'none';
+    document.getElementById('alertBox').style.display = 'none';
 }
 
 function mostrarError(mensaje) {
-
-    const alertBox =
-        document.getElementById('alertBox');
-
-    alertBox.className =
-        'alert alert-danger';
-
-    alertBox.textContent =
-        mensaje || 'Ha ocurrido un error.';
-
+    const alertBox = document.getElementById('alertBox');
+    alertBox.className = 'alert alert-danger';
+    alertBox.textContent = mensaje || 'Ha ocurrido un error.';
     alertBox.style.display = 'block';
 
     window.scrollTo({
@@ -1230,16 +1077,9 @@ function mostrarError(mensaje) {
 }
 
 function mostrarExito(mensaje) {
-
-    const alertBox =
-        document.getElementById('alertBox');
-
-    alertBox.className =
-        'alert alert-success';
-
-    alertBox.textContent =
-        mensaje || 'Operación realizada correctamente.';
-
+    const alertBox = document.getElementById('alertBox');
+    alertBox.className = 'alert alert-success';
+    alertBox.textContent = mensaje || 'Operación realizada correctamente.';
     alertBox.style.display = 'block';
 
     window.scrollTo({
@@ -1253,18 +1093,9 @@ function mostrarExito(mensaje) {
 ========================================================== */
 
 function obtenerMensajeError(error) {
-
-    if (!error) {
-        return 'Error desconocido.';
-    }
-
-    if (typeof error === 'string') {
-        return error;
-    }
-
-    if (error.message) {
-        return error.message;
-    }
+    if (!error) return 'Error desconocido.';
+    if (typeof error === 'string') return error;
+    if (error.message) return error.message;
 
     try {
         return JSON.stringify(error);
