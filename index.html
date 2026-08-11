@@ -1,1108 +1,208 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Pagos - Grúa y Parqueadero</title>
-
-    <style>
-        :root {
-            --primary: #004a99;
-            --primary-dark: #003b7a;
-            --secondary: #f4f7f6;
-            --accent: #28a745;
-            --accent-dark: #218838;
-            --danger: #dc3545;
-            --text: #333;
-            --muted: #666;
-            --border: #ccc;
-            --white: #fff;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-            background: #e9ecef;
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 950px;
-            margin: 0 auto;
-            background: var(--white);
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 18px rgba(0,0,0,.10);
-        }
-
-        header {
-            text-align: center;
-            border-bottom: 3px solid var(--primary);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-
-        header h1 {
-            color: var(--primary);
-            margin: 0;
-            font-size: 1.8rem;
-            text-transform: uppercase;
-        }
-
-        header h2 {
-            font-size: 1.05rem;
-            color: var(--muted);
-            font-weight: 600;
-            margin: 7px 0 0;
-        }
-
-        .alert {
-            padding: 14px 16px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            display: none;
-            font-weight: 600;
-        }
-
-        .alert-danger {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        .alert-success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .section {
-            margin-bottom: 25px;
-            padding: 20px;
-            background: var(--secondary);
-            border-radius: 7px;
-            border-left: 5px solid var(--primary);
-        }
-
-        .section-title {
-            font-size: 1.15rem;
-            color: var(--primary);
-            margin: 0 0 18px;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-title span {
-            background: var(--primary);
-            color: #fff;
-            width: 29px;
-            height: 29px;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 10px;
-            font-size: .9rem;
-            flex: 0 0 auto;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 18px 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            font-weight: 600;
-            margin-bottom: 6px;
-            font-size: .9rem;
-            color: #555;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid var(--border);
-            border-radius: 5px;
-            font-size: 1rem;
-            background: #fff;
-        }
-
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(0,74,153,.15);
-        }
-
-        input[readonly] {
-            background: #e9ecef;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 25px;
-            padding-top: 8px;
-        }
-
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: normal;
-            cursor: pointer;
-            margin: 0;
-        }
-
-        .radio-group input {
-            width: auto;
-        }
-
-        .btn-container {
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        button {
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            padding: 14px 30px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 380px;
-        }
-
-        button:hover {
-            background: var(--accent-dark);
-        }
-
-        button:disabled {
-            background: #6c757d;
-            cursor: not-allowed;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 35px;
-            font-size: .84rem;
-            color: #777;
-            border-top: 1px solid #ddd;
-            padding-top: 15px;
-        }
-
-        .loader-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255,255,255,.88);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .loader-overlay.active {
-            display: flex;
-        }
-
-        .spinner {
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid var(--primary);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 15px;
-        }
-
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        .loader-text {
-            color: var(--primary);
-            font-weight: 600;
-            text-align: center;
-        }
-
-        @media (max-width: 700px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 18px;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full-width {
-                grid-column: auto;
-            }
-
-            header h1 {
-                font-size: 1.45rem;
-            }
-
-            header h2 {
-                font-size: .95rem;
-            }
-
-            .section {
-                padding: 15px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Pagos - Grúa y Parqueadero</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .card { border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .header-title { background-color: #0d6efd; color: white; border-radius: 12px 12px 0 0; padding: 20px; }
+    .bg-total { background-color: #e9ecef; font-weight: bold; }
+  </style>
 </head>
-
 <body>
 
-<div class="loader-overlay" id="loader">
-    <div class="spinner"></div>
-    <div class="loader-text" id="loaderText">
-        Procesando...
+<div class="container my-4">
+  <div class="card mx-auto" style="max-width: 800px;">
+    <div class="header-title text-center">
+      <h3 class="mb-0">REGISTRO DE PAGOS - GRÚA Y PARQUEADERO</h3>
+      <small>Secretaría de Movilidad - La Ceja, Antioquia</small>
     </div>
-</div>
+    
+    <div class="card-body p-4">
+      <form id="formRegistro" class="needs-validation" novalidate>
+        
+        <!-- DATOS DEL SOLICITANTE E INFRACTOR -->
+        <h5 class="text-primary border-bottom pb-2 mb-3">Datos del Solicitante e Infractor</h5>
+        <div class="row g-3 mb-3">
+          <div class="col-md-12">
+            <label for="nombre" class="form-label">Nombre del Solicitante *</label>
+            <input type="text" class="form-control" id="nombre" name="NOMBRE" required>
+          </div>
+          <div class="col-md-6">
+            <label for="cedulaInfractor" class="form-label">Cédula del Infractor *</label>
+            <input type="text" class="form-control" id="cedulaInfractor" name="CÉDULA INFRACTOR" required>
+          </div>
+          <div class="col-md-6">
+            <label for="cedulaPagador" class="form-label">Cédula del Pagador *</label>
+            <input type="text" class="form-control" id="cedulaPagador" name="CÉDULA PAGADOR" required>
+          </div>
+          <div class="col-md-6">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input type="text" class="form-control" id="direccion" name="DIRECCIÓN">
+          </div>
+          <div class="col-md-6">
+            <label for="ciudad" class="form-label">Ciudad</label>
+            <input type="text" class="form-control" id="ciudad" name="CIUDAD" value="La Ceja">
+          </div>
+          <div class="col-md-6">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="tel" class="form-control" id="telefono" name="TELÉFONO">
+          </div>
+          <div class="col-md-6">
+            <label for="correo" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="correo" name="CORREO ELECTRÓNICO">
+          </div>
+        </div>
 
-<div class="container">
+        <!-- DATOS DEL VEHÍCULO Y LA INFRACCIÓN -->
+        <h5 class="text-primary border-bottom pb-2 mb-3">Datos de la Infracción</h5>
+        <div class="row g-3 mb-3">
+          <div class="col-md-4">
+            <label for="placa" class="form-label">Placa *</label>
+            <input type="text" class="form-control text-uppercase" id="placa" name="PLACA" maxlength="6" required>
+          </div>
+          <div class="col-md-8">
+            <label for="tipoInfraccion" class="form-label">Tipo de Infracción *</label>
+            <select class="form-select" id="tipoInfraccion" name="TIPO DE INFRACCIÓN" required>
+              <option value="">Cargando opciones...</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="nroComparendo" class="form-label">Nro. Comparendo *</label>
+            <input type="text" class="form-control" id="nroComparendo" name="NRO COMPARENDO" required>
+          </div>
+          <div class="col-md-6">
+            <label for="fecha" class="form-label">Fecha *</label>
+            <input type="date" class="form-control" id="fecha" name="FECHA" required>
+          </div>
+        </div>
 
-    <header>
-        <h1>Secretaría de Movilidad</h1>
-        <h2>
-            FORMATO DE REGISTRO DE PAGOS POR CONCEPTO DEL
-            SERVICIO DE GRÚA Y PARQUEADERO
-        </h2>
-    </header>
-
-    <div id="alertBox" class="alert"></div>
-
-    <form id="registroForm" novalidate>
-
-        <!-- ==================================================
-             1. INFORMACIÓN GENERAL
-        =================================================== -->
-        <div class="section">
-
-            <h3 class="section-title">
-                <span>1</span>
-                Información General
-            </h3>
-
-            <div class="form-grid">
-
-                <div class="form-group full-width">
-                    <label for="nombre">
-                        Nombre Solicitante *
-                    </label>
-                    <input
-                        id="nombre"
-                        type="text"
-                        name="NOMBRE"
-                        autocomplete="name"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="cedulaInfractor">
-                        Cédula Infractor *
-                    </label>
-                    <input
-                        id="cedulaInfractor"
-                        type="text"
-                        name="CÉDULA INFRACTOR"
-                        autocomplete="off"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="cedulaPagador">
-                        Cédula Pagador *
-                    </label>
-                    <input
-                        id="cedulaPagador"
-                        type="text"
-                        name="CÉDULA PAGADOR"
-                        autocomplete="off"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="direccion">
-                        Dirección
-                    </label>
-                    <input
-                        id="direccion"
-                        type="text"
-                        name="DIRECCIÓN">
-                </div>
-
-                <div class="form-group">
-                    <label for="ciudad">
-                        Ciudad
-                    </label>
-                    <input
-                        id="ciudad"
-                        type="text"
-                        name="CIUDAD"
-                        value="La Ceja">
-                </div>
-
-                <div class="form-group">
-                    <label for="telefono">
-                        Teléfono
-                    </label>
-                    <input
-                        id="telefono"
-                        type="tel"
-                        name="TELÉFONO">
-                </div>
-
-                <div class="form-group">
-                    <label for="correo">
-                        Correo Electrónico
-                    </label>
-                    <input
-                        id="correo"
-                        type="email"
-                        name="CORREO ELECTRÓNICO"
-                        autocomplete="email">
-                </div>
-
+        <!-- VALORES PAGADOS EN ORDEN SOLICITADO -->
+        <h5 class="text-primary border-bottom pb-2 mb-3">Liquidación de Pagos</h5>
+        <div class="row g-3 mb-3">
+          <div class="col-md-12">
+            <label for="valorGrua" class="form-label">Valor Pagado Grúa *</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control val-calculo" id="valorGrua" name="VALOR PAGADO GRÚA" min="0" step="100" value="0" required>
             </div>
-        </div>
-
-        <!-- ==================================================
-             2. VEHÍCULO E INFRACCIÓN
-        =================================================== -->
-        <div class="section">
-
-            <h3 class="section-title">
-                <span>2</span>
-                Datos del Vehículo e Infracción
-            </h3>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-                    <label for="placa">
-                        Placa *
-                    </label>
-                    <input
-                        id="placa"
-                        type="text"
-                        name="PLACA"
-                        maxlength="10"
-                        autocomplete="off"
-                        style="text-transform:uppercase;"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="tipoInfraccion">
-                        Tipo Infracción *
-                    </label>
-                    <select
-                        id="tipoInfraccion"
-                        name="TIPO DE INFRACCIÓN"
-                        required>
-                        <option value="">
-                            Cargando...
-                        </option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="comparendo">
-                        Nro Comparendo *
-                    </label>
-                    <input
-                        id="comparendo"
-                        type="text"
-                        name="NRO COMPARENDO"
-                        autocomplete="off"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="valorGrua">
-                        Valor Pagado Grúa *
-                    </label>
-                    <input
-                        id="valorGrua"
-                        type="number"
-                        name="VALOR PAGADO GRÚA"
-                        min="0"
-                        step="1"
-                        inputmode="numeric"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="valorParqueadero">
-                        Valor Pagado Parqueadero *
-                    </label>
-                    <input
-                        id="valorParqueadero"
-                        type="number"
-                        name="VALOR PAGADO PARQUEADERO"
-                        min="0"
-                        step="1"
-                        inputmode="numeric"
-                        required>
-                </div>
-
-                <div class="form-group">
-                    <label for="fecha">
-                        Fecha de pago *
-                    </label>
-                    <input
-                        id="fecha"
-                        type="date"
-                        name="FECHA"
-                        required>
-                </div>
-
-                <div class="form-group full-width">
-                    <label for="totalPagado">
-                        Total Pagado (Grúa + Parqueadero)
-                    </label>
-                    <input
-                        id="totalPagado"
-                        type="text"
-                        name="TOTAL PAGADO"
-                        readonly>
-                </div>
-
+          </div>
+          <div class="col-md-12">
+            <label for="valorParqueadero" class="form-label">Valor Pagado Parqueadero *</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control val-calculo" id="valorParqueadero" name="VALOR PAGADO PARQUEADERO" min="0" step="100" value="0" required>
             </div>
-        </div>
-
-        <!-- ==================================================
-             3. DOCUMENTOS Y FUNCIONARIO
-        =================================================== -->
-        <div class="section">
-
-            <h3 class="section-title">
-                <span>3</span>
-                REGISTRO DE DOCUMENTOS ANEXOS Y SOPORTES DEL INFORME
-            </h3>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label>
-                        Fotocopia Doc. Identidad
-                    </label>
-
-                    <div class="radio-group">
-
-                        <label>
-                            <input
-                                type="radio"
-                                name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD"
-                                value="SI"
-                                checked>
-                            Sí
-                        </label>
-
-                        <label>
-                            <input
-                                type="radio"
-                                name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD"
-                                value="NO">
-                            No
-                        </label>
-
-                    </div>
-                </div>
-
-                <div class="form-group">
-
-                    <label>
-                        Consignaciones Originales
-                    </label>
-
-                    <div class="radio-group">
-
-                        <label>
-                            <input
-                                type="radio"
-                                name="CONSIGNACIONES ORIGINALES"
-                                value="SI"
-                                checked>
-                            Sí
-                        </label>
-
-                        <label>
-                            <input
-                                type="radio"
-                                name="CONSIGNACIONES ORIGINALES"
-                                value="NO">
-                            No
-                        </label>
-
-                    </div>
-                </div>
-
-                <div class="form-group full-width">
-
-                    <label for="funcionario">
-                        Nombre Funcionario *
-                    </label>
-
-                    <select
-                        id="funcionario"
-                        name="NOMBRE FUNCIONARIO"
-                        required>
-                        <option value="">
-                            Cargando...
-                        </option>
-                    </select>
-
-                </div>
-
+          </div>
+          <div class="col-md-12">
+            <label for="totalPagado" class="form-label">Total Pagado</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="text" class="form-control bg-total" id="totalPagado" name="TOTAL PAGADO" readonly value="0">
             </div>
+          </div>
         </div>
 
-        <div class="btn-container">
-            <button
-                type="submit"
-                id="btnSubmit">
-                Guardar y Generar PDF
-            </button>
+        <!-- DOCUMENTACIÓN Y FUNCIONARIO -->
+        <h5 class="text-primary border-bottom pb-2 mb-3">Soportes y Registro</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <label for="fotocopia" class="form-label">Fotocopia Documento Identidad</label>
+            <select class="form-select" id="fotocopia" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD">
+              <option value="SI">SI</option>
+              <option value="NO">NO</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="consignaciones" class="form-label">Consignaciones Originales</label>
+            <select class="form-select" id="consignaciones" name="CONSIGNACIONES ORIGINALES">
+              <option value="SI">SI</option>
+              <option value="NO">NO</option>
+            </select>
+          </div>
+          <div class="col-md-12">
+            <label for="nombreFuncionario" class="form-label">Nombre del Funcionario *</label>
+            <select class="form-select" id="nombreFuncionario" name="NOMBRE FUNCIONARIO" required>
+              <option value="">Cargando opciones...</option>
+            </select>
+          </div>
         </div>
 
-    </form>
-
-    <footer>
-        Secretaría de Movilidad &copy; 2026 ·
-        SISTEMA DE REGISTRO DE INFORMACIÓN DEL SERVICIO
-        DE GRÚA Y PARQUEADERO
-    </footer>
-
+        <button type="submit" class="btn btn-primary w-100 py-2 fs-5" id="btnGuardar">
+          Guardar y Generar PDF
+        </button>
+      </form>
+    </div>
+  </div>
 </div>
 
 <script>
-/* ==========================================================
-   CONFIGURACIÓN
-========================================================== */
+  let pagadorModificadoManualmente = false;
 
-const APP_URL =
-    'https://script.google.com/macros/s/AKfycbzECS0aKzDCp5MqzZTB2nJoTDvgcJn-a24q4HaVnXw1iaXaoTjF8OKnLJwrD0SjWgH0bw/exec';
+  document.addEventListener('DOMContentLoaded', () => {
+    // Establecer fecha de hoy por defecto
+    document.getElementById('fecha').valueToDate = new Date();
+    document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
 
-const EN_GOOGLE =
-    typeof google !== 'undefined' &&
-    google.script &&
-    google.script.run;
+    // 1. AUTO-LLENADO DE CÉDULA DE PAGADOR DESDE INFRACTOR
+    const inputInfractor = document.getElementById('cedulaInfractor');
+    const inputPagador = document.getElementById('cedulaPagador');
 
-/* ==========================================================
-   INICIO
-========================================================== */
+    inputPagador.addEventListener('input', () => {
+      pagadorModificadoManualmente = true;
+    });
 
-window.addEventListener('DOMContentLoaded', function () {
+    inputInfractor.addEventListener('input', (e) => {
+      if (!pagadorModificadoManualmente || inputPagador.value.trim() === '') {
+        inputPagador.value = e.target.value;
+      }
+    });
 
-    establecerFechaActual();
+    // 2. CÁLCULO AUTOMÁTICO DE TOTAL PAGADO
+    const inputsValor = document.querySelectorAll('.val-calculo');
+    inputsValor.forEach(input => {
+      input.addEventListener('input', calcularTotal);
+    });
 
-    document
-        .getElementById('valorGrua')
-        .addEventListener('input', calcularTotal);
-
-    document
-        .getElementById('valorParqueadero')
-        .addEventListener('input', calcularTotal);
-
-    document
-        .getElementById('placa')
-        .addEventListener('input', function () {
-            this.value = this.value.toUpperCase();
-        });
-
-    document
-        .getElementById('registroForm')
-        .addEventListener('submit', procesarFormulario);
-
+    // 3. CARGAR LISTAS DESPLEGABLES (INFRACCIONES Y FUNCIONARIOS)
     cargarDesplegables();
-});
+  });
 
-/* ==========================================================
-   FECHA ACTUAL
-========================================================== */
-
-function establecerFechaActual() {
-
-    const campo = document.getElementById('fecha');
-
-    if (!campo.value) {
-
-        const ahora = new Date();
-
-        const yyyy = ahora.getFullYear();
-        const mm = String(
-            ahora.getMonth() + 1
-        ).padStart(2, '0');
-
-        const dd = String(
-            ahora.getDate()
-        ).padStart(2, '0');
-
-        campo.value =
-            yyyy + '-' + mm + '-' + dd;
-    }
-}
-
-/* ==========================================================
-   CARGAR DESPLEGABLES
-========================================================== */
-
-function cargarDesplegables() {
-
-    mostrarLoader(
-        'Cargando infracciones y funcionarios...'
-    );
-
-    if (EN_GOOGLE) {
-
-        google.script.run
-            .withSuccessHandler(function (datos) {
-                ocultarLoader();
-                poblarDesplegables(datos);
-            })
-            .withFailureHandler(function (error) {
-                ocultarLoader();
-                mostrarError(
-                    'No se pudieron cargar los menús: ' +
-                    obtenerMensajeError(error)
-                );
-                marcarDesplegablesComoError();
-            })
-            .obtenerOpcionesDesplegables();
-
-        return;
-    }
-
-    const url =
-        APP_URL +
-        '?api=opciones&_=' +
-        Date.now();
-
-    fetch(url, {
-        method: 'GET',
-        redirect: 'follow'
-    })
-    .then(async function (response) {
-
-        const texto = await response.text();
-
-        if (!response.ok) {
-            throw new Error('HTTP status ' + response.status);
-        }
-
-        let datos;
-
-        try {
-            datos = JSON.parse(texto);
-        } catch (error) {
-            if (texto.includes('<!DOCTYPE html>') || texto.includes('accounts.google.com')) {
-                throw new Error(
-                    'La aplicación web de Apps Script requiere autenticación. ' +
-                    'Asegúrate de cambiar "Quién tiene acceso" a "Cualquier persona" en el menú de despliegue.'
-                );
-            }
-            throw new Error(
-                'La respuesta del servidor no es un JSON válido.'
-            );
-        }
-
-        return datos;
-    })
-    .then(function (datos) {
-        ocultarLoader();
-        poblarDesplegables(datos);
-    })
-    .catch(function (error) {
-        ocultarLoader();
-        console.error('=== Error cargando menús ===', error);
-
-        let mensaje = obtenerMensajeError(error);
-
-        if (
-            error instanceof TypeError &&
-            mensaje.toLowerCase().includes('failed to fetch')
-        ) {
-            mensaje =
-                'Failed to fetch (Bloqueo CORS). Asegúrate de que la Web App en Apps Script ' +
-                'esté desplegada con acceso a "Cualquier persona" y que estés usando la URL /exec.';
-        }
-
-        mostrarError(
-            'No se pudieron cargar los menús desplegables: ' + mensaje
-        );
-
-        marcarDesplegablesComoError();
-    });
-}
-
-/* ==========================================================
-   POBLAR SELECTS
-========================================================== */
-
-function poblarDesplegables(datos) {
-
-    if (!datos) {
-        mostrarError(
-            'El servidor no devolvió información.'
-        );
-        marcarDesplegablesComoError();
-        return;
-    }
-
-    if (datos.success === false) {
-        mostrarError(
-            datos.message ||
-            'El servidor informó un error.'
-        );
-        marcarDesplegablesComoError();
-        return;
-    }
-
-    const selInf = document.getElementById('tipoInfraccion');
-    const selFun = document.getElementById('funcionario');
-
-    selInf.innerHTML = '<option value="">Seleccione...</option>';
-
-    (datos.infracciones || []).forEach(function (item) {
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        selInf.appendChild(option);
-    });
-
-    selFun.innerHTML = '<option value="">Seleccione...</option>';
-
-    (datos.funcionarios || []).forEach(function (item) {
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        selFun.appendChild(option);
-    });
-
-    if (
-        !(datos.infracciones || []).length &&
-        !(datos.funcionarios || []).length
-    ) {
-        mostrarError(
-            'Los menús están vacíos. Revisa las pestañas ' +
-            'INFRACCION y FUNCIONARIOS en la hoja de cálculo.'
-        );
-    }
-}
-
-/* ==========================================================
-   ERROR EN SELECTS
-========================================================== */
-
-function marcarDesplegablesComoError() {
-    document.getElementById('tipoInfraccion').innerHTML =
-        '<option value="">Error al cargar</option>';
-
-    document.getElementById('funcionario').innerHTML =
-        '<option value="">Error al cargar</option>';
-}
-
-/* ==========================================================
-   CALCULAR TOTAL
-========================================================== */
-
-function calcularTotal() {
-
-    const grua =
-        parseFloat(
-            document.getElementById('valorGrua').value
-        ) || 0;
-
-    const parqueadero =
-        parseFloat(
-            document.getElementById('valorParqueadero').value
-        ) || 0;
-
+  function calcularTotal() {
+    const grua = parseFloat(document.getElementById('valorGrua').value) || 0;
+    const parqueadero = parseFloat(document.getElementById('valorParqueadero').value) || 0;
     const total = grua + parqueadero;
+    document.getElementById('totalPagado').value = total.toLocaleString('es-CO');
+  }
 
-    document.getElementById('totalPagado').value =
-        '$ ' +
-        total.toLocaleString(
-            'es-CO',
-            {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 2
-            }
-        );
-}
-
-/* ==========================================================
-   PROCESAR FORMULARIO
-========================================================== */
-
-function procesarFormulario(event) {
-
-    event.preventDefault();
-
-    ocultarAlertas();
-
-    const form = document.getElementById('registroForm');
-
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
+  function cargarDesplegables() {
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
+      google.script.run
+        .withSuccessHandler(llenarSelects)
+        .withFailureHandler(err => console.error("Error al cargar opciones:", err))
+        .obtenerOpcionesDesplegables();
     }
+  }
 
-    const btn = document.getElementById('btnSubmit');
-    btn.disabled = true;
+  function llenarSelects(res) {
+    if (!res || !res.success) return;
 
-    mostrarLoader('Guardando información y generando PDF...');
+    const selectInf = document.getElementById('tipoInfraccion');
+    const selectFunc = document.getElementById('nombreFuncionario');
 
-    const formData = new FormData(form);
-    const data = {};
-
-    formData.forEach(function (value, key) {
-        data[key] = value;
+    selectInf.innerHTML = '<option value="">Seleccione...</option>';
+    res.infracciones.forEach(item => {
+      selectInf.innerHTML += `<option value="${item}">${item}</option>`;
     });
 
-    data['PLACA'] = String(data['PLACA'] || '').trim().toUpperCase();
-    data['VALOR PAGADO GRÚA'] = data['VALOR PAGADO GRÚA'] || '0';
-    data['VALOR PAGADO PARQUEADERO'] = data['VALOR PAGADO PARQUEADERO'] || '0';
-
-    if (EN_GOOGLE) {
-        google.script.run
-            .withSuccessHandler(manejarRespuesta)
-            .withFailureHandler(function (error) {
-                ocultarLoader();
-                btn.disabled = false;
-                mostrarError(obtenerMensajeError(error));
-            })
-            .guardarYGenerarPDF(data);
-
-        return;
-    }
-
-    fetch(APP_URL, {
-        method: 'POST',
-        redirect: 'follow',
-        body: JSON.stringify(data)
-    })
-    .then(async function (response) {
-
-        const texto = await response.text();
-
-        if (!response.ok) {
-            throw new Error('HTTP status ' + response.status);
-        }
-
-        let respuesta;
-
-        try {
-            respuesta = JSON.parse(texto);
-        } catch (error) {
-            throw new Error(
-                'El servidor no devolvió una respuesta JSON válida.'
-            );
-        }
-
-        return respuesta;
-    })
-    .then(function (respuesta) {
-        manejarRespuesta(respuesta);
-    })
-    .catch(function (error) {
-
-        ocultarLoader();
-        btn.disabled = false;
-
-        console.error('=== Error enviando formulario ===', error);
-
-        let mensaje = obtenerMensajeError(error);
-
-        if (
-            error instanceof TypeError &&
-            mensaje.toLowerCase().includes('failed to fetch')
-        ) {
-            mensaje =
-                'Failed to fetch. El navegador bloqueó la solicitud. ' +
-                'Asegúrate de que la Web App esté configurada para "Cualquier persona".';
-        }
-
-        mostrarError('Error de conexión: ' + mensaje);
+    selectFunc.innerHTML = '<option value="">Seleccione...</option>';
+    res.funcionarios.forEach(item => {
+      selectFunc.innerHTML += `<option value="${item}">${item}</option>`;
     });
-}
-
-/* ==========================================================
-   RESPUESTA DEL SERVIDOR
-========================================================== */
-
-function manejarRespuesta(respuesta) {
-
-    ocultarLoader();
-    document.getElementById('btnSubmit').disabled = false;
-
-    if (respuesta && respuesta.success === true) {
-
-        mostrarExito(
-            'Registro guardado correctamente. ' +
-            'El PDF se descargará automáticamente.'
-        );
-
-        if (respuesta.pdfBase64 && respuesta.pdfNombre) {
-            descargarPDF(
-                respuesta.pdfBase64,
-                respuesta.pdfNombre
-            );
-        } else {
-            mostrarError(
-                'El registro se guardó, pero no se generó el PDF.'
-            );
-        }
-
-        document.getElementById('registroForm').reset();
-        document.getElementById('totalPagado').value = '';
-
-        establecerFechaActual();
-
-        return;
-    }
-
-    mostrarError(
-        (respuesta && respuesta.message) ||
-        'Error desconocido al procesar el registro.'
-    );
-}
-
-/* ==========================================================
-   DESCARGAR PDF
-========================================================== */
-
-function descargarPDF(base64Data, fileName) {
-
-    try {
-
-        const limpio = String(base64Data || '').replace(/\s/g, '');
-        const binario = atob(limpio);
-        const bytes = new Uint8Array(binario.length);
-
-        for (let i = 0; i < binario.length; i++) {
-            bytes[i] = binario.charCodeAt(i);
-        }
-
-        const blob = new Blob([bytes], { type: 'application/pdf' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-
-        link.href = url;
-        link.download = fileName || 'Registro_Grúa_Parqueadero.pdf';
-
-        document.body.appendChild(link);
-        link.click();
-
-        setTimeout(function () {
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-        }, 1000);
-
-    } catch (error) {
-        console.error('=== Error descargando PDF ===', error);
-        mostrarError(
-            'El registro se guardó, pero falló la descarga del PDF: ' +
-            obtenerMensajeError(error)
-        );
-    }
-}
-
-/* ==========================================================
-   LOADER
-========================================================== */
-
-function mostrarLoader(mensaje) {
-    const loader = document.getElementById('loader');
-    document.getElementById('loaderText').textContent = mensaje || 'Procesando...';
-    loader.classList.add('active');
-}
-
-function ocultarLoader() {
-    document.getElementById('loader').classList.remove('active');
-}
-
-/* ==========================================================
-   MENSAJES
-========================================================== */
-
-function ocultarAlertas() {
-    document.getElementById('alertBox').style.display = 'none';
-}
-
-function mostrarError(mensaje) {
-    const alertBox = document.getElementById('alertBox');
-    alertBox.className = 'alert alert-danger';
-    alertBox.textContent = mensaje || 'Ha ocurrido un error.';
-    alertBox.style.display = 'block';
-
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-function mostrarExito(mensaje) {
-    const alertBox = document.getElementById('alertBox');
-    alertBox.className = 'alert alert-success';
-    alertBox.textContent = mensaje || 'Operación realizada correctamente.';
-    alertBox.style.display = 'block';
-
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-}
-
-/* ==========================================================
-   OBTENER MENSAJE DE ERROR
-========================================================== */
-
-function obtenerMensajeError(error) {
-    if (!error) return 'Error desconocido.';
-    if (typeof error === 'string') return error;
-    if (error.message) return error.message;
-
-    try {
-        return JSON.stringify(error);
-    } catch (e) {
-        return 'Error desconocido.';
-    }
-}
+  }
 </script>
 
 </body>
