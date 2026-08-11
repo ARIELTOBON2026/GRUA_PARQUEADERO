@@ -1,28 +1,445 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secretaría de Movilidad - Sistema de Registro</title>
+    <title>Secretaría de Movilidad - Registro de Pagos</title>
     <style>
-        body, html {
+        :root {
+            --primary: #004a99;
+            --secondary: #f4f7f6;
+            --accent: #28a745;
+            --danger: #dc3545;
+            --text: #333;
+            --border: #ccc;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #e9ecef;
+            color: var(--text);
             margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden;
-            background-color: #f4f4f4;
-            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
         }
-        iframe {
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+        }
+        header h2 {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: normal;
+            margin: 5px 0 0;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--secondary);
+            border-radius: 6px;
+            border-left: 5px solid var(--primary);
+        }
+        .section-title {
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .section-title span {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"], input[type="number"], select {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0,74,153,0.2);
+        }
+        input[readonly] {
+            background-color: #e9ecef;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            padding-top: 8px;
+        }
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        button {
+            background-color: var(--accent);
+            color: white;
             border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
             width: 100%;
-            height: 100vh; /* Ocupa toda la altura de la pantalla */
+            max-width: 350px;
         }
+        button:hover {
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+        /* Loader */
+        .loader-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .loader-overlay.active { display: flex; }
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid var(--primary);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        .alert-danger { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
     </style>
 </head>
 <body>
-    <!-- Incrustamos tu Web App de Google Apps Script -->
-    <iframe src="https://script.google.com/macros/s/AKfycbyy7-nSi7691j_YvAGuQcW9Kue9M_KNnsI0yAzvLMKNZ7m_rUxeRTqX8vFatZn6K_B0eg/exec"></iframe>
+
+    <div class="loader-overlay" id="loader">
+        <div class="spinner"></div>
+        <p>Procesando y generando PDF...</p>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Secretaría de Movilidad</h1>
+            <h2>FORMATO DE REGISTRO DE PAGOS POR CONCEPTO DEL SERVICIO DE GRÚA Y PARQUEADERO</h2>
+        </header>
+
+        <div id="alertBox" class="alert"></div>
+
+        <form id="registroForm">
+            <!-- SECCIÓN 1 -->
+            <div class="section">
+                <h3 class="section-title"><span>1</span> Información General</h3>
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="NOMBRE">Nombre Solicitante *</label>
+                        <input type="text" id="NOMBRE" name="NOMBRE" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="CEDULA_INFRACTOR">Cédula Infractor *</label>
+                        <input type="text" id="CEDULA_INFRACTOR" name="CÉDULA INFRACTOR" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="CEDULA_PAGADOR">Cédula Pagador *</label>
+                        <input type="text" id="CEDULA_PAGADOR" name="CÉDULA PAGADOR" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="DIRECCION">Dirección</label>
+                        <input type="text" id="DIRECCION" name="DIRECCIÓN">
+                    </div>
+                    <div class="form-group">
+                        <label for="CIUDAD">Ciudad</label>
+                        <input type="text" id="CIUDAD" name="CIUDAD">
+                    </div>
+                    <div class="form-group">
+                        <label for="TELEFONO">Teléfono</label>
+                        <input type="tel" id="TELEFONO" name="TELÉFONO">
+                    </div>
+                    <div class="form-group">
+                        <label for="CORREO">Correo Electrónico</label>
+                        <input type="email" id="CORREO" name="CORREO ELECTRÓNICO">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2 -->
+            <div class="section">
+                <h3 class="section-title"><span>2</span> Datos del Vehículo e Infracción</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="PLACA">Placa *</label>
+                        <input type="text" id="PLACA" name="PLACA" style="text-transform:uppercase;" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="TIPO_INFRACCION">Tipo Infracción *</label>
+                        <select id="TIPO_INFRACCION" name="TIPO DE INFRACCIÓN" required>
+                            <option value="">Cargando...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="NRO_COMPARENDO">Nro Comparendo *</label>
+                        <input type="text" id="NRO_COMPARENDO" name="NRO COMPARENDO" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="VALOR_GRUA">Valor Pagado Grúa *</label>
+                        <input type="number" id="VALOR_GRUA" name="VALOR PAGADO GRÚA" min="0" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="VALOR_PARQUEADERO">Valor Pagado Parqueadero *</label>
+                        <input type="number" id="VALOR_PARQUEADERO" name="VALOR PAGADO PARQUEADERO" min="0" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="FECHA">Fecha de pago *</label>
+                        <input type="date" id="FECHA" name="FECHA" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="TOTAL_PAGADO">Total Pagado (Grúa + Parqueadero)</label>
+                        <input type="text" id="TOTAL_PAGADO" name="TOTAL PAGADO" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 3 -->
+            <div class="section">
+                <h3 class="section-title"><span>3</span> REGISTRO DE DOCUMENTOS ANEXOS Y SOPORTES DEL INFORME</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Fotocopia Doc. Identidad</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD" value="SI" checked> Sí</label>
+                            <label><input type="radio" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD" value="NO"> No</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Consignaciones Originales</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="CONSIGNACIONES ORIGINALES" value="SI" checked> Sí</label>
+                            <label><input type="radio" name="CONSIGNACIONES ORIGINALES" value="NO"> No</label>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="FUNCIONARIO">Nombre Funcionario *</label>
+                        <select id="FUNCIONARIO" name="NOMBRE FUNCIONARIO" required>
+                            <option value="">Cargando...</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit" id="btnSubmit">Guardar y Generar PDF</button>
+            </div>
+        </form>
+
+        <footer>
+            Secretaría de Movilidad &copy; 2026 · SISTEMA DE REGISTRO DE INFORMACIÓN DEL SERVICIO DE GRÚA Y PARQUEADERO
+        </footer>
+    </div>
+
+    <script>
+        // Ejecutar al cargar la página
+        window.addEventListener('load', function() {
+            // Llamar al servidor para llenar los Selects
+            google.script.run
+                .withSuccessHandler(poblarDesplegables)
+                .withFailureHandler(mostrarError)
+                .obtenerOpcionesDesplegables();
+                
+            // Calcular total al cambiar valores
+            document.getElementById('VALOR_GRUA').addEventListener('input', calcularTotal);
+            document.getElementById('VALOR_PARQUEADERO').addEventListener('input', calcularTotal);
+            
+            // Envío del formulario
+            document.getElementById('registroForm').addEventListener('submit', procesarFormulario);
+        });
+
+        function poblarDesplegables(datos) {
+            const selInfraccion = document.getElementById('TIPO_INFRACCION');
+            const selFuncionario = document.getElementById('FUNCIONARIO');
+            
+            selInfraccion.innerHTML = '<option value="">Seleccione...</option>';
+            datos.infracciones.forEach(function(item) {
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.textContent = item;
+                selInfraccion.appendChild(opt);
+            });
+
+            selFuncionario.innerHTML = '<option value="">Seleccione...</option>';
+            datos.funcionarios.forEach(function(item) {
+                const opt = document.createElement('option');
+                opt.value = item;
+                opt.textContent = item;
+                selFuncionario.appendChild(opt);
+            });
+        }
+
+        function calcularTotal() {
+            const grua = parseFloat(document.getElementById('VALOR_GRUA').value) || 0;
+            const parqueadero = parseFloat(document.getElementById('VALOR_PARQUEADERO').value) || 0;
+            const total = grua + parqueadero;
+            // Formatear como moneda colombiana
+            document.getElementById('TOTAL_PAGADO').value = '$ ' + total.toLocaleString('es-CO');
+        }
+
+        function procesarFormulario(e) {
+            e.preventDefault();
+            const loader = document.getElementById('loader');
+            const btn = document.getElementById('btnSubmit');
+            const alertBox = document.getElementById('alertBox');
+            
+            alertBox.style.display = 'none';
+            loader.classList.add('active');
+            btn.disabled = true;
+
+            // Recopilar datos del formulario
+            const form = document.getElementById('registroForm');
+            const formData = new FormData(form);
+            const data = {};
+            
+            formData.forEach(function(value, key) {
+                data[key] = value;
+            });
+            
+            // Asegurar que los totales y valores se envían limpios o como los espera el server
+            data['TOTAL PAGADO'] = (parseFloat(document.getElementById('VALOR_GRUA').value) || 0) + 
+                                   (parseFloat(document.getElementById('VALOR_PARQUEADERO').value) || 0);
+
+            google.script.run
+                .withSuccessHandler(function(respuesta) {
+                    loader.classList.remove('active');
+                    btn.disabled = false;
+                    if (respuesta.success) {
+                        mostrarExito('Registro guardado correctamente. Descargando PDF...');
+                        descargarPDF(respuesta.pdfBase64, respuesta.pdfNombre);
+                        form.reset();
+                        calcularTotal();
+                    } else {
+                        mostrarError(respuesta.message);
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    loader.classList.remove('active');
+                    btn.disabled = false;
+                    mostrarError('Error de conexión: ' + error.message);
+                })
+                .guardarYGenerarPDF(data);
+        }
+
+        function descargarPDF(base64Data, fileName) {
+            try {
+                const byteCharacters = atob(base64Data);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], {type: 'application/pdf'});
+                
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (err) {
+                mostrarError('El registro se guardó, pero hubo un error al descargar el PDF automáticamente.');
+            }
+        }
+
+        function mostrarError(msg) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = 'alert alert-danger';
+            alertBox.textContent = msg;
+            alertBox.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function mostrarExito(msg) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = 'alert alert-success';
+            alertBox.textContent = msg;
+            alertBox.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>
