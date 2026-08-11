@@ -1,0 +1,1432 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestión de Devoluciones | Secretaría de Movilidad</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --primary: #0b5ed7;
+        --primary-dark: #084298;
+        --accent: #0dcaf0;
+        --bg-soft: #f4f7fb;
+        --border-light: #e3eaf2;
+        --text-muted-custom: #6c757d;
+      }
+
+      * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(135deg, #eef3fb 0%, #f8f9fc 100%);
+        padding: 30px 15px 60px;
+        min-height: 100vh;
+        color: #2c3e50;
+      }
+
+      .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow:
+          0 10px 40px rgba(13, 110, 253, 0.08),
+          0 2px 6px rgba(0,0,0,0.04);
+        overflow: hidden;
+      }
+
+      .card-header {
+        background: linear-gradient(135deg, #0b5ed7 0%, #084298 100%);
+        color: white;
+        padding: 2rem 2rem 1.8rem;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          rgba(255,255,255,0.12) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+      }
+
+      .header-content {
+        position: relative;
+        z-index: 1;
+      }
+
+      .header-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 56px;
+        height: 56px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 14px;
+        margin-bottom: 12px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+      }
+
+      .card-header h3 {
+        font-weight: 700;
+        font-size: 1.6rem;
+        margin-bottom: 6px;
+        letter-spacing: -0.02em;
+      }
+
+      .card-header p {
+        opacity: 0.85;
+        margin: 0;
+        font-weight: 400;
+        font-size: 0.95rem;
+      }
+
+      .card-body {
+        padding: 2.25rem !important;
+        background: white;
+      }
+
+      .section-block {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+      }
+
+      .section-block:not(:last-child) {
+        border-bottom: 1px dashed var(--border-light);
+      }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 1.5rem;
+        color: var(--primary-dark);
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+
+      .section-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        color: white;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+      }
+
+      .form-label {
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: #344054;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .form-label i {
+        color: var(--primary);
+        font-size: 0.95rem;
+      }
+
+      .required-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background: #ef4444;
+        border-radius: 50%;
+        margin-left: 4px;
+      }
+
+      .form-control,
+      .form-select {
+        border: 1.5px solid var(--border-light);
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        background-color: #fbfcfd;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.1);
+        background-color: white;
+      }
+
+      .form-control::placeholder {
+        color: #b0b8c1;
+        font-size: 0.9rem;
+      }
+
+      /* ===== GRUPO SÍ / NO ===== */
+
+      .toggle-group {
+        display: flex;
+        gap: 8px;
+      }
+
+      .toggle-option {
+        flex: 1;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .toggle-option input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+      }
+
+      .toggle-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 10px;
+        border: 1.5px solid var(--border-light);
+        border-radius: 10px;
+        background: #fbfcfd;
+        font-weight: 500;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        color: var(--text-muted-custom);
+      }
+
+      .toggle-option input:checked + .toggle-label.toggle-si {
+        background: #ecfdf5;
+        border-color: #10b981;
+        color: #047857;
+      }
+
+      .toggle-option input:checked + .toggle-label.toggle-no {
+        background: #fef2f2;
+        border-color: #ef4444;
+        color: #b91c1c;
+      }
+
+      /* ===== BOTÓN PRINCIPAL ===== */
+
+      .btn-submit {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-dark) 100%
+        );
+        border: none;
+        color: white;
+        padding: 14px 24px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 8px 20px rgba(13, 110, 253, 0.25);
+        transition: all 0.3s ease;
+      }
+
+      .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(13, 110, 253, 0.35);
+        background: linear-gradient(
+          135deg,
+          var(--primary-dark) 0%,
+          var(--primary) 100%
+        );
+      }
+
+      .btn-submit:active {
+        transform: translateY(0);
+      }
+
+      /* ===== SPINNER ===== */
+
+      .spinner-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(4px);
+        z-index: 9999;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .spinner-card {
+        background: white;
+        padding: 2rem 3rem;
+        border-radius: 16px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        text-align: center;
+      }
+
+      /* ===== INPUT GROUP MONEDA ===== */
+
+      .input-group-text {
+        border: 1.5px solid var(--border-light);
+        background: #fbfcfd;
+        border-right: none;
+      }
+
+      .ig-input {
+        border-left: none !important;
+      }
+
+      /* ===== TOTAL PAGADO ===== */
+
+      .total-prefix {
+        background: linear-gradient(135deg, #10b981, #047857) !important;
+        color: white !important;
+        border: none !important;
+        font-weight: 700;
+      }
+
+      .total-box {
+        background: #ecfdf5 !important;
+        color: #047857 !important;
+        font-weight: 700;
+        font-size: 1rem !important;
+        letter-spacing: 0.02em;
+      }
+
+      .label-total {
+        color: #047857 !important;
+        font-weight: 600 !important;
+      }
+
+      .label-total i {
+        color: #10b981 !important;
+      }
+
+      /* ===== TOAST DE NOTIFICACIÓN ===== */
+
+      @keyframes slideIn {
+        from {
+          transform: translateX(120%);
+          opacity: 0;
+        }
+
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      /* ===== FOOTER ===== */
+
+      .app-footer {
+        text-align: center;
+        margin-top: 2rem;
+        color: var(--text-muted-custom);
+        font-size: 0.85rem;
+      }
+
+      .app-footer i {
+        color: #ef4444;
+      }
+
+      /* Ocultar ayudas */
+
+      .form-text,
+      small.help,
+      .help-block {
+        display: none !important;
+      }
+
+      @media (max-width: 576px) {
+        .card-body {
+          padding: 1.5rem !important;
+        }
+
+        .card-header {
+          padding: 1.5rem;
+        }
+
+        .card-header h3 {
+          font-size: 1.3rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- ===== PANTALLA DE CARGA ===== -->
+
+    <div id="spinner" class="spinner-overlay">
+      <div class="spinner-card">
+        <div
+          class="spinner-border text-primary mb-3"
+          role="status"
+          style="width: 3rem; height: 3rem;">
+        </div>
+
+        <div class="fw-bold text-primary" id="spinnerText">
+          Procesando...
+        </div>
+      </div>
+    </div>
+
+    <div class="container" style="max-width: 820px;">
+
+      <div class="card">
+
+        <!-- ===== ENCABEZADO ===== -->
+
+        <div class="card-header text-center">
+
+          <div class="header-content">
+
+            <div class="header-icon mx-auto">
+              <i
+                class="bi bi-shield-check"
+                style="font-size: 1.8rem; color: white;">
+              </i>
+            </div>
+
+            <h3>Secretaría de Movilidad</h3>
+
+            <p>
+              <i class="bi bi-file-earmark-text me-1"></i>
+              FORMATO DE REGISTRO DE PAGOS POR CONCEPTO DEL SERVICIO DE GRÚA Y PARQUEADERO
+            </p>
+
+          </div>
+
+        </div>
+
+        <!-- ===== CUERPO ===== -->
+
+        <div class="card-body">
+
+          <form
+            id="formDevoluciones"
+            autocomplete="off"
+            onsubmit="handleFormSubmit(this); return false;">
+
+            <!-- ===== SECCIÓN 1: INFORMACIÓN GENERAL ===== -->
+
+            <div class="section-block">
+
+              <div class="section-title">
+                <span class="section-number">1</span>
+                Información General
+              </div>
+
+              <div class="mb-3">
+
+                <label for="nombre" class="form-label">
+                  <i class="bi bi-person"></i>
+                  Nombre Solicitante
+                  <span class="required-dot"></span>
+                </label>
+
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombre"
+                  name="NOMBRE"
+                  placeholder="Nombre completo"
+                  required
+                  autocomplete="off">
+
+              </div>
+
+              <div class="row g-3 mb-3">
+
+                <!-- CÉDULA INFRACTOR -->
+
+                <div class="col-md-6">
+
+                  <label for="cedula_infractor" class="form-label">
+                    <i class="bi bi-card-text"></i>
+                    Cédula Infractor
+                    <span class="required-dot"></span>
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cedula_infractor"
+                    name="CÉDULA INFRACTOR"
+                    placeholder="0000000000"
+                    required
+                    autocomplete="off">
+
+                </div>
+
+                <!-- CÉDULA PAGADOR -->
+
+                <div class="col-md-6">
+
+                  <label for="cedula_pagador" class="form-label">
+                    <i class="bi bi-card-list"></i>
+                    Cédula Pagador
+                    <span class="required-dot"></span>
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cedula_pagador"
+                    name="CÉDULA PAGADOR"
+                    placeholder="0000000000"
+                    required
+                    autocomplete="off">
+
+                </div>
+
+              </div>
+
+              <div class="row g-3 mb-3">
+
+                <div class="col-md-4">
+
+                  <label for="direccion" class="form-label">
+                    <i class="bi bi-geo-alt"></i>
+                    Dirección
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="direccion"
+                    name="DIRECCIÓN"
+                    placeholder="Calle, número..."
+                    autocomplete="nope"
+                    data-form-type="other">
+
+                </div>
+
+                <div class="col-md-4">
+
+                  <label for="ciudad" class="form-label">
+                    <i class="bi bi-building"></i>
+                    Ciudad
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="ciudad"
+                    name="CIUDAD"
+                    placeholder="Ciudad"
+                    autocomplete="nope"
+                    data-form-type="other">
+
+                </div>
+
+                <div class="col-md-4">
+
+                  <label for="telefono" class="form-label">
+                    <i class="bi bi-telephone"></i>
+                    Teléfono
+                  </label>
+
+                  <input
+                    type="tel"
+                    class="form-control"
+                    id="telefono"
+                    name="TELÉFONO"
+                    placeholder="+57..."
+                    autocomplete="nope"
+                    data-form-type="other">
+
+                </div>
+
+              </div>
+
+              <div class="mb-0">
+
+                <label for="correo" class="form-label">
+                  <i class="bi bi-envelope"></i>
+                  Correo Electrónico
+                </label>
+
+                <input
+                  type="email"
+                  class="form-control"
+                  id="correo"
+                  name="CORREO ELECTRÓNICO"
+                  placeholder="ejemplo@correo.com"
+                  autocomplete="nope"
+                  data-form-type="other">
+
+              </div>
+
+            </div>
+
+            <!-- ===== SECCIÓN 2: VEHÍCULO E INFRACCIÓN ===== -->
+
+            <div class="section-block">
+
+              <div class="section-title">
+                <span class="section-number">2</span>
+                Datos del Vehículo e Infracción
+              </div>
+
+              <div class="row g-3 mb-3">
+
+                <div class="col-md-4">
+
+                  <label for="placa" class="form-label">
+                    <i class="bi bi-car-front"></i>
+                    Placa
+                    <span class="required-dot"></span>
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="placa"
+                    name="PLACA"
+                    placeholder="ABC123"
+                    required
+                    style="text-transform: uppercase;"
+                    autocomplete="off">
+
+                </div>
+
+                <div class="col-md-4">
+
+                  <label for="tipo_infraccion" class="form-label">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    Tipo Infracción
+                    <span class="required-dot"></span>
+                  </label>
+
+                  <select
+                    class="form-select"
+                    id="tipo_infraccion"
+                    name="TIPO DE INFRACCIÓN"
+                    required
+                    autocomplete="off">
+
+                    <option value="">Cargando...</option>
+
+                  </select>
+
+                </div>
+
+                <div class="col-md-4">
+
+                  <label for="nro_comparendo" class="form-label">
+                    <i class="bi bi-file-earmark-code"></i>
+                    Nro Comparendo
+                    <span class="required-dot"></span>
+                  </label>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="nro_comparendo"
+                    name="NRO COMPARENDO"
+                    placeholder="000000"
+                    required
+                    autocomplete="off">
+
+                </div>
+
+              </div>
+
+              <div class="row g-3 mb-3">
+
+                <div class="col-md-6">
+
+                  <label for="valor_grua" class="form-label">
+                    <i class="bi bi-truck"></i>
+                    Valor Pagado Grúa
+                  </label>
+
+                  <div class="input-group">
+
+                    <span class="input-group-text">$</span>
+
+                    <input
+                      type="number"
+                      step="0.01"
+                      class="form-control ig-input"
+                      id="valor_grua"
+                      name="VALOR PAGADO GRÚA"
+                      placeholder="0.00"
+                      autocomplete="off">
+
+                  </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                  <label for="valor_parqueadero" class="form-label">
+                    <i class="bi bi-p-sign"></i>
+                    Valor Pagado Parqueadero
+                  </label>
+
+                  <div class="input-group">
+
+                    <span class="input-group-text">$</span>
+
+                    <input
+                      type="number"
+                      step="0.01"
+                      class="form-control ig-input"
+                      id="valor_parqueadero"
+                      name="VALOR PAGADO PARQUEADERO"
+                      placeholder="0.00"
+                      autocomplete="off">
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="row g-3">
+
+                <div class="col-md-6">
+
+                  <label for="fecha" class="form-label">
+                    <i class="bi bi-calendar-event"></i>
+                    Fecha de pago
+                    <span class="required-dot"></span>
+                  </label>
+
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="fecha"
+                    name="FECHA"
+                    required
+                    autocomplete="off">
+
+                </div>
+
+                <!-- TOTAL PAGADO -->
+
+                <div class="col-md-6">
+
+                  <label for="total_pagado" class="form-label label-total">
+                    <i class="bi bi-cash-stack"></i>
+                    Total Pagado (Grúa + Parqueadero)
+                  </label>
+
+                  <div class="input-group">
+
+                    <span class="input-group-text total-prefix">$</span>
+
+                    <input
+                      type="text"
+                      class="form-control ig-input total-box"
+                      id="total_pagado"
+                      placeholder="0"
+                      readonly
+                      tabindex="-1">
+
+                  </div>
+
+                  <!-- Valor numérico que viaja al servidor -->
+
+                  <input
+                    type="hidden"
+                    id="total_pagado_num"
+                    name="TOTAL PAGADO"
+                    value="0">
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- ===== SECCIÓN 3: DOCUMENTACIÓN Y VERIFICACIÓN ===== -->
+
+            <div class="section-block">
+
+              <div class="section-title">
+                <span class="section-number">3</span>
+                REGISTRO DE DOCUMENTOS ANEXOS Y SOPORTES DEL INFORME
+              </div>
+
+              <div class="row g-3 mb-3">
+
+                <div class="col-md-6">
+
+                  <label class="form-label">
+                    <i class="bi bi-person-badge"></i>
+                    Fotocopia Doc. Identidad
+                  </label>
+
+                  <div class="toggle-group">
+
+                    <label class="toggle-option">
+
+                      <input
+                        type="radio"
+                        name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD"
+                        value="SI"
+                        checked>
+
+                      <span class="toggle-label toggle-si">
+                        <i class="bi bi-check-circle"></i>
+                        Sí
+                      </span>
+
+                    </label>
+
+                    <label class="toggle-option">
+
+                      <input
+                        type="radio"
+                        name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD"
+                        value="NO">
+
+                      <span class="toggle-label toggle-no">
+                        <i class="bi bi-x-circle"></i>
+                        No
+                      </span>
+
+                    </label>
+
+                  </div>
+
+                </div>
+
+                <div class="col-md-6">
+
+                  <label class="form-label">
+                    <i class="bi bi-receipt"></i>
+                    Consignaciones Originales
+                  </label>
+
+                  <div class="toggle-group">
+
+                    <label class="toggle-option">
+
+                      <input
+                        type="radio"
+                        name="CONSIGNACIONES ORIGINALES"
+                        value="SI"
+                        checked>
+
+                      <span class="toggle-label toggle-si">
+                        <i class="bi bi-check-circle"></i>
+                        Sí
+                      </span>
+
+                    </label>
+
+                    <label class="toggle-option">
+
+                      <input
+                        type="radio"
+                        name="CONSIGNACIONES ORIGINALES"
+                        value="NO">
+
+                      <span class="toggle-label toggle-no">
+                        <i class="bi bi-x-circle"></i>
+                        No
+                      </span>
+
+                    </label>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div class="mb-0">
+
+                <label for="nombre_funcionario" class="form-label">
+                  <i class="bi bi-person-workspace"></i>
+                  Nombre Funcionario
+                  <span class="required-dot"></span>
+                </label>
+
+                <select
+                  class="form-select"
+                  id="nombre_funcionario"
+                  name="NOMBRE FUNCIONARIO"
+                  required
+                  autocomplete="off">
+
+                  <option value="">Cargando...</option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+            <!-- ===== BOTÓN ENVIAR ===== -->
+
+            <button
+              type="submit"
+              class="btn btn-submit w-100">
+
+              <i class="bi bi-cloud-upload"></i>
+
+              Guardar y Generar PDF
+
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <!-- ===== FOOTER ===== -->
+
+      <div class="app-footer">
+
+        <p class="mb-0">
+
+          <i class="bi bi-heart-fill"></i>
+
+          Secretaría de Movilidad &copy; 2026 · SISTEMA DE REGISTRO DE INFORMACIÓN DEL SERVICIO DE GRÚA Y PARQUEADERO
+
+        </p>
+
+      </div>
+
+    </div>
+
+    <script>
+
+      // ============================================================
+      // FORMATEADOR DE MONEDA COLOMBIANA
+      // ============================================================
+
+      const fmtCOP = new Intl.NumberFormat('es-CO', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+
+
+      // ============================================================
+      // INICIALIZACIÓN
+      // ============================================================
+
+      document.addEventListener('DOMContentLoaded', function() {
+
+        // Fecha actual por defecto
+        document.getElementById('fecha').value =
+          new Date().toISOString().split('T')[0];
+
+
+        // ========================================================
+        // CÉDULA INFRACTOR → CÉDULA PAGADOR
+        //
+        // Se copia automáticamente.
+        //
+        // IMPORTANTE:
+        // El campo Cédula Pagador NO está bloqueado.
+        // El usuario puede modificarlo manualmente.
+        // ========================================================
+
+        document
+          .getElementById('cedula_infractor')
+          .addEventListener('input', function() {
+
+            document.getElementById('cedula_pagador').value =
+              this.value;
+
+          });
+
+
+        // Recalcular total al escribir en grúa o parqueadero
+
+        document
+          .getElementById('valor_grua')
+          .addEventListener('input', calcularTotal);
+
+        document
+          .getElementById('valor_parqueadero')
+          .addEventListener('input', calcularTotal);
+
+
+        // Cargar listas desplegables
+
+        cargarListas();
+
+      });
+
+
+      // ============================================================
+      // CÁLCULO AUTOMÁTICO DEL TOTAL PAGADO
+      // ============================================================
+
+      function calcularTotal() {
+
+        const grua =
+          parseFloat(
+            document.getElementById('valor_grua').value
+          ) || 0;
+
+        const parq =
+          parseFloat(
+            document.getElementById('valor_parqueadero').value
+          ) || 0;
+
+        const total = grua + parq;
+
+
+        // Vista formateada
+
+        document.getElementById('total_pagado').value =
+          total > 0
+            ? fmtCOP.format(total)
+            : '';
+
+
+        // Valor numérico enviado al servidor
+
+        document.getElementById('total_pagado_num').value =
+          total;
+
+      }
+
+
+      // ============================================================
+      // SPINNER
+      // ============================================================
+
+      function mostrarSpinner(texto = 'Procesando...') {
+
+        document.getElementById('spinnerText').innerText =
+          texto;
+
+        document.getElementById('spinner').style.display =
+          'flex';
+
+      }
+
+
+      function ocultarSpinner() {
+
+        document.getElementById('spinner').style.display =
+          'none';
+
+      }
+
+
+      // ============================================================
+      // CARGAR LISTAS DESPLEGABLES
+      // ============================================================
+
+      function cargarListas() {
+
+        mostrarSpinner('Cargando listas...');
+
+        google.script.run
+
+          .withSuccessHandler(poblarSelects)
+
+          .withFailureHandler(function(err) {
+
+            ocultarSpinner();
+
+            mostrarToast(
+              '❌ Error al cargar desplegables: ' +
+              (err.message || err),
+              'error'
+            );
+
+          })
+
+          .obtenerOpcionesDesplegables();
+
+      }
+
+
+      function poblarSelects(opciones) {
+
+        if (!opciones) {
+
+          ocultarSpinner();
+
+          mostrarToast(
+            '❌ El servidor no devolvió datos.',
+            'error'
+          );
+
+          return;
+
+        }
+
+
+        // ========================================================
+        // INFRACCIONES
+        // ========================================================
+
+        const selectInf =
+          document.getElementById('tipo_infraccion');
+
+        selectInf.innerHTML =
+          '<option value="">-- Seleccione Infracción --</option>';
+
+
+        if (
+          opciones.infracciones &&
+          opciones.infracciones.length > 0
+        ) {
+
+          opciones.infracciones.forEach(function(item) {
+
+            const opt =
+              document.createElement('option');
+
+            opt.value = item;
+            opt.text = item;
+
+            selectInf.appendChild(opt);
+
+          });
+
+        }
+
+
+        // ========================================================
+        // FUNCIONARIOS
+        // ========================================================
+
+        const selectFunc =
+          document.getElementById('nombre_funcionario');
+
+        selectFunc.innerHTML =
+          '<option value="">-- Seleccione Funcionario --</option>';
+
+
+        if (
+          opciones.funcionarios &&
+          opciones.funcionarios.length > 0
+        ) {
+
+          opciones.funcionarios.forEach(function(item) {
+
+            const opt =
+              document.createElement('option');
+
+            opt.value = item;
+            opt.text = item;
+
+            selectFunc.appendChild(opt);
+
+          });
+
+        }
+
+
+        ocultarSpinner();
+
+      }
+
+
+      // ============================================================
+      // ENVIAR FORMULARIO
+      // ============================================================
+
+      function handleFormSubmit(form) {
+
+        mostrarSpinner(
+          'Guardando registro y generando PDF...'
+        );
+
+
+        const formData =
+          new FormData(form);
+
+        const dataObj = {};
+
+
+        formData.forEach(function(value, key) {
+
+          dataObj[key] = value;
+
+        });
+
+
+        google.script.run
+
+          .withSuccessHandler(function(res) {
+
+            ocultarSpinner();
+
+
+            if (res.success) {
+
+              // ==================================================
+              // DESCARGA AUTOMÁTICA DEL PDF
+              // ==================================================
+
+              if (
+                res.pdfBase64 &&
+                res.pdfNombre
+              ) {
+
+                descargarPDF(
+                  res.pdfBase64,
+                  res.pdfNombre
+                );
+
+              }
+
+
+              mostrarToast(
+                '✅ Registro guardado correctamente. PDF descargado.'
+              );
+
+
+              // ==================================================
+              // RESET DEL FORMULARIO
+              // ==================================================
+
+              form.reset();
+
+
+              document.getElementById('fecha').value =
+                new Date().toISOString().split('T')[0];
+
+
+              document
+                .querySelectorAll(
+                  '.toggle-option input[value="SI"]'
+                )
+                .forEach(function(r) {
+
+                  r.checked = true;
+
+                });
+
+
+              calcularTotal();
+
+
+            } else {
+
+              mostrarToast(
+                '❌ Error: ' + res.message,
+                'error'
+              );
+
+            }
+
+          })
+
+          .withFailureHandler(function(err) {
+
+            ocultarSpinner();
+
+            mostrarToast(
+              '❌ Error en el servidor: ' +
+              err.message,
+              'error'
+            );
+
+          })
+
+          .guardarYGenerarPDF(dataObj);
+
+      }
+
+
+      // ============================================================
+      // DESCARGAR PDF AUTOMÁTICAMENTE DESDE BASE64
+      // ============================================================
+
+      function descargarPDF(
+        base64,
+        nombreArchivo
+      ) {
+
+        // Decodificar Base64 a bytes
+
+        const byteCharacters =
+          atob(base64);
+
+        const byteNumbers =
+          new Array(byteCharacters.length);
+
+
+        for (
+          let i = 0;
+          i < byteCharacters.length;
+          i++
+        ) {
+
+          byteNumbers[i] =
+            byteCharacters.charCodeAt(i);
+
+        }
+
+
+        const byteArray =
+          new Uint8Array(byteNumbers);
+
+
+        // Crear Blob PDF
+
+        const blob =
+          new Blob(
+            [byteArray],
+            {
+              type: 'application/pdf'
+            }
+          );
+
+
+        // Forzar descarga
+
+        const url =
+          window.URL.createObjectURL(blob);
+
+        const link =
+          document.createElement('a');
+
+
+        link.href = url;
+
+        link.download =
+          nombreArchivo;
+
+        link.style.display =
+          'none';
+
+
+        document.body.appendChild(link);
+
+        link.click();
+
+
+        // Limpiar
+
+        setTimeout(function() {
+
+          document.body.removeChild(link);
+
+          window.URL.revokeObjectURL(url);
+
+        }, 100);
+
+      }
+
+
+      // ============================================================
+      // NOTIFICACIÓN TOAST
+      // ============================================================
+
+      function mostrarToast(
+        mensaje,
+        tipo = 'exito'
+      ) {
+
+        const existente =
+          document.getElementById(
+            'toastNotif'
+          );
+
+
+        if (existente) {
+          existente.remove();
+        }
+
+
+        const toast =
+          document.createElement('div');
+
+
+        toast.id =
+          'toastNotif';
+
+
+        toast.innerHTML =
+          mensaje;
+
+
+        toast.style.cssText =
+          'position: fixed; top: 20px; right: 20px; ' +
+          'padding: 14px 22px; ' +
+          'border-radius: 10px; ' +
+          'color: white; ' +
+          'font-weight: 600; ' +
+          'font-size: 0.95rem; ' +
+          'z-index: 10000; ' +
+          'box-shadow: 0 10px 30px rgba(0,0,0,0.2); ' +
+          'animation: slideIn 0.3s ease; ' +
+          'max-width: 90%; ' +
+          'background: ' +
+          (
+            tipo === 'error'
+              ? 'linear-gradient(135deg,#ef4444,#b91c1c)'
+              : 'linear-gradient(135deg,#10b981,#047857)'
+          ) +
+          ';';
+
+
+        document.body.appendChild(toast);
+
+
+        setTimeout(function() {
+
+          toast.style.opacity =
+            '0';
+
+          toast.style.transition =
+            'opacity 0.4s';
+
+
+          setTimeout(function() {
+
+            toast.remove();
+
+          }, 400);
+
+        }, 4000);
+
+      }
+
+    </script>
+
+  </body>
+</html>
+```
