@@ -1,221 +1,1195 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <base target="_top">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secretaría de Movilidad - Registro de Pagos</title>
+    <title>Registro de Pagos - Grúa y Parqueadero</title>
+
     <style>
-        :root { --primary:#004a99; --secondary:#f4f7f6; --accent:#28a745; --text:#333; --border:#ccc; }
-        body { font-family:'Segoe UI',Tahoma,sans-serif; background:#e9ecef; color:var(--text); margin:0; padding:20px; line-height:1.6; }
-        .container { max-width:900px; margin:0 auto; background:#fff; padding:30px; border-radius:8px; box-shadow:0 4px 15px rgba(0,0,0,.1); }
-        header { text-align:center; border-bottom:3px solid var(--primary); padding-bottom:15px; margin-bottom:30px; }
-        header h1 { color:var(--primary); margin:0; font-size:1.8rem; text-transform:uppercase; }
-        header h2 { font-size:1.1rem; color:#666; font-weight:normal; margin:5px 0 0; }
-        .section { margin-bottom:30px; padding:20px; background:var(--secondary); border-radius:6px; border-left:5px solid var(--primary); }
-        .section-title { font-size:1.2rem; color:var(--primary); margin-top:0; margin-bottom:20px; display:flex; align-items:center; }
-        .section-title span { background:var(--primary); color:#fff; width:28px; height:28px; border-radius:50%; display:inline-flex; justify-content:center; align-items:center; margin-right:10px; font-size:.9rem; }
-        .form-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; }
-        .form-group { display:flex; flex-direction:column; }
-        .form-group.full-width { grid-column:1 / -1; }
-        label { font-weight:600; margin-bottom:6px; font-size:.9rem; color:#555; }
-        input, select { padding:10px; border:1px solid var(--border); border-radius:4px; font-size:1rem; }
-        input:focus, select:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 2px rgba(0,74,153,.2); }
-        input[readonly] { background:#e9ecef; font-weight:bold; color:var(--primary); }
-        .radio-group { display:flex; gap:20px; padding-top:8px; }
-        .radio-group label { display:flex; align-items:center; gap:6px; font-weight:normal; cursor:pointer; }
-        .btn-container { text-align:center; margin-top:20px; }
-        button { background:var(--accent); color:#fff; border:none; padding:14px 30px; font-size:1.1rem; font-weight:bold; border-radius:5px; cursor:pointer; width:100%; max-width:350px; }
-        button:hover { background:#218838; }
-        button:disabled { background:#6c757d; cursor:not-allowed; }
-        footer { text-align:center; margin-top:40px; font-size:.85rem; color:#777; border-top:1px solid #ddd; padding-top:15px; }
-        .loader-overlay { display:none; position:fixed; inset:0; background:rgba(255,255,255,.85); z-index:9999; justify-content:center; align-items:center; flex-direction:column; }
-        .loader-overlay.active { display:flex; }
-        .spinner { border:6px solid #f3f3f3; border-top:6px solid var(--primary); border-radius:50%; width:60px; height:60px; animation:spin 1s linear infinite; margin-bottom:15px; }
-        @keyframes spin { 100% { transform:rotate(360deg); } }
-        .alert { padding:15px; margin-bottom:20px; border-radius:4px; display:none; }
-        .alert-danger { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
-        .alert-success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+        :root {
+            --primary: #004a99;
+            --primary-dark: #003b7a;
+            --secondary: #f4f7f6;
+            --accent: #28a745;
+            --accent-dark: #218838;
+            --danger: #dc3545;
+            --text: #333;
+            --muted: #666;
+            --border: #ccc;
+            --white: #fff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            background: #e9ecef;
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 18px rgba(0,0,0,.10);
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+        }
+
+        header h2 {
+            font-size: 1.05rem;
+            color: var(--muted);
+            font-weight: 600;
+            margin: 7px 0 0;
+        }
+
+        .alert {
+            padding: 14px 16px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            display: none;
+            font-weight: 600;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: var(--secondary);
+            border-radius: 7px;
+            border-left: 5px solid var(--primary);
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            color: var(--primary);
+            margin: 0 0 18px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title span {
+            background: var(--primary);
+            color: #fff;
+            width: 29px;
+            height: 29px;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+            font-size: .9rem;
+            flex: 0 0 auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: .9rem;
+            color: #555;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 1rem;
+            background: #fff;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0,74,153,.15);
+        }
+
+        input[readonly] {
+            background: #e9ecef;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 25px;
+            padding-top: 8px;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .radio-group input {
+            width: auto;
+        }
+
+        .btn-container {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        button {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        button:hover {
+            background: var(--accent-dark);
+        }
+
+        button:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 35px;
+            font-size: .84rem;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+
+        .loader-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255,255,255,.88);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .loader-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid var(--primary);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loader-text {
+            color: var(--primary);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 18px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full-width {
+                grid-column: auto;
+            }
+
+            header h1 {
+                font-size: 1.45rem;
+            }
+
+            header h2 {
+                font-size: .95rem;
+            }
+
+            .section {
+                padding: 15px;
+            }
+        }
     </style>
 </head>
+
 <body>
 
-<div class="loader-overlay" id="loader"><div class="spinner"></div><p>Procesando y generando PDF...</p></div>
+<div class="loader-overlay" id="loader">
+    <div class="spinner"></div>
+    <div class="loader-text" id="loaderText">
+        Procesando y generando PDF...
+    </div>
+</div>
 
 <div class="container">
+
     <header>
         <h1>Secretaría de Movilidad</h1>
-        <h2>FORMATO DE REGISTRO DE PAGOS POR CONCEPTO DEL SERVICIO DE GRÚA Y PARQUEADERO</h2>
+        <h2>
+            FORMATO DE REGISTRO DE PAGOS POR CONCEPTO DEL
+            SERVICIO DE GRÚA Y PARQUEADERO
+        </h2>
     </header>
 
     <div id="alertBox" class="alert"></div>
 
-    <form id="registroForm">
+    <form id="registroForm" novalidate>
+
+        <!-- ==================================================
+             1. INFORMACIÓN GENERAL
+        =================================================== -->
         <div class="section">
-            <h3 class="section-title"><span>1</span> Información General</h3>
+
+            <h3 class="section-title">
+                <span>1</span>
+                Información General
+            </h3>
+
             <div class="form-grid">
-                <div class="form-group full-width"><label>Nombre Solicitante *</label><input type="text" name="NOMBRE" required></div>
-                <div class="form-group"><label>Cédula Infractor *</label><input type="text" name="CÉDULA INFRACTOR" required></div>
-                <div class="form-group"><label>Cédula Pagador *</label><input type="text" name="CÉDULA PAGADOR" required></div>
-                <div class="form-group"><label>Dirección</label><input type="text" name="DIRECCIÓN"></div>
-                <div class="form-group"><label>Ciudad</label><input type="text" name="CIUDAD"></div>
-                <div class="form-group"><label>Teléfono</label><input type="tel" name="TELÉFONO"></div>
-                <div class="form-group"><label>Correo Electrónico</label><input type="email" name="CORREO ELECTRÓNICO"></div>
+
+                <div class="form-group full-width">
+                    <label for="nombre">
+                        Nombre Solicitante *
+                    </label>
+                    <input
+                        id="nombre"
+                        type="text"
+                        name="NOMBRE"
+                        autocomplete="name"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cedulaInfractor">
+                        Cédula Infractor *
+                    </label>
+                    <input
+                        id="cedulaInfractor"
+                        type="text"
+                        name="CÉDULA INFRACTOR"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cedulaPagador">
+                        Cédula Pagador *
+                    </label>
+                    <input
+                        id="cedulaPagador"
+                        type="text"
+                        name="CÉDULA PAGADOR"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">
+                        Dirección
+                    </label>
+                    <input
+                        id="direccion"
+                        type="text"
+                        name="DIRECCIÓN">
+                </div>
+
+                <div class="form-group">
+                    <label for="ciudad">
+                        Ciudad
+                    </label>
+                    <input
+                        id="ciudad"
+                        type="text"
+                        name="CIUDAD"
+                        value="La Ceja">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">
+                        Teléfono
+                    </label>
+                    <input
+                        id="telefono"
+                        type="tel"
+                        name="TELÉFONO">
+                </div>
+
+                <div class="form-group">
+                    <label for="correo">
+                        Correo Electrónico
+                    </label>
+                    <input
+                        id="correo"
+                        type="email"
+                        name="CORREO ELECTRÓNICO"
+                        autocomplete="email">
+                </div>
+
             </div>
         </div>
 
+        <!-- ==================================================
+             2. VEHÍCULO E INFRACCIÓN
+        =================================================== -->
         <div class="section">
-            <h3 class="section-title"><span>2</span> Datos del Vehículo e Infracción</h3>
+
+            <h3 class="section-title">
+                <span>2</span>
+                Datos del Vehículo e Infracción
+            </h3>
+
             <div class="form-grid">
-                <div class="form-group"><label>Placa *</label><input type="text" name="PLACA" style="text-transform:uppercase;" required></div>
-                <div class="form-group"><label>Tipo Infracción *</label><select id="TIPO_INFRACCION" name="TIPO DE INFRACCIÓN" required><option value="">Cargando...</option></select></div>
-                <div class="form-group"><label>Nro Comparendo *</label><input type="text" name="NRO COMPARENDO" required></div>
-                <div class="form-group"><label>Valor Pagado Grúa *</label><input type="number" id="VALOR_GRUA" name="VALOR PAGADO GRÚA" min="0" step="any" required></div>
-                <div class="form-group"><label>Valor Pagado Parqueadero *</label><input type="number" id="VALOR_PARQUEADERO" name="VALOR PAGADO PARQUEADERO" min="0" step="any" required></div>
-                <div class="form-group"><label>Fecha de pago *</label><input type="date" name="FECHA" required></div>
-                <div class="form-group full-width"><label>Total Pagado (Grúa + Parqueadero)</label><input type="text" id="TOTAL_PAGADO" name="TOTAL PAGADO" readonly></div>
+
+                <div class="form-group">
+                    <label for="placa">
+                        Placa *
+                    </label>
+                    <input
+                        id="placa"
+                        type="text"
+                        name="PLACA"
+                        maxlength="10"
+                        autocomplete="off"
+                        style="text-transform:uppercase;"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoInfraccion">
+                        Tipo Infracción *
+                    </label>
+                    <select
+                        id="tipoInfraccion"
+                        name="TIPO DE INFRACCIÓN"
+                        required>
+                        <option value="">
+                            Cargando...
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comparendo">
+                        Nro Comparendo *
+                    </label>
+                    <input
+                        id="comparendo"
+                        type="text"
+                        name="NRO COMPARENDO"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="valorGrua">
+                        Valor Pagado Grúa *
+                    </label>
+                    <input
+                        id="valorGrua"
+                        type="number"
+                        name="VALOR PAGADO GRÚA"
+                        min="0"
+                        step="1"
+                        inputmode="numeric"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="valorParqueadero">
+                        Valor Pagado Parqueadero *
+                    </label>
+                    <input
+                        id="valorParqueadero"
+                        type="number"
+                        name="VALOR PAGADO PARQUEADERO"
+                        min="0"
+                        step="1"
+                        inputmode="numeric"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">
+                        Fecha de pago *
+                    </label>
+                    <input
+                        id="fecha"
+                        type="date"
+                        name="FECHA"
+                        required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="totalPagado">
+                        Total Pagado (Grúa + Parqueadero)
+                    </label>
+                    <input
+                        id="totalPagado"
+                        type="text"
+                        name="TOTAL PAGADO"
+                        readonly>
+                </div>
+
             </div>
         </div>
 
+        <!-- ==================================================
+             3. DOCUMENTOS Y FUNCIONARIO
+        =================================================== -->
         <div class="section">
-            <h3 class="section-title"><span>3</span> REGISTRO DE DOCUMENTOS ANEXOS Y SOPORTES DEL INFORME</h3>
+
+            <h3 class="section-title">
+                <span>3</span>
+                REGISTRO DE DOCUMENTOS ANEXOS Y SOPORTES DEL INFORME
+            </h3>
+
             <div class="form-grid">
-                <div class="form-group"><label>Fotocopia Doc. Identidad</label>
+
+                <div class="form-group">
+
+                    <label>
+                        Fotocopia Doc. Identidad
+                    </label>
+
                     <div class="radio-group">
-                        <label><input type="radio" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD" value="SI" checked> Sí</label>
-                        <label><input type="radio" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD" value="NO"> No</label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD"
+                                value="SI"
+                                checked>
+                            Sí
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD"
+                                value="NO">
+                            No
+                        </label>
+
                     </div>
                 </div>
-                <div class="form-group"><label>Consignaciones Originales</label>
+
+                <div class="form-group">
+
+                    <label>
+                        Consignaciones Originales
+                    </label>
+
                     <div class="radio-group">
-                        <label><input type="radio" name="CONSIGNACIONES ORIGINALES" value="SI" checked> Sí</label>
-                        <label><input type="radio" name="CONSIGNACIONES ORIGINALES" value="NO"> No</label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="CONSIGNACIONES ORIGINALES"
+                                value="SI"
+                                checked>
+                            Sí
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="CONSIGNACIONES ORIGINALES"
+                                value="NO">
+                            No
+                        </label>
+
                     </div>
                 </div>
-                <div class="form-group full-width"><label>Nombre Funcionario *</label><select id="FUNCIONARIO" name="NOMBRE FUNCIONARIO" required><option value="">Cargando...</option></select></div>
+
+                <div class="form-group full-width">
+
+                    <label for="funcionario">
+                        Nombre Funcionario *
+                    </label>
+
+                    <select
+                        id="funcionario"
+                        name="NOMBRE FUNCIONARIO"
+                        required>
+                        <option value="">
+                            Cargando...
+                        </option>
+                    </select>
+
+                </div>
+
             </div>
         </div>
 
-        <div class="btn-container"><button type="submit" id="btnSubmit">Guardar y Generar PDF</button></div>
+        <div class="btn-container">
+            <button
+                type="submit"
+                id="btnSubmit">
+                Guardar y Generar PDF
+            </button>
+        </div>
+
     </form>
 
-    <footer>Secretaría de Movilidad &copy; 2026 · SISTEMA DE REGISTRO DE INFORMACIÓN DEL SERVICIO DE GRÚA Y PARQUEADERO</footer>
+    <footer>
+        Secretaría de Movilidad &copy; 2026 ·
+        SISTEMA DE REGISTRO DE INFORMACIÓN DEL SERVICIO
+        DE GRÚA Y PARQUEADERO
+    </footer>
+
 </div>
 
 <script>
-    /* ==========================================================
-       MODO DUAL: funciona dentro de Google Apps Script
-       y también en GitHub Pages (usando fetch hacia tu API)
-    ========================================================== */
-    var APP_URL = 'https://script.google.com/macros/s/AKfycbzEBNZyhF0vSN-s2DcR7gZsekJh6_Er-76_9-01aRXJnXTNqlB8FPp-0vH25_NX3FrztQ/exec';
-    var EN_GOOGLE = (typeof google !== 'undefined') && google.script && google.script.run;
+/* ==========================================================
+   CONFIGURACIÓN
+========================================================== */
 
-    window.addEventListener('load', function () {
-        // 1) PRIMERO: suma y envío (JavaScript puro, funciona en cualquier parte)
-        document.getElementById('VALOR_GRUA').addEventListener('input', calcularTotal);
-        document.getElementById('VALOR_PARQUEADERO').addEventListener('input', calcularTotal);
-        document.getElementById('registroForm').addEventListener('submit', procesarFormulario);
+const APP_URL =
+    'https://script.google.com/macros/s/AKfycbzEBNZyhF0vSN-s2DcR7gZsekJh6_Er-76_9-01aRXJnXTNqlB8FPp-0vH25_NX3FrztQ/exec';
 
-        // 2) LUEGO: cargar menús según el entorno
-        if (EN_GOOGLE) {
-            google.script.run
-                .withSuccessHandler(poblarDesplegables)
-                .withFailureHandler(mostrarError)
-                .obtenerOpcionesDesplegables();
-        } else {
-            fetch(APP_URL + '?api=opciones')
-                .then(function (r) { return r.json(); })
-                .then(poblarDesplegables)
-                .catch(function (err) { mostrarError('No se pudieron cargar los menús: ' + err); });
+const EN_GOOGLE =
+    typeof google !== 'undefined' &&
+    google.script &&
+    google.script.run;
+
+/* ==========================================================
+   INICIO
+========================================================== */
+
+window.addEventListener('DOMContentLoaded', function () {
+
+    establecerFechaActual();
+
+    document
+        .getElementById('valorGrua')
+        .addEventListener('input', calcularTotal);
+
+    document
+        .getElementById('valorParqueadero')
+        .addEventListener('input', calcularTotal);
+
+    document
+        .getElementById('placa')
+        .addEventListener('input', function () {
+            this.value = this.value.toUpperCase();
+        });
+
+    document
+        .getElementById('registroForm')
+        .addEventListener('submit', procesarFormulario);
+
+    cargarDesplegables();
+});
+
+/* ==========================================================
+   FECHA ACTUAL
+========================================================== */
+
+function establecerFechaActual() {
+
+    const campo = document.getElementById('fecha');
+
+    if (!campo.value) {
+
+        const ahora = new Date();
+
+        const yyyy = ahora.getFullYear();
+        const mm = String(
+            ahora.getMonth() + 1
+        ).padStart(2, '0');
+
+        const dd = String(
+            ahora.getDate()
+        ).padStart(2, '0');
+
+        campo.value =
+            yyyy + '-' + mm + '-' + dd;
+    }
+}
+
+/* ==========================================================
+   CARGAR DESPLEGABLES
+========================================================== */
+
+function cargarDesplegables() {
+
+    mostrarLoader(
+        'Cargando infracciones y funcionarios...'
+    );
+
+    if (EN_GOOGLE) {
+
+        google.script.run
+            .withSuccessHandler(function (datos) {
+
+                ocultarLoader();
+                poblarDesplegables(datos);
+
+            })
+            .withFailureHandler(function (error) {
+
+                ocultarLoader();
+
+                mostrarError(
+                    'No se pudieron cargar los menús: ' +
+                    obtenerMensajeError(error)
+                );
+
+            })
+            .obtenerOpcionesDesplegables();
+
+        return;
+    }
+
+    const url =
+        APP_URL +
+        '?api=opciones&_=' +
+        Date.now();
+
+    fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        cache: 'no-store'
+    })
+    .then(function (response) {
+
+        if (!response.ok) {
+            throw new Error(
+                'HTTP ' + response.status
+            );
         }
+
+        return response.json();
+    })
+    .then(function (datos) {
+
+        ocultarLoader();
+        poblarDesplegables(datos);
+
+    })
+    .catch(function (error) {
+
+        ocultarLoader();
+
+        mostrarError(
+            'No se pudieron cargar los menús. ' +
+            obtenerMensajeError(error)
+        );
+
+        marcarDesplegablesComoError();
+    });
+}
+
+/* ==========================================================
+   POBLAR SELECTS
+========================================================== */
+
+function poblarDesplegables(datos) {
+
+    if (!datos) {
+        throw new Error(
+            'El servidor no devolvió información.'
+        );
+    }
+
+    if (datos.success === false) {
+        mostrarError(
+            datos.message ||
+            'El servidor informó un error.'
+        );
+        return;
+    }
+
+    const selInf =
+        document.getElementById('tipoInfraccion');
+
+    const selFun =
+        document.getElementById('funcionario');
+
+    selInf.innerHTML =
+        '<option value="">Seleccione...</option>';
+
+    (datos.infracciones || []).forEach(function (item) {
+
+        const option =
+            document.createElement('option');
+
+        option.value = item;
+        option.textContent = item;
+
+        selInf.appendChild(option);
     });
 
-    function poblarDesplegables(datos) {
-        var selInf = document.getElementById('TIPO_INFRACCION');
-        var selFun = document.getElementById('FUNCIONARIO');
-        selInf.innerHTML = '<option value="">Seleccione...</option>';
-        (datos.infracciones || []).forEach(function (item) {
-            var o = document.createElement('option'); o.value = item; o.textContent = item; selInf.appendChild(o);
-        });
-        selFun.innerHTML = '<option value="">Seleccione...</option>';
-        (datos.funcionarios || []).forEach(function (item) {
-            var o = document.createElement('option'); o.value = item; o.textContent = item; selFun.appendChild(o);
-        });
+    selFun.innerHTML =
+        '<option value="">Seleccione...</option>';
+
+    (datos.funcionarios || []).forEach(function (item) {
+
+        const option =
+            document.createElement('option');
+
+        option.value = item;
+        option.textContent = item;
+
+        selFun.appendChild(option);
+    });
+
+    if (
+        !(datos.infracciones || []).length &&
+        !(datos.funcionarios || []).length
+    ) {
+        mostrarError(
+            'Los menús están vacíos. Revise las hojas ' +
+            'INFRACCION/INFRACCIONES y FUNCIONARIOS/FUNCIONARIO.'
+        );
+    }
+}
+
+/* ==========================================================
+   ERROR EN SELECTS
+========================================================== */
+
+function marcarDesplegablesComoError() {
+
+    document.getElementById('tipoInfraccion').innerHTML =
+        '<option value="">Error al cargar</option>';
+
+    document.getElementById('funcionario').innerHTML =
+        '<option value="">Error al cargar</option>';
+}
+
+/* ==========================================================
+   CALCULAR TOTAL
+========================================================== */
+
+function calcularTotal() {
+
+    const grua =
+        parseFloat(
+            document.getElementById('valorGrua').value
+        ) || 0;
+
+    const parqueadero =
+        parseFloat(
+            document.getElementById('valorParqueadero').value
+        ) || 0;
+
+    const total = grua + parqueadero;
+
+    document.getElementById('totalPagado').value =
+        '$ ' +
+        total.toLocaleString(
+            'es-CO',
+            {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            }
+        );
+}
+
+/* ==========================================================
+   PROCESAR FORMULARIO
+========================================================== */
+
+function procesarFormulario(event) {
+
+    event.preventDefault();
+
+    ocultarAlertas();
+
+    const form =
+        document.getElementById('registroForm');
+
+    if (!form.checkValidity()) {
+
+        form.reportValidity();
+
+        return;
     }
 
-    function calcularTotal() {
-        var grua = parseFloat(document.getElementById('VALOR_GRUA').value) || 0;
-        var parq = parseFloat(document.getElementById('VALOR_PARQUEADERO').value) || 0;
-        document.getElementById('TOTAL_PAGADO').value = '$ ' + (grua + parq).toLocaleString('es-CO');
+    const btn =
+        document.getElementById('btnSubmit');
+
+    btn.disabled = true;
+
+    mostrarLoader(
+        'Guardando información y generando PDF...'
+    );
+
+    const formData =
+        new FormData(form);
+
+    const data = {};
+
+    formData.forEach(function (value, key) {
+        data[key] = value;
+    });
+
+    data['PLACA'] =
+        String(data['PLACA'] || '')
+            .trim()
+            .toUpperCase();
+
+    data['VALOR PAGADO GRÚA'] =
+        data['VALOR PAGADO GRÚA'] || '0';
+
+    data['VALOR PAGADO PARQUEADERO'] =
+        data['VALOR PAGADO PARQUEADERO'] || '0';
+
+    if (EN_GOOGLE) {
+
+        google.script.run
+            .withSuccessHandler(manejarRespuesta)
+            .withFailureHandler(function (error) {
+
+                ocultarLoader();
+                btn.disabled = false;
+
+                mostrarError(
+                    obtenerMensajeError(error)
+                );
+            })
+            .guardarYGenerarPDF(data);
+
+        return;
     }
 
-    function procesarFormulario(e) {
-        e.preventDefault();
-        document.getElementById('alertBox').style.display = 'none';
-        document.getElementById('loader').classList.add('active');
-        document.getElementById('btnSubmit').disabled = true;
+    /*
+     * IMPORTANTE:
+     * No se establece Content-Type: application/json.
+     * Así el navegador evita un preflight CORS.
+     */
+    fetch(APP_URL, {
+        method: 'POST',
+        redirect: 'follow',
+        cache: 'no-store',
+        body: JSON.stringify(data)
+    })
+    .then(function (response) {
 
-        var formData = new FormData(document.getElementById('registroForm'));
-        var data = {};
-        formData.forEach(function (value, key) { data[key] = value; });
-
-        if (EN_GOOGLE) {
-            google.script.run
-                .withSuccessHandler(manejarRespuesta)
-                .withFailureHandler(function (err) { ocultarLoader(); mostrarError(err.message); })
-                .guardarYGenerarPDF(data);
-        } else {
-            fetch(APP_URL, { method: 'POST', redirect: 'follow', body: JSON.stringify(data) })
-                .then(function (r) { return r.json(); })
-                .then(manejarRespuesta)
-                .catch(function (err) { ocultarLoader(); mostrarError('Error de conexión: ' + err); });
+        if (!response.ok) {
+            throw new Error(
+                'HTTP ' + response.status
+            );
         }
-    }
 
-    function manejarRespuesta(respuesta) {
-        ocultarLoader();
-        if (respuesta && respuesta.success) {
-            mostrarExito('Registro guardado correctamente. Descargando PDF...');
-            descargarPDF(respuesta.pdfBase64, respuesta.pdfNombre);
-            document.getElementById('registroForm').reset();
-            document.getElementById('TOTAL_PAGADO').value = '';
-        } else {
-            mostrarError((respuesta && respuesta.message) || 'Error desconocido.');
-        }
-    }
+        return response.text();
+    })
+    .then(function (texto) {
 
-    function ocultarLoader() {
-        document.getElementById('loader').classList.remove('active');
-        document.getElementById('btnSubmit').disabled = false;
-    }
+        let respuesta;
 
-    function descargarPDF(base64Data, fileName) {
         try {
-            var bin = atob(base64Data);
-            var bytes = new Uint8Array(bin.length);
-            for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-            var blob = new Blob([bytes], { type: 'application/pdf' });
-            var link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (err) {
-            mostrarError('El registro se guardó, pero falló la descarga automática del PDF.');
+            respuesta = JSON.parse(texto);
+        } catch (error) {
+
+            throw new Error(
+                'El servidor no devolvió JSON válido. ' +
+                'Respuesta recibida: ' +
+                texto.substring(0, 180)
+            );
         }
+
+        manejarRespuesta(respuesta);
+    })
+    .catch(function (error) {
+
+        ocultarLoader();
+
+        btn.disabled = false;
+
+        mostrarError(
+            'Error de conexión con Apps Script: ' +
+            obtenerMensajeError(error)
+        );
+    });
+}
+
+/* ==========================================================
+   RESPUESTA DEL SERVIDOR
+========================================================== */
+
+function manejarRespuesta(respuesta) {
+
+    ocultarLoader();
+
+    document.getElementById('btnSubmit').disabled = false;
+
+    if (
+        respuesta &&
+        respuesta.success === true
+    ) {
+
+        mostrarExito(
+            'Registro guardado correctamente. ' +
+            'El PDF se descargará automáticamente.'
+        );
+
+        if (
+            respuesta.pdfBase64 &&
+            respuesta.pdfNombre
+        ) {
+
+            descargarPDF(
+                respuesta.pdfBase64,
+                respuesta.pdfNombre
+            );
+        } else {
+
+            mostrarError(
+                'El registro se guardó, pero el servidor ' +
+                'no devolvió el PDF.'
+            );
+        }
+
+        document
+            .getElementById('registroForm')
+            .reset();
+
+        document.getElementById(
+            'totalPagado'
+        ).value = '';
+
+        establecerFechaActual();
+
+        return;
     }
 
-    function mostrarError(msg) {
-        var a = document.getElementById('alertBox');
-        a.className = 'alert alert-danger'; a.textContent = msg; a.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    mostrarError(
+        (respuesta && respuesta.message) ||
+        'Error desconocido al procesar el registro.'
+    );
+}
+
+/* ==========================================================
+   DESCARGAR PDF
+========================================================== */
+
+function descargarPDF(base64Data, fileName) {
+
+    try {
+
+        const binario =
+            atob(base64Data);
+
+        const bytes =
+            new Uint8Array(
+                binario.length
+            );
+
+        for (
+            let i = 0;
+            i < binario.length;
+            i++
+        ) {
+            bytes[i] =
+                binario.charCodeAt(i);
+        }
+
+        const blob =
+            new Blob(
+                [bytes],
+                { type: 'application/pdf' }
+            );
+
+        const url =
+            window.URL.createObjectURL(blob);
+
+        const link =
+            document.createElement('a');
+
+        link.href = url;
+        link.download =
+            fileName || 'Registro_Grúa_Parqueadero.pdf';
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        setTimeout(function () {
+
+            document.body.removeChild(link);
+
+            window.URL.revokeObjectURL(url);
+
+        }, 1000);
+
+    } catch (error) {
+
+        mostrarError(
+            'El registro se guardó, pero falló la ' +
+            'descarga automática del PDF. ' +
+            obtenerMensajeError(error)
+        );
     }
-    function mostrarExito(msg) {
-        var a = document.getElementById('alertBox');
-        a.className = 'alert alert-success'; a.textContent = msg; a.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ==========================================================
+   LOADER
+========================================================== */
+
+function mostrarLoader(mensaje) {
+
+    const loader =
+        document.getElementById('loader');
+
+    document.getElementById(
+        'loaderText'
+    ).textContent =
+        mensaje ||
+        'Procesando...';
+
+    loader.classList.add('active');
+}
+
+function ocultarLoader() {
+
+    document
+        .getElementById('loader')
+        .classList.remove('active');
+}
+
+/* ==========================================================
+   MENSAJES
+========================================================== */
+
+function ocultarAlertas() {
+
+    document.getElementById(
+        'alertBox'
+    ).style.display = 'none';
+}
+
+function mostrarError(mensaje) {
+
+    const alertBox =
+        document.getElementById('alertBox');
+
+    alertBox.className =
+        'alert alert-danger';
+
+    alertBox.textContent =
+        mensaje || 'Ha ocurrido un error.';
+
+    alertBox.style.display = 'block';
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+function mostrarExito(mensaje) {
+
+    const alertBox =
+        document.getElementById('alertBox');
+
+    alertBox.className =
+        'alert alert-success';
+
+    alertBox.textContent =
+        mensaje || 'Operación realizada correctamente.';
+
+    alertBox.style.display = 'block';
+
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+
+/* ==========================================================
+   OBTENER MENSAJE DE ERROR
+========================================================== */
+
+function obtenerMensajeError(error) {
+
+    if (!error) {
+        return 'Error desconocido.';
     }
+
+    if (typeof error === 'string') {
+        return error;
+    }
+
+    if (error.message) {
+        return error.message;
+    }
+
+    try {
+        return JSON.stringify(error);
+    } catch (e) {
+        return 'Error desconocido.';
+    }
+}
 </script>
+
 </body>
 </html>
