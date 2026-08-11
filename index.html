@@ -287,7 +287,7 @@
 <div class="loader-overlay" id="loader">
     <div class="spinner"></div>
     <div class="loader-text" id="loaderText">
-        Procesando y generando PDF...
+        Procesando...
     </div>
 </div>
 
@@ -337,6 +337,7 @@
                         id="cedulaInfractor"
                         type="text"
                         name="CÉDULA INFRACTOR"
+                        autocomplete="off"
                         required>
                 </div>
 
@@ -348,6 +349,7 @@
                         id="cedulaPagador"
                         type="text"
                         name="CÉDULA PAGADOR"
+                        autocomplete="off"
                         required>
                 </div>
 
@@ -444,6 +446,7 @@
                         id="comparendo"
                         type="text"
                         name="NRO COMPARENDO"
+                        autocomplete="off"
                         required>
                 </div>
 
@@ -702,6 +705,7 @@ function cargarDesplegables() {
                     obtenerMensajeError(error)
                 );
 
+                marcarDesplegablesComoError();
             })
             .obtenerOpcionesDesplegables();
 
@@ -713,12 +717,25 @@ function cargarDesplegables() {
         '?api=opciones&_=' +
         Date.now();
 
+    console.log('=== Cargando opciones desde ===');
+    console.log(url);
+
     fetch(url, {
         method: 'GET',
-        redirect: 'follow',
-        cache: 'no-store'
+        redirect: 'follow'
     })
-    .then(function (response) {
+    .then(async function (response) {
+
+        const texto = await response.text();
+
+        console.log('=== Estado HTTP ===');
+        console.log(response.status);
+
+        console.log('=== URL final ===');
+        console.log(response.url);
+
+        console.log('=== Primeros 500 caracteres de respuesta ===');
+        console.log(texto.substring(0, 500));
 
         if (!response.ok) {
             throw new Error(
@@ -726,7 +743,18 @@ function cargarDesplegables() {
             );
         }
 
-        return response.json();
+        let datos;
+
+        try {
+            datos = JSON.parse(texto);
+        } catch (error) {
+            throw new Error(
+                'La respuesta no es JSON. Inicio recibido: ' +
+                texto.substring(0, 180)
+            );
+        }
+
+        return datos;
     })
     .then(function (datos) {
 
@@ -738,9 +766,26 @@ function cargarDesplegables() {
 
         ocultarLoader();
 
+        console.error('=== Error cargando menús ===');
+        console.error(error);
+
+        let mensaje =
+            obtenerMensajeError(error);
+
+        if (
+            error instanceof TypeError &&
+            mensaje.toLowerCase().includes('failed to fetch')
+        ) {
+            mensaje =
+                'Failed to fetch. El navegador bloqueó la solicitud. ' +
+                'Revisa que la Web App esté desplegada como ' +
+                '"Cualquier persona", que la URL termine en /exec ' +
+                'y que no estés abriendo el HTML con file://.';
+        }
+
         mostrarError(
             'No se pudieron cargar los menús. ' +
-            obtenerMensajeError(error)
+            mensaje
         );
 
         marcarDesplegablesComoError();
@@ -754,9 +799,11 @@ function cargarDesplegables() {
 function poblarDesplegables(datos) {
 
     if (!datos) {
-        throw new Error(
+        mostrarError(
             'El servidor no devolvió información.'
         );
+        marcarDesplegablesComoError();
+        return;
     }
 
     if (datos.success === false) {
@@ -764,6 +811,7 @@ function poblarDesplegables(datos) {
             datos.message ||
             'El servidor informó un error.'
         );
+        marcarDesplegablesComoError();
         return;
     }
 
@@ -903,6 +951,9 @@ function procesarFormulario(event) {
     data['VALOR PAGADO PARQUEADERO'] =
         data['VALOR PAGADO PARQUEADERO'] || '0';
 
+    console.log('=== Datos a enviar ===');
+    console.log(data);
+
     if (EN_GOOGLE) {
 
         google.script.run
@@ -929,20 +980,23 @@ function procesarFormulario(event) {
     fetch(APP_URL, {
         method: 'POST',
         redirect: 'follow',
-        cache: 'no-store',
         body: JSON.stringify(data)
     })
-    .then(function (response) {
+    .then(async function (response) {
+
+        const texto = await response.text();
+
+        console.log('=== Estado POST ===');
+        console.log(response.status);
+
+        console.log('=== Respuesta POST ===');
+        console.log(texto.substring(0, 500));
 
         if (!response.ok) {
             throw new Error(
                 'HTTP ' + response.status
             );
         }
-
-        return response.text();
-    })
-    .then(function (texto) {
 
         let respuesta;
 
@@ -957,6 +1011,9 @@ function procesarFormulario(event) {
             );
         }
 
+        return respuesta;
+    })
+    .then(function (respuesta) {
         manejarRespuesta(respuesta);
     })
     .catch(function (error) {
@@ -965,9 +1022,26 @@ function procesarFormulario(event) {
 
         btn.disabled = false;
 
+        console.error('=== Error enviando formulario ===');
+        console.error(error);
+
+        let mensaje =
+            obtenerMensajeError(error);
+
+        if (
+            error instanceof TypeError &&
+            mensaje.toLowerCase().includes('failed to fetch')
+        ) {
+            mensaje =
+                'Failed to fetch. El navegador bloqueó la solicitud. ' +
+                'Revisa que la Web App esté desplegada como ' +
+                '"Cualquier persona", que la URL termine en /exec ' +
+                'y que no estés abriendo el HTML con file://.';
+        }
+
         mostrarError(
             'Error de conexión con Apps Script: ' +
-            obtenerMensajeError(error)
+            mensaje
         );
     });
 }
@@ -981,6 +1055,9 @@ function manejarRespuesta(respuesta) {
     ocultarLoader();
 
     document.getElementById('btnSubmit').disabled = false;
+
+    console.log('=== Respuesta del servidor ===');
+    console.log(respuesta);
 
     if (
         respuesta &&
@@ -1036,8 +1113,11 @@ function descargarPDF(base64Data, fileName) {
 
     try {
 
+        const limpio = String(base64Data || '')
+            .replace(/\s/g, '');
+
         const binario =
-            atob(base64Data);
+            atob(limpio);
 
         const bytes =
             new Uint8Array(
@@ -1082,6 +1162,9 @@ function descargarPDF(base64Data, fileName) {
         }, 1000);
 
     } catch (error) {
+
+        console.error('=== Error descargando PDF ===');
+        console.error(error);
 
         mostrarError(
             'El registro se guardó, pero falló la ' +
