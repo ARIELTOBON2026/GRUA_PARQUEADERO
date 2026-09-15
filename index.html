@@ -1,777 +1,3029 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Pagos - Grúa y Parqueadero</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <title>Registro de Facturación - Grúa y Parqueadero</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    rel="stylesheet">
+
   <style>
+
+    /* =========================================================
+       VARIABLES
+    ========================================================= */
+
     :root {
-      --primary: #0a3d62;
-      --primary-light: #1e5a8e;
-      --primary-dark: #062540;
-      --accent: #d4a24c;
-      --accent-light: #f4c675;
-      --surface: #ffffff;
-      --surface-alt: #f5f7fa;
-      --border: #e1e8ed;
-      --text: #1a2b3c;
-      --text-muted: #6b7a8f;
-      --success: #10b981;
-      --danger: #ef4444;
-      --shadow-sm: 0 1px 3px rgba(10, 61, 98, 0.08);
-      --shadow-md: 0 4px 16px rgba(10, 61, 98, 0.1);
-      --shadow-lg: 0 12px 40px rgba(10, 61, 98, 0.15);
+      --azul: #0d47a1;
+      --azul-oscuro: #082d68;
+      --azul-claro: #1976d2;
+      --azul-suave: #eaf3ff;
+
+      --verde: #198754;
+      --rojo: #dc3545;
+      --amarillo: #ffc107;
+
+      --gris: #6c757d;
+      --gris-claro: #f5f7fa;
+      --borde: #dfe5ec;
+
+      --blanco: #ffffff;
+
+      --sombra:
+        0 10px 30px rgba(13, 71, 161, 0.10);
+
+      --sombra-hover:
+        0 15px 35px rgba(13, 71, 161, 0.18);
     }
 
-    * { box-sizing: border-box; }
+    /* =========================================================
+       GENERAL
+    ========================================================= */
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
-      background: linear-gradient(135deg, #eef4fa 0%, #d9e4f0 100%);
-      background-attachment: fixed;
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 0;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(212, 162, 76, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(10, 61, 98, 0.08) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .container { position: relative; z-index: 1; }
-
-    /* === TARJETA PRINCIPAL === */
-    .card {
-      border: none;
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      background: var(--surface);
-      animation: fadeInUp 0.6s ease-out;
-    }
-
-    /* === ENCABEZADO === */
-    .header-title {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      padding: 2.5rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header-title::before {
-      content: "";
-      position: absolute;
-      top: -50%; right: -10%;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(212, 162, 76, 0.2) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-
-    .header-title h3 {
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 0.5rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .header-title small {
-      opacity: 0.9;
-      font-weight: 400;
-      font-size: 0.875rem;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .header-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px; height: 56px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 14px;
-      font-size: 1.75rem;
-      margin-bottom: 1rem;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .card-body { padding: 2.5rem; }
-
-    @media (max-width: 576px) {
-      .card-body { padding: 1.5rem; }
-    }
-
-    /* === SECCIONES === */
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--border);
-    }
-
-    .section-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px; height: 32px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      border-radius: 10px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .section-header h5 {
       margin: 0;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1.1rem;
-      flex-grow: 1;
+      padding: 0;
+      background:
+        linear-gradient(
+          135deg,
+          #f4f8fc 0%,
+          #eef4fb 50%,
+          #f8fafc 100%
+        );
+
+      font-family:
+        "Segoe UI",
+        Arial,
+        Helvetica,
+        sans-serif;
+
+      color: #263238;
+      min-height: 100vh;
     }
 
-    .section-icon { color: var(--accent); font-size: 1.25rem; }
+    /* =========================================================
+       ENCABEZADO
+    ========================================================= */
 
-    /* === CAMPOS === */
-    .form-label {
-      font-size: 0.825rem;
-      font-weight: 500;
-      color: var(--text);
-      margin-bottom: 0.5rem;
+    .header-principal {
+      background:
+        linear-gradient(
+          135deg,
+          var(--azul-oscuro),
+          var(--azul)
+        );
+
+      color: white;
+
+      padding: 22px 20px;
+
+      box-shadow:
+        0 5px 20px rgba(0, 0, 0, .15);
+    }
+
+    .header-contenido {
+      max-width: 1200px;
+      margin: auto;
+
       display: flex;
       align-items: center;
-      gap: 0.375rem;
+      gap: 18px;
     }
 
-    .form-label i { color: var(--primary-light); font-size: 0.875rem; }
+    .logo {
+      width: 72px;
+      height: 72px;
 
-    .form-control, .form-select {
-      border: 1.5px solid var(--border);
+      background: white;
+
+      border-radius: 18px;
+
+      object-fit: contain;
+
+      padding: 7px;
+
+      box-shadow:
+        0 5px 15px rgba(0,0,0,.15);
+    }
+
+    .icono-header {
+      width: 72px;
+      height: 72px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(255,255,255,.14);
+
+      border: 1px solid rgba(255,255,255,.20);
+
+      border-radius: 18px;
+
+      font-size: 32px;
+    }
+
+    .titulo-header {
+      margin: 0;
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .subtitulo-header {
+      margin: 4px 0 0;
+      opacity: .88;
+      font-size: 15px;
+    }
+
+    /* =========================================================
+       CONTENEDOR
+    ========================================================= */
+
+    .contenedor {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    /* =========================================================
+       TARJETAS
+    ========================================================= */
+
+    .card-principal {
+      background: var(--blanco);
+
+      border: 1px solid var(--borde);
+
+      border-radius: 18px;
+
+      box-shadow: var(--sombra);
+
+      overflow: hidden;
+
+      margin-bottom: 25px;
+    }
+
+    .card-header-custom {
+      background:
+        linear-gradient(
+          135deg,
+          #ffffff,
+          #f5f9ff
+        );
+
+      padding: 18px 22px;
+
+      border-bottom: 1px solid var(--borde);
+
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .card-header-icon {
+      width: 42px;
+      height: 42px;
+
+      border-radius: 12px;
+
+      background: var(--azul-suave);
+
+      color: var(--azul);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 18px;
+    }
+
+    .card-header-title {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      color: #263238;
+    }
+
+    .card-body-custom {
+      padding: 25px;
+    }
+
+    /* =========================================================
+       LABELS
+    ========================================================= */
+
+    .form-label {
+      font-weight: 600;
+      font-size: 14px;
+      color: #37474f;
+      margin-bottom: 7px;
+    }
+
+    .campo-obligatorio::after {
+      content: " *";
+      color: var(--rojo);
+      font-weight: 700;
+    }
+
+    /* =========================================================
+       INPUTS
+    ========================================================= */
+
+    .form-control,
+    .form-select {
+
+      min-height: 46px;
+
       border-radius: 10px;
-      padding: 0.65rem 0.9rem;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-      background-color: var(--surface-alt);
-      color: var(--text);
+
+      border: 1px solid #cfd8e3;
+
+      padding: 10px 13px;
+
+      font-size: 14px;
+
+      transition:
+        border-color .2s,
+        box-shadow .2s,
+        background .2s;
     }
 
-    .form-control:hover, .form-select:hover {
-      border-color: var(--primary-light);
-      background-color: white;
+    .form-control:hover,
+    .form-select:hover {
+      border-color: #9fb4cb;
     }
 
-    .form-control:focus, .form-select:focus {
-      border-color: var(--primary);
-      background-color: white;
-      box-shadow: 0 0 0 3px rgba(10, 61, 98, 0.1);
+    .form-control:focus,
+    .form-select:focus {
+
+      border-color: var(--azul-claro);
+
+      box-shadow:
+        0 0 0 4px rgba(25,118,210,.10);
+
       outline: none;
     }
 
-    .input-group-text {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      border: none;
-      font-weight: 600;
-      border-radius: 10px 0 0 10px !important;
+    .form-control[readonly] {
+      background: #f3f6f9;
     }
 
-    .input-group .form-control {
-      border-left: none;
-      border-radius: 0 10px 10px 0 !important;
+    textarea.form-control {
+      min-height: 100px;
+      resize: vertical;
     }
 
-    /* === TOTAL === */
-    .total-card {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: 14px;
-      padding: 1.5rem;
-      color: white;
+    /* =========================================================
+       INPUT CON ICONO
+    ========================================================= */
+
+    .input-icon {
       position: relative;
-      overflow: hidden;
-      margin-top: 1rem;
     }
 
-    .total-card::after {
-      content: "";
+    .input-icon i {
+
       position: absolute;
-      top: -30px; right: -30px;
-      width: 120px; height: 120px;
-      background: radial-gradient(circle, rgba(212, 162, 76, 0.25) 0%, transparent 70%);
-      border-radius: 50%;
+
+      left: 14px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      color: #78909c;
+
+      z-index: 5;
     }
 
-    .total-label {
-      font-size: 0.875rem;
-      opacity: 0.85;
-      margin-bottom: 0.25rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    .input-icon .form-control,
+    .input-icon .form-select {
+      padding-left: 40px;
     }
 
-    .total-amount {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      position: relative;
-      z-index: 1;
+    /* =========================================================
+       SECCIÓN VALORES
+    ========================================================= */
+
+    .valor-card {
+
+      border-radius: 15px;
+
+      padding: 18px;
+
+      border: 1px solid var(--borde);
+
+      background:
+        linear-gradient(
+          135deg,
+          #ffffff,
+          #f8fbff
+        );
+
+      height: 100%;
+
+      transition: .2s;
     }
 
-    .total-amount::before { content: "$ "; opacity: 0.8; }
-
-    .payment-field {
-      background: var(--surface-alt);
-      padding: 1.25rem;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      margin-bottom: 0.75rem;
-      transition: all 0.25s ease;
-    }
-
-    .payment-field:hover {
-      border-color: var(--primary-light);
+    .valor-card:hover {
       transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--sombra-hover);
     }
 
-    /* === BOTÓN === */
-    .btn-primary-custom {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    .valor-card.total {
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--azul),
+          var(--azul-claro)
+        );
+
       color: white;
+
       border: none;
-      border-radius: 12px;
-      padding: 1rem 2rem;
+    }
+
+    .valor-titulo {
+      font-size: 13px;
       font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 14px rgba(10, 61, 98, 0.3);
-      width: 100%;
+      margin-bottom: 7px;
+      opacity: .8;
     }
 
-    .btn-primary-custom:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(10, 61, 98, 0.4);
-      background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
-    }
-
-    .btn-primary-custom:disabled { opacity: 0.7; cursor: not-allowed; }
-
-    .was-validated .form-control:valid,
-    .was-validated .form-select:valid { border-color: var(--success); }
-
-    .was-validated .form-control:invalid,
-    .was-validated .form-select:invalid {
-      border-color: var(--danger);
-      background-image: none;
-    }
-
-    .required-dot { color: var(--danger); font-weight: bold; }
-
-    .form-footer {
-      background: var(--surface-alt);
-      padding: 1rem 2.5rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .form-footer i { color: var(--accent); }
-
-    /* ============================================
-       NOTIFICACIONES TOAST (reemplazan los alert)
-       ============================================ */
-    .toast-container {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      pointer-events: none;
-    }
-
-    .custom-toast {
-      min-width: 340px;
-      max-width: 440px;
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 12px 40px rgba(10, 61, 98, 0.25);
-      overflow: hidden;
-      display: flex;
-      align-items: stretch;
-      position: relative;
-      pointer-events: auto;
-      animation: toastIn 0.45s cubic-bezier(0.21, 1.02, 0.73, 1);
-    }
-
-    .custom-toast.hiding { animation: toastOut 0.3s ease forwards; }
-
-    .toast-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 58px;
-      font-size: 1.6rem;
+    .valor-card.total .valor-titulo {
       color: white;
-      flex-shrink: 0;
+      opacity: .9;
     }
 
-    .toast-success .toast-icon { background: linear-gradient(135deg, #10b981, #059669); }
-    .toast-error .toast-icon   { background: linear-gradient(135deg, #ef4444, #dc2626); }
-
-    .toast-body-custom { padding: 14px 16px; flex-grow: 1; }
-
-    .toast-title {
+    .valor-input {
+      font-size: 22px;
       font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-
-    .toast-message { font-size: 0.85rem; color: var(--text-muted); line-height: 1.4; }
-
-    .toast-close {
-      background: none;
       border: none;
-      color: var(--text-muted);
-      padding: 10px 14px;
+      background: transparent;
+      padding: 0;
+      width: 100%;
+      color: var(--azul);
+    }
+
+    .valor-card.total .valor-input {
+      color: white;
+    }
+
+    .valor-input:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    /* =========================================================
+       CHECKBOX / ARCHIVOS
+    ========================================================= */
+
+    .documentos-box {
+
+      background: #f8fafc;
+
+      border: 1px solid var(--borde);
+
+      border-radius: 12px;
+
+      padding: 18px;
+    }
+
+    .form-check {
+      margin-bottom: 10px;
+    }
+
+    .form-check-input {
       cursor: pointer;
-      align-self: flex-start;
-      font-size: 0.85rem;
-      transition: color 0.2s;
     }
 
-    .toast-close:hover { color: var(--text); }
-
-    .toast-progress {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      height: 3px;
-      animation: toastProgress 4.5s linear forwards;
+    .form-check-label {
+      cursor: pointer;
+      font-size: 14px;
     }
 
-    .toast-success .toast-progress { background: var(--success); }
-    .toast-error .toast-progress   { background: var(--danger); }
+    /* =========================================================
+       BOTONES
+    ========================================================= */
 
-    @media (max-width: 576px) {
-      .toast-container { left: 16px; right: 16px; }
-      .custom-toast { min-width: 0; width: 100%; max-width: 100%; }
+    .botones {
+
+      display: flex;
+
+      justify-content: flex-end;
+
+      gap: 10px;
+
+      flex-wrap: wrap;
+
+      padding-top: 10px;
     }
 
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(120%); }
-      to   { opacity: 1; transform: translateX(0); }
+    .btn {
+
+      border-radius: 10px;
+
+      min-height: 44px;
+
+      padding:
+        9px 18px;
+
+      font-weight: 600;
+
+      font-size: 14px;
     }
 
-    @keyframes toastOut {
-      from { opacity: 1; transform: translateX(0); }
-      to   { opacity: 0; transform: translateX(120%); }
+    .btn-primary {
+      background: var(--azul);
+      border-color: var(--azul);
     }
 
-    @keyframes toastProgress {
-      from { width: 100%; }
-      to   { width: 0%; }
+    .btn-primary:hover {
+      background: var(--azul-oscuro);
+      border-color: var(--azul-oscuro);
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .btn-success {
+      background: var(--verde);
+      border-color: var(--verde);
     }
 
-    ::-webkit-scrollbar { width: 10px; }
-    ::-webkit-scrollbar-track { background: var(--surface-alt); }
-    ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+    .btn-outline-secondary:hover {
+      color: white;
+    }
+
+    /* =========================================================
+       LOADING
+    ========================================================= */
+
+    #loading {
+
+      display: none;
+
+      position: fixed;
+
+      inset: 0;
+
+      background:
+        rgba(8, 45, 104, .35);
+
+      backdrop-filter: blur(4px);
+
+      z-index: 9999;
+
+      align-items: center;
+
+      justify-content: center;
+    }
+
+    .loading-card {
+
+      background: white;
+
+      border-radius: 18px;
+
+      padding: 30px 40px;
+
+      text-align: center;
+
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.25);
+    }
+
+    .loading-card .spinner-border {
+      width: 3rem;
+      height: 3rem;
+    }
+
+    .loading-text {
+      margin-top: 15px;
+      font-weight: 600;
+      color: var(--azul);
+    }
+
+    /* =========================================================
+       ALERTA
+    ========================================================= */
+
+    #alertas {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+
+      z-index: 10000;
+
+      max-width: 420px;
+    }
+
+    /* =========================================================
+       PDF
+    ========================================================= */
+
+    #modalPDF .modal-dialog {
+
+      max-width: 1200px;
+
+      width: 96%;
+
+      height: 95vh;
+
+      margin: 2.5vh auto;
+    }
+
+    #modalPDF .modal-content {
+
+      height: 100%;
+
+      border: none;
+
+      border-radius: 16px;
+
+      overflow: hidden;
+
+      box-shadow:
+        0 20px 70px rgba(0,0,0,.35);
+    }
+
+    #modalPDF .modal-header {
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--azul-oscuro),
+          var(--azul)
+        );
+
+      color: white;
+
+      border: none;
+
+      padding: 14px 20px;
+    }
+
+    #modalPDF .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    #modalPDF .btn-close {
+      filter: brightness(0) invert(1);
+    }
+
+    #visorPDF {
+
+      width: 100%;
+
+      height: 100%;
+
+      border: none;
+
+      background: #e9ecef;
+    }
+
+    #modalPDF .modal-body {
+      padding: 0;
+      background: #e9ecef;
+      overflow: hidden;
+    }
+
+    #modalPDF .modal-footer {
+
+      background: white;
+
+      border-top: 1px solid var(--borde);
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+
+    .footer {
+
+      text-align: center;
+
+      color: #78909c;
+
+      font-size: 13px;
+
+      padding: 10px 0 30px;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 768px) {
+
+      .header-contenido {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .titulo-header {
+        font-size: 21px;
+      }
+
+      .subtitulo-header {
+        font-size: 13px;
+      }
+
+      .card-body-custom {
+        padding: 18px;
+      }
+
+      .botones {
+        justify-content: stretch;
+      }
+
+      .botones .btn {
+        width: 100%;
+      }
+
+      #modalPDF .modal-dialog {
+        width: 100%;
+        height: 100vh;
+        margin: 0;
+      }
+
+      #modalPDF .modal-content {
+        border-radius: 0;
+      }
+    }
+
   </style>
 </head>
+
+
 <body>
 
-<!-- CONTENEDOR DE NOTIFICACIONES -->
-<div class="toast-container" id="toastContainer"></div>
 
-<div class="container my-4">
-  <div class="card mx-auto" style="max-width: 850px;">
-    
-    <div class="header-title text-center">
-      <div class="header-icon mx-auto">
-        <i class="bi bi-shield-check"></i>
-      </div>
-      <h3 class="mb-0">REGISTRO DE PAGOS</h3>
-      <small>
-        <i class="bi bi-geo-alt-fill"></i>
-        Secretaría de Movilidad - La Ceja, Antioquia
-      </small>
-    </div>
-    
-    <div class="card-body">
-      <form id="formRegistro" class="needs-validation" novalidate>
-        
-        <div class="section-header">
-          <span class="section-number">1</span>
-          <h5>Datos del Solicitante e Infractor</h5>
-          <i class="bi bi-person-badge section-icon"></i>
-        </div>
+<!-- =========================================================
+     ENCABEZADO
+========================================================= -->
 
-        <div class="row g-3 mb-4">
-          <div class="col-md-12">
-            <label for="nombre" class="form-label">
-              <i class="bi bi-person-fill"></i> Nombre del Solicitante <span class="required-dot">*</span>
-            </label>
-            <input type="text" class="form-control" id="nombre" name="NOMBRE" required>
-          </div>
-          <div class="col-md-6">
-            <label for="cedulaInfractor" class="form-label">
-              <i class="bi bi-card-text"></i> Cédula del Infractor <span class="required-dot">*</span>
-            </label>
-            <input type="text" class="form-control" id="cedulaInfractor" name="CÉDULA INFRACTOR" required>
-          </div>
-          <div class="col-md-6">
-            <label for="cedulaPagador" class="form-label">
-              <i class="bi bi-wallet2"></i> Cédula del Pagador <span class="required-dot">*</span>
-            </label>
-            <input type="text" class="form-control" id="cedulaPagador" name="CÉDULA PAGADOR" required>
-          </div>
-          <div class="col-md-6">
-            <label for="direccion" class="form-label">
-              <i class="bi bi-house-door"></i> Dirección
-            </label>
-            <input type="text" class="form-control" id="direccion" name="DIRECCIÓN">
-          </div>
-          <div class="col-md-6">
-            <label for="ciudad" class="form-label">
-              <i class="bi bi-geo-alt"></i> Ciudad
-            </label>
-            <input type="text" class="form-control" id="ciudad" name="CIUDAD" value="La Ceja">
-          </div>
-          <div class="col-md-6">
-            <label for="telefono" class="form-label">
-              <i class="bi bi-telephone"></i> Teléfono
-            </label>
-            <input type="tel" class="form-control" id="telefono" name="TELÉFONO">
-          </div>
-          <div class="col-md-6">
-            <label for="correo" class="form-label">
-              <i class="bi bi-envelope"></i> Correo Electrónico
-            </label>
-            <input type="email" class="form-control" id="correo" name="CORREO ELECTRÓNICO">
-          </div>
-        </div>
+<header class="header-principal">
 
-        <div class="section-header">
-          <span class="section-number">2</span>
-          <h5>Datos de la Infracción</h5>
-          <i class="bi bi-exclamation-triangle section-icon"></i>
-        </div>
+  <div class="header-contenido">
 
-        <div class="row g-3 mb-4">
-          <div class="col-md-4">
-            <label for="placa" class="form-label">
-              <i class="bi bi-car-front"></i> Placa <span class="required-dot">*</span>
-            </label>
-            <input type="text" class="form-control text-uppercase" id="placa" name="PLACA" maxlength="6" required>
-          </div>
-          <div class="col-md-8">
-            <label for="tipoInfraccion" class="form-label">
-              <i class="bi bi-list-check"></i> Tipo de Infracción <span class="required-dot">*</span>
-            </label>
-            <select class="form-select" id="tipoInfraccion" name="TIPO DE INFRACCIÓN" required>
-              <option value="">Cargando opciones...</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label for="nroComparendo" class="form-label">
-              <i class="bi bi-file-earmark-text"></i> Nro. Comparendo <span class="required-dot">*</span>
-            </label>
-            <input type="text" class="form-control" id="nroComparendo" name="NRO COMPARENDO" required>
-          </div>
-          <div class="col-md-6">
-            <label for="fecha" class="form-label">
-              <i class="bi bi-calendar-event"></i> Fecha <span class="required-dot">*</span>
-            </label>
-            <input type="date" class="form-control" id="fecha" name="FECHA" required>
-          </div>
-        </div>
+    <img
+      src="https://arieltobon2026.github.io/logo.png"
+      class="logo"
+      alt="Logo Secretaría de Movilidad"
+      onerror="this.style.display='none';">
 
-        <div class="section-header">
-          <span class="section-number">3</span>
-          <h5>Liquidación de Pagos</h5>
-          <i class="bi bi-calculator section-icon"></i>
-        </div>
-
-        <div class="payment-field">
-          <label for="valorGrua" class="form-label">
-            <i class="bi bi-truck"></i> Valor Pagado Grúa <span class="required-dot">*</span>
-          </label>
-          <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="number" class="form-control val-calculo" id="valorGrua" name="VALOR PAGADO GRÚA" min="0" step="100" value="0" required>
-          </div>
-        </div>
-
-        <div class="payment-field">
-          <label for="valorParqueadero" class="form-label">
-            <i class="bi bi-p-square"></i> Valor Pagado Parqueadero <span class="required-dot">*</span>
-          </label>
-          <div class="input-group">
-            <span class="input-group-text">$</span>
-            <input type="number" class="form-control val-calculo" id="valorParqueadero" name="VALOR PAGADO PARQUEADERO" min="0" step="100" value="0" required>
-          </div>
-        </div>
-
-        <div class="total-card">
-          <div class="total-label">
-            <i class="bi bi-receipt"></i> Total Pagado
-          </div>
-          <div class="total-amount" id="totalPagado">0</div>
-          <input type="hidden" id="totalPagadoHidden" name="TOTAL PAGADO" value="0">
-        </div>
-
-        <div class="section-header mt-4">
-          <span class="section-number">4</span>
-          <h5>Soportes y Registro</h5>
-          <i class="bi bi-folder-check section-icon"></i>
-        </div>
-
-        <div class="row g-3 mb-4">
-          <div class="col-md-6">
-            <label for="fotocopia" class="form-label">
-              <i class="bi bi-file-earmark-person"></i> Fotocopia Documento Identidad
-            </label>
-            <select class="form-select" id="fotocopia" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD">
-              <option value="SI">✓ SI</option>
-              <option value="NO">✗ NO</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label for="consignaciones" class="form-label">
-              <i class="bi bi-cash-stack"></i> Consignaciones Originales
-            </label>
-            <select class="form-select" id="consignaciones" name="CONSIGNACIONES ORIGINALES">
-              <option value="SI">✓ SI</option>
-              <option value="NO">✗ NO</option>
-            </select>
-          </div>
-          <div class="col-md-12">
-            <label for="nombreFuncionario" class="form-label">
-              <i class="bi bi-person-workspace"></i> Nombre del Funcionario <span class="required-dot">*</span>
-            </label>
-            <select class="form-select" id="nombreFuncionario" name="NOMBRE FUNCIONARIO" required>
-              <option value="">Cargando opciones...</option>
-            </select>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-primary-custom" id="btnGuardar">
-          <i class="bi bi-file-earmark-pdf"></i>
-          Guardar y Generar PDF
-        </button>
-      </form>
+    <div class="icono-header">
+      <i class="fa-solid fa-truck-ramp-box"></i>
     </div>
 
-    <div class="form-footer">
-      <span><i class="bi bi-shield-lock-fill"></i> Datos protegidos · Sistema institucional</span>
-      <span>Secretaría de Movilidad · La Ceja © 2026</span>
+    <div>
+
+      <h1 class="titulo-header">
+        Secretaría de Movilidad - La Ceja
+      </h1>
+
+      <p class="subtitulo-header">
+        Sistema de Registro de Facturación - Servicio de Grúa y Parqueadero
+      </p>
+
     </div>
+
   </div>
+
+</header>
+
+
+<!-- =========================================================
+     CONTENIDO
+========================================================= -->
+
+<main class="contenedor">
+
+<form
+  id="formulario"
+  class="needs-validation"
+  novalidate>
+
+
+<!-- =========================================================
+     INFORMACIÓN DEL CIUDADANO
+========================================================= -->
+
+<section class="card-principal">
+
+  <div class="card-header-custom">
+
+    <div class="card-header-icon">
+      <i class="fa-solid fa-user"></i>
+    </div>
+
+    <h2 class="card-header-title">
+      Información del ciudadano
+    </h2>
+
+  </div>
+
+
+  <div class="card-body-custom">
+
+    <div class="row g-4">
+
+
+      <!-- NOMBRE -->
+
+      <div class="col-md-6">
+
+        <label
+          for="nombre"
+          class="form-label campo-obligatorio">
+
+          Nombre completo
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-user"></i>
+
+          <input
+            type="text"
+            id="nombre"
+            name="NOMBRE"
+            class="form-control"
+            required
+            autocomplete="name">
+
+          <div class="invalid-feedback">
+            Ingrese el nombre completo.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CÉDULA INFRACTOR -->
+
+      <div class="col-md-3">
+
+        <label
+          for="cedulaInfractor"
+          class="form-label campo-obligatorio">
+
+          Cédula infractor
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-id-card"></i>
+
+          <input
+            type="text"
+            id="cedulaInfractor"
+            name="CÉDULA INFRACTOR"
+            class="form-control"
+            required
+            inputmode="numeric">
+
+          <div class="invalid-feedback">
+            Ingrese la cédula del infractor.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CÉDULA PAGADOR -->
+
+      <div class="col-md-3">
+
+        <label
+          for="cedulaPagador"
+          class="form-label campo-obligatorio">
+
+          Cédula pagador
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-address-card"></i>
+
+          <input
+            type="text"
+            id="cedulaPagador"
+            name="CÉDULA PAGADOR"
+            class="form-control"
+            required
+            inputmode="numeric">
+
+          <div class="invalid-feedback">
+            Ingrese la cédula del pagador.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DIRECCIÓN -->
+
+      <div class="col-md-6">
+
+        <label
+          for="direccion"
+          class="form-label campo-obligatorio">
+
+          Dirección
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-location-dot"></i>
+
+          <input
+            type="text"
+            id="direccion"
+            name="DIRECCIÓN"
+            class="form-control"
+            required
+            autocomplete="street-address">
+
+          <div class="invalid-feedback">
+            La dirección es obligatoria.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CIUDAD -->
+
+      <div class="col-md-3">
+
+        <label
+          for="ciudad"
+          class="form-label campo-obligatorio">
+
+          Ciudad
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-city"></i>
+
+          <input
+            type="text"
+            id="ciudad"
+            name="CIUDAD"
+            class="form-control"
+            value="La Ceja"
+            required>
+
+          <div class="invalid-feedback">
+            La ciudad es obligatoria.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- TELÉFONO -->
+
+      <div class="col-md-3">
+
+        <label
+          for="telefono"
+          class="form-label campo-obligatorio">
+
+          Teléfono
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-phone"></i>
+
+          <input
+            type="tel"
+            id="telefono"
+            name="TELÉFONO"
+            class="form-control"
+            required
+            autocomplete="tel">
+
+          <div class="invalid-feedback">
+            El teléfono es obligatorio.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- EMAIL -->
+
+      <div class="col-md-6">
+
+        <label
+          for="correo"
+          class="form-label campo-obligatorio">
+
+          Correo electrónico
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-envelope"></i>
+
+          <input
+            type="email"
+            id="correo"
+            name="CORREO ELECTRÓNICO"
+            class="form-control"
+            required
+            autocomplete="email">
+
+          <div class="invalid-feedback">
+            Ingrese un correo electrónico válido.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     INFORMACIÓN DEL VEHÍCULO Y COMPARENDO
+========================================================= -->
+
+<section class="card-principal">
+
+  <div class="card-header-custom">
+
+    <div class="card-header-icon">
+      <i class="fa-solid fa-car"></i>
+    </div>
+
+    <h2 class="card-header-title">
+      Información del vehículo y comparendo
+    </h2>
+
+  </div>
+
+
+  <div class="card-body-custom">
+
+    <div class="row g-4">
+
+
+      <!-- PLACA -->
+
+      <div class="col-md-3">
+
+        <label
+          for="placa"
+          class="form-label campo-obligatorio">
+
+          Placa
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-car-side"></i>
+
+          <input
+            type="text"
+            id="placa"
+            name="PLACA"
+            class="form-control text-uppercase"
+            required>
+
+          <div class="invalid-feedback">
+            Ingrese la placa.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- TIPO INFRACCIÓN -->
+
+      <div class="col-md-5">
+
+        <label
+          for="tipoInfraccion"
+          class="form-label campo-obligatorio">
+
+          Tipo de infracción
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-file-circle-exclamation"></i>
+
+          <select
+            id="tipoInfraccion"
+            name="TIPO DE INFRACCIÓN"
+            class="form-select"
+            required>
+
+            <option value="">
+              Seleccione...
+            </option>
+
+          </select>
+
+          <div class="invalid-feedback">
+            Seleccione el tipo de infracción.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- COMPARENDO -->
+
+      <div class="col-md-4">
+
+        <label
+          for="comparendo"
+          class="form-label campo-obligatorio">
+
+          Nro. comparendo
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-file-lines"></i>
+
+          <input
+            type="text"
+            id="comparendo"
+            name="NRO COMPARENDO"
+            class="form-control"
+            required>
+
+          <div class="invalid-feedback">
+            Ingrese el número de comparendo.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FECHA -->
+
+      <div class="col-md-4">
+
+        <label
+          for="fecha"
+          class="form-label campo-obligatorio">
+
+          Fecha
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-calendar-days"></i>
+
+          <input
+            type="date"
+            id="fecha"
+            name="FECHA"
+            class="form-control"
+            required>
+
+          <div class="invalid-feedback">
+            Seleccione la fecha.
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- FUNCIONARIO -->
+
+      <div class="col-md-8">
+
+        <label
+          for="funcionario"
+          class="form-label campo-obligatorio">
+
+          Funcionario
+
+        </label>
+
+        <div class="input-icon">
+
+          <i class="fa-solid fa-user-tie"></i>
+
+          <select
+            id="funcionario"
+            name="FUNCIONARIO"
+            class="form-select"
+            required>
+
+            <option value="">
+              Seleccione funcionario...
+            </option>
+
+          </select>
+
+          <div class="invalid-feedback">
+            Seleccione el funcionario.
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     VALORES
+========================================================= -->
+
+<section class="card-principal">
+
+  <div class="card-header-custom">
+
+    <div class="card-header-icon">
+      <i class="fa-solid fa-money-bill-wave"></i>
+    </div>
+
+    <h2 class="card-header-title">
+      Valores pagados
+    </h2>
+
+  </div>
+
+
+  <div class="card-body-custom">
+
+    <div class="row g-4">
+
+
+      <!-- GRÚA -->
+
+      <div class="col-md-4">
+
+        <div class="valor-card">
+
+          <div class="valor-titulo">
+            VALOR PAGADO GRÚA
+          </div>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              $
+            </span>
+
+            <input
+              type="text"
+              id="valorGrua"
+              name="VALOR PAGADO GRÚA"
+              class="form-control valor-input"
+              value="0"
+              inputmode="decimal">
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- PARQUEADERO -->
+
+      <div class="col-md-4">
+
+        <div class="valor-card">
+
+          <div class="valor-titulo">
+            VALOR PAGADO PARQUEADERO
+          </div>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              $
+            </span>
+
+            <input
+              type="text"
+              id="valorParqueadero"
+              name="VALOR PAGADO PARQUEADERO"
+              class="form-control valor-input"
+              value="0"
+              inputmode="decimal">
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAL -->
+
+      <div class="col-md-4">
+
+        <div class="valor-card total">
+
+          <div class="valor-titulo">
+            TOTAL PAGADO
+          </div>
+
+          <div class="input-group">
+
+            <span class="input-group-text">
+              $
+            </span>
+
+            <input
+              type="text"
+              id="totalPagado"
+              name="TOTAL PAGADO"
+              class="form-control valor-input"
+              value="0"
+              readonly>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     DOCUMENTOS
+========================================================= -->
+
+<section class="card-principal">
+
+  <div class="card-header-custom">
+
+    <div class="card-header-icon">
+      <i class="fa-solid fa-paperclip"></i>
+    </div>
+
+    <h2 class="card-header-title">
+      Documentos soporte
+    </h2>
+
+  </div>
+
+
+  <div class="card-body-custom">
+
+    <div class="documentos-box">
+
+      <div class="row">
+
+        <div class="col-md-6">
+
+          <div class="form-check">
+
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="fotocopia"
+              name="FOTOCOPIA">
+
+            <label
+              class="form-check-label"
+              for="fotocopia">
+
+              <i class="fa-solid fa-id-card me-2"></i>
+
+              Fotocopia de documento
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <div class="col-md-6">
+
+          <div class="form-check">
+
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="consignaciones"
+              name="CONSIGNACIONES">
+
+            <label
+              class="form-check-label"
+              for="consignaciones">
+
+              <i class="fa-solid fa-receipt me-2"></i>
+
+              Consignaciones
+
+            </label>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- =========================================================
+     BOTONES
+========================================================= -->
+
+<section class="card-principal">
+
+  <div class="card-body-custom">
+
+    <div class="botones">
+
+      <button
+        type="button"
+        class="btn btn-outline-secondary"
+        id="btnLimpiar">
+
+        <i class="fa-solid fa-eraser me-2"></i>
+
+        Limpiar
+
+      </button>
+
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        id="btnGuardar">
+
+        <i class="fa-solid fa-file-pdf me-2"></i>
+
+        Guardar y generar PDF
+
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+</form>
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+<div class="footer">
+
+  Secretaría de Movilidad - Municipio de La Ceja - Antioquia
+
 </div>
 
-<script>
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz4vDH-byU00jCc5_uwEEQt2p_tlqCw9V-LgwX-0S1JeupRibP8amoRlhAx-SzTtYhlLg/exec';
+</main>
 
-  let pagadorModificadoManualmente = false;
 
-  /* ============================================
-     SISTEMA DE NOTIFICACIONES TOAST
-     ============================================ */
-  function mostrarToast(tipo, titulo, mensaje) {
-    const container = document.getElementById('toastContainer');
-    const toast = document.createElement('div');
-    toast.className = `custom-toast toast-${tipo}`;
+<!-- =========================================================
+     ALERTAS
+========================================================= -->
 
-    const icon = tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+<div id="alertas"></div>
 
-    toast.innerHTML = `
-      <div class="toast-icon"><i class="bi ${icon}"></i></div>
-      <div class="toast-body-custom">
-        <div class="toast-title">${titulo}</div>
-        <div class="toast-message">${mensaje}</div>
+
+<!-- =========================================================
+     LOADING
+========================================================= -->
+
+<div id="loading">
+
+  <div class="loading-card">
+
+    <div
+      class="spinner-border text-primary"
+      role="status">
+
+      <span class="visually-hidden">
+        Procesando...
+      </span>
+
+    </div>
+
+    <div class="loading-text">
+      Guardando información y generando PDF...
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     MODAL VISTA PREVIA PDF
+========================================================= -->
+
+<div
+  class="modal fade"
+  id="modalPDF"
+  tabindex="-1"
+  aria-hidden="true">
+
+  <div class="modal-dialog modal-xl">
+
+    <div class="modal-content">
+
+
+      <div class="modal-header">
+
+        <h5 class="modal-title">
+
+          <i class="fa-solid fa-file-pdf me-2"></i>
+
+          Vista previa del documento PDF
+
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar">
+        </button>
+
       </div>
-      <button class="toast-close" onclick="cerrarToast(this)" title="Cerrar">
-        <i class="bi bi-x-lg"></i>
-      </button>
-      <div class="toast-progress"></div>
-    `;
 
-    container.appendChild(toast);
 
-    // Se cierra solo después de 4.5 segundos
-    setTimeout(() => {
-      if (toast.parentNode) {
-        toast.classList.add('hiding');
-        setTimeout(() => toast.remove(), 300);
-      }
-    }, 4500);
+      <div class="modal-body">
+
+        <iframe
+          id="visorPDF"
+          title="Vista previa del PDF">
+        </iframe>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          data-bs-dismiss="modal">
+
+          <i class="fa-solid fa-xmark me-2"></i>
+
+          Cerrar
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="imprimirPDF()">
+
+          <i class="fa-solid fa-print me-2"></i>
+
+          Imprimir
+
+        </button>
+
+
+        <button
+          type="button"
+          class="btn btn-success"
+          onclick="descargarPDF()">
+
+          <i class="fa-solid fa-download me-2"></i>
+
+          Descargar PDF
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =========================================================
+     BOOTSTRAP
+========================================================= -->
+
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const WEB_APP_URL =
+  'https://script.google.com/macros/s/AKfycbwxNOkoiyi4MKEmx1TS11nR--wKNPhHGdbKOCLG3O4JEALVc9idiPjDi0thUyd69np_/exec';
+
+
+/* =========================================================
+   VARIABLES PDF
+========================================================= */
+
+let pdfBase64Actual = '';
+
+let pdfNombreActual = 'documento.pdf';
+
+let pdfBlobUrlActual = '';
+
+let modalPDF = null;
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function () {
+
+    modalPDF =
+      new bootstrap.Modal(
+        document.getElementById('modalPDF')
+      );
+
+
+    establecerFechaActual();
+
+    cargarOpciones();
+
+    configurarCalculos();
+
+    configurarCedulaPagador();
+
+  }
+);
+
+
+/* =========================================================
+   FECHA ACTUAL
+========================================================= */
+
+function establecerFechaActual() {
+
+  const campo =
+    document.getElementById('fecha');
+
+  if (!campo.value) {
+
+    const ahora = new Date();
+
+    const offset =
+      ahora.getTimezoneOffset();
+
+    const fechaLocal =
+      new Date(
+        ahora.getTime() -
+        offset * 60000
+      );
+
+    campo.value =
+      fechaLocal
+        .toISOString()
+        .slice(0, 10);
+
   }
 
-  function cerrarToast(btn) {
-    const toast = btn.closest('.custom-toast');
-    toast.classList.add('hiding');
-    setTimeout(() => toast.remove(), 300);
-  }
+}
 
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
 
-    const inputInfractor = document.getElementById('cedulaInfractor');
-    const inputPagador = document.getElementById('cedulaPagador');
+/* =========================================================
+   CARGAR OPCIONES
+========================================================= */
 
-    inputPagador.addEventListener('input', () => {
-      pagadorModificadoManualmente = true;
-    });
+async function cargarOpciones() {
 
-    inputInfractor.addEventListener('input', (e) => {
-      if (!pagadorModificadoManualmente || inputPagador.value.trim() === '') {
-        inputPagador.value = e.target.value;
-      }
-    });
+  try {
 
-    document.querySelectorAll('.val-calculo').forEach(input => {
-      input.addEventListener('input', calcularTotal);
-    });
+    const respuesta =
+      await fetch(
+        WEB_APP_URL + '?api=opciones'
+      );
 
-    cargarDesplegables();
-  });
-
-  function calcularTotal() {
-    const grua = parseFloat(document.getElementById('valorGrua').value) || 0;
-    const parqueadero = parseFloat(document.getElementById('valorParqueadero').value) || 0;
-    const total = grua + parqueadero;
-    document.getElementById('totalPagado').textContent = total.toLocaleString('es-CO');
-    document.getElementById('totalPagadoHidden').value = total;
-  }
-
-  async function cargarDesplegables() {
-    const selectInf = document.getElementById('tipoInfraccion');
-    const selectFunc = document.getElementById('nombreFuncionario');
-
-    try {
-      const response = await fetch(`${WEB_APP_URL}?api=opciones`);
-      const res = await response.json();
-
-      if (res.success) {
-        selectInf.innerHTML = '<option value="">Seleccione una opción...</option>';
-        (res.infracciones || []).forEach(item => {
-          selectInf.innerHTML += `<option value="${item}">${item}</option>`;
-        });
-
-        selectFunc.innerHTML = '<option value="">Seleccione un funcionario...</option>';
-        (res.funcionarios || []).forEach(item => {
-          selectFunc.innerHTML += `<option value="${item}">${item}</option>`;
-        });
-      } else {
-        throw new Error(res.message);
-      }
-    } catch (error) {
-      console.error('Error cargando desplegables:', error);
-      selectInf.innerHTML = '<option value="">Error al cargar opciones</option>';
-      selectFunc.innerHTML = '<option value="">Error al cargar opciones</option>';
+    if (!respuesta.ok) {
+      throw new Error(
+        'No fue posible consultar las opciones.'
+      );
     }
+
+    const data =
+      await respuesta.json();
+
+
+    /* ---------------------------------------------
+       INFRACCIONES
+    --------------------------------------------- */
+
+    const selectInfraccion =
+      document.getElementById(
+        'tipoInfraccion'
+      );
+
+
+    if (
+      data.infracciones &&
+      Array.isArray(data.infracciones)
+    ) {
+
+      data.infracciones.forEach(
+        function (item) {
+
+          const option =
+            document.createElement('option');
+
+          if (
+            typeof item === 'object' &&
+            item !== null
+          ) {
+
+            option.value =
+              item.valor ??
+              item.nombre ??
+              item.descripcion ??
+              '';
+
+            option.textContent =
+              item.nombre ??
+              item.descripcion ??
+              item.valor ??
+              '';
+
+          } else {
+
+            option.value = item;
+
+            option.textContent = item;
+
+          }
+
+          if (option.value) {
+            selectInfraccion.appendChild(
+              option
+            );
+          }
+
+        }
+      );
+
+    }
+
+
+    /* ---------------------------------------------
+       FUNCIONARIOS
+    --------------------------------------------- */
+
+    const selectFuncionario =
+      document.getElementById(
+        'funcionario'
+      );
+
+
+    if (
+      data.funcionarios &&
+      Array.isArray(data.funcionarios)
+    ) {
+
+      data.funcionarios.forEach(
+        function (item) {
+
+          const option =
+            document.createElement('option');
+
+          if (
+            typeof item === 'object' &&
+            item !== null
+          ) {
+
+            option.value =
+              item.valor ??
+              item.nombre ??
+              item.funcionario ??
+              '';
+
+            option.textContent =
+              item.nombre ??
+              item.funcionario ??
+              item.valor ??
+              '';
+
+          } else {
+
+            option.value = item;
+
+            option.textContent = item;
+
+          }
+
+          if (option.value) {
+            selectFuncionario.appendChild(
+              option
+            );
+          }
+
+        }
+      );
+
+    }
+
   }
 
-  document.getElementById('formRegistro').addEventListener('submit', async function(e) {
-    e.preventDefault();
+  catch (error) {
 
-    if (!this.checkValidity()) {
-      e.stopPropagation();
-      this.classList.add('was-validated');
-      mostrarToast('error', 'Campos incompletos', 'Por favor diligencia todos los campos obligatorios marcados con *.');
+    console.error(
+      'Error cargando opciones:',
+      error
+    );
+
+    mostrarAlerta(
+      'No se pudieron cargar las listas de infracciones y funcionarios.',
+      'warning'
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CÉDULA PAGADOR
+   ========================================================= */
+
+function configurarCedulaPagador() {
+
+  const infractor =
+    document.getElementById(
+      'cedulaInfractor'
+    );
+
+  const pagador =
+    document.getElementById(
+      'cedulaPagador'
+    );
+
+
+  infractor.addEventListener(
+    'input',
+    function () {
+
+      /*
+       * Se mantiene la posibilidad
+       * de modificar manualmente
+       * la cédula del pagador.
+       *
+       * Solo se copia automáticamente
+       * cuando el pagador está vacío.
+       */
+
+      if (
+        !pagador.value.trim()
+      ) {
+
+        pagador.value =
+          infractor.value;
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   CÁLCULOS
+========================================================= */
+
+function configurarCalculos() {
+
+  const grua =
+    document.getElementById(
+      'valorGrua'
+    );
+
+  const parqueadero =
+    document.getElementById(
+      'valorParqueadero'
+    );
+
+
+  grua.addEventListener(
+    'input',
+    calcularTotal
+  );
+
+
+  parqueadero.addEventListener(
+    'input',
+    calcularTotal
+  );
+
+
+  calcularTotal();
+
+}
+
+
+/* =========================================================
+   CONVERTIR NÚMERO
+========================================================= */
+
+function convertirNumero(valor) {
+
+  if (
+    valor === null ||
+    valor === undefined ||
+    valor === ''
+  ) {
+
+    return 0;
+
+  }
+
+
+  let texto =
+    String(valor)
+      .trim()
+      .replace(/\$/g, '')
+      .replace(/\s/g, '');
+
+
+  /*
+   * Permite valores como:
+   *
+   * 100000
+   * 100.000
+   * 100,000
+   * 100000.50
+   * 100000,50
+   */
+
+  if (
+    texto.includes(',') &&
+    texto.includes('.')
+  ) {
+
+    const ultimaComa =
+      texto.lastIndexOf(',');
+
+    const ultimoPunto =
+      texto.lastIndexOf('.');
+
+
+    if (ultimaComa > ultimoPunto) {
+
+      texto =
+        texto
+          .replace(/\./g, '')
+          .replace(',', '.');
+
+    } else {
+
+      texto =
+        texto.replace(/,/g, '');
+
+    }
+
+  }
+
+  else if (
+    texto.includes(',')
+  ) {
+
+    const partes =
+      texto.split(',');
+
+
+    if (
+      partes.length === 2 &&
+      partes[1].length <= 2
+    ) {
+
+      texto =
+        texto.replace(',', '.');
+
+    } else {
+
+      texto =
+        texto.replace(/,/g, '');
+
+    }
+
+  }
+
+  else if (
+    texto.includes('.')
+  ) {
+
+    const partes =
+      texto.split('.');
+
+
+    if (
+      partes.length === 2 &&
+      partes[1].length <= 2
+    ) {
+
+      // Decimal
+
+    } else {
+
+      texto =
+        texto.replace(/\./g, '');
+
+    }
+
+  }
+
+
+  const numero =
+    parseFloat(texto);
+
+
+  return isNaN(numero)
+    ? 0
+    : numero;
+
+}
+
+
+/* =========================================================
+   CALCULAR TOTAL
+========================================================= */
+
+function calcularTotal() {
+
+  const valorGrua =
+    convertirNumero(
+      document.getElementById(
+        'valorGrua'
+      ).value
+    );
+
+
+  const valorParqueadero =
+    convertirNumero(
+      document.getElementById(
+        'valorParqueadero'
+      ).value
+    );
+
+
+  /*
+   * IMPORTANTE:
+   * Se conserva la lógica actual:
+   *
+   * TOTAL = GRÚA + PARQUEADERO
+   */
+
+  const total =
+    valorGrua +
+    valorParqueadero;
+
+
+  document.getElementById(
+    'totalPagado'
+  ).value =
+    formatearMoneda(total);
+
+}
+
+
+/* =========================================================
+   FORMATEAR MONEDA
+========================================================= */
+
+function formatearMoneda(valor) {
+
+  return new Intl.NumberFormat(
+    'es-CO',
+    {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }
+  ).format(valor);
+
+}
+
+
+/* =========================================================
+   OBTENER VALOR NUMÉRICO
+========================================================= */
+
+function obtenerValorNumerico(id) {
+
+  return convertirNumero(
+    document.getElementById(id).value
+  );
+
+}
+
+
+/* =========================================================
+   CONSTRUIR DATOS
+========================================================= */
+
+function obtenerDatosFormulario() {
+
+  const datos = {};
+
+
+  datos['NOMBRE'] =
+    document.getElementById(
+      'nombre'
+    ).value.trim();
+
+
+  datos['CÉDULA INFRACTOR'] =
+    document.getElementById(
+      'cedulaInfractor'
+    ).value.trim();
+
+
+  datos['CÉDULA PAGADOR'] =
+    document.getElementById(
+      'cedulaPagador'
+    ).value.trim();
+
+
+  datos['DIRECCIÓN'] =
+    document.getElementById(
+      'direccion'
+    ).value.trim();
+
+
+  datos['CIUDAD'] =
+    document.getElementById(
+      'ciudad'
+    ).value.trim();
+
+
+  datos['TELÉFONO'] =
+    document.getElementById(
+      'telefono'
+    ).value.trim();
+
+
+  datos['CORREO ELECTRÓNICO'] =
+    document.getElementById(
+      'correo'
+    ).value.trim();
+
+
+  datos['PLACA'] =
+    document.getElementById(
+      'placa'
+    ).value.trim()
+      .toUpperCase();
+
+
+  datos['TIPO DE INFRACCIÓN'] =
+    document.getElementById(
+      'tipoInfraccion'
+    ).value;
+
+
+  datos['NRO COMPARENDO'] =
+    document.getElementById(
+      'comparendo'
+    ).value.trim();
+
+
+  datos['FECHA'] =
+    document.getElementById(
+      'fecha'
+    ).value;
+
+
+  datos['VALOR PAGADO GRÚA'] =
+    obtenerValorNumerico(
+      'valorGrua'
+    );
+
+
+  datos['VALOR PAGADO PARQUEADERO'] =
+    obtenerValorNumerico(
+      'valorParqueadero'
+    );
+
+
+  /*
+   * Se mantiene el cálculo actual.
+   */
+
+  datos['TOTAL PAGADO'] =
+    datos['VALOR PAGADO GRÚA'] +
+    datos['VALOR PAGADO PARQUEADERO'];
+
+
+  datos['FOTOCOPIA'] =
+    document.getElementById(
+      'fotocopia'
+    ).checked
+      ? 'Sí'
+      : 'No';
+
+
+  datos['CONSIGNACIONES'] =
+    document.getElementById(
+      'consignaciones'
+    ).checked
+      ? 'Sí'
+      : 'No';
+
+
+  datos['FUNCIONARIO'] =
+    document.getElementById(
+      'funcionario'
+    ).value;
+
+
+  return datos;
+
+}
+
+
+/* =========================================================
+   VALIDAR CORREO
+========================================================= */
+
+function validarCorreo(correo) {
+
+  const patron =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return patron.test(
+    String(correo || '').trim()
+  );
+
+}
+
+
+/* =========================================================
+   VALIDAR FORMULARIO
+========================================================= */
+
+function validarFormulario() {
+
+  const formulario =
+    document.getElementById(
+      'formulario'
+    );
+
+
+  if (!formulario.checkValidity()) {
+
+    formulario.classList.add(
+      'was-validated'
+    );
+
+    return false;
+
+  }
+
+
+  const correo =
+    document.getElementById(
+      'correo'
+    ).value.trim();
+
+
+  if (!validarCorreo(correo)) {
+
+    document.getElementById(
+      'correo'
+    ).classList.add(
+      'is-invalid'
+    );
+
+    mostrarAlerta(
+      'Ingrese un correo electrónico válido.',
+      'danger'
+    );
+
+    return false;
+
+  }
+
+
+  return true;
+
+}
+
+
+/* =========================================================
+   ENVIAR FORMULARIO
+========================================================= */
+
+document.getElementById(
+  'formulario'
+).addEventListener(
+  'submit',
+  async function (event) {
+
+    event.preventDefault();
+
+
+    if (!validarFormulario()) {
       return;
     }
 
-    const btnGuardar = document.getElementById('btnGuardar');
-    btnGuardar.disabled = true;
-    btnGuardar.innerHTML = '<i class="bi bi-hourglass-split"></i> Procesando y generando PDF...';
+
+    const datos =
+      obtenerDatosFormulario();
+
+
+    const boton =
+      document.getElementById(
+        'btnGuardar'
+      );
+
+
+    boton.disabled = true;
+
+
+    mostrarLoading(true);
+
 
     try {
-      const formData = new FormData(this);
-      const dataObj = {};
-      formData.forEach((value, key) => {
-        dataObj[key] = value;
-      });
 
-      const response = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        mode: 'cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(dataObj)
-      });
+      const respuesta =
+        await fetch(
+          WEB_APP_URL,
+          {
+            method: 'POST',
 
-      const res = await response.json();
+            headers: {
+              'Content-Type':
+                'text/plain;charset=utf-8'
+            },
 
-      if (res.success) {
-        // ✅ NUEVO MENSAJE: toast moderno en lugar del alert nativo
-        mostrarToast('success', '¡Registro guardado con éxito!', 'Los datos fueron almacenados correctamente. El PDF se descargará en unos segundos.');
+            body:
+              JSON.stringify(datos)
+          }
+        );
 
-        if (res.pdfBase64) {
-          const link = document.createElement('a');
-          link.href = 'data:application/pdf;base64,' + res.pdfBase64;
-          link.download = res.pdfNombre || 'Registro_Pago.pdf';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
 
-        this.reset();
-        this.classList.remove('was-validated');
-        document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
-        pagadorModificadoManualmente = false;
-        calcularTotal();
+      if (!respuesta.ok) {
 
-      } else {
-        throw new Error(res.message || 'Error guardando los datos.');
+        throw new Error(
+          'Error HTTP ' +
+          respuesta.status
+        );
+
       }
 
-    } catch (error) {
-      console.error('Error enviando datos:', error);
-      mostrarToast('error', 'Ocurrió un error', error.message);
-    } finally {
-      btnGuardar.disabled = false;
-      btnGuardar.innerHTML = '<i class="bi bi-file-earmark-pdf"></i> Guardar y Generar PDF';
+
+      const resultado =
+        await respuesta.json();
+
+
+      if (
+        !resultado ||
+        resultado.success === false
+      ) {
+
+        throw new Error(
+          resultado?.message ||
+          resultado?.error ||
+          'No fue posible guardar la información.'
+        );
+
+      }
+
+
+      mostrarLoading(false);
+
+
+      boton.disabled = false;
+
+
+      /*
+       * =====================================================
+       * CAMBIO IMPORTANTE:
+       *
+       * ANTES:
+       * El PDF se descargaba automáticamente.
+       *
+       * AHORA:
+       * Se muestra primero la vista previa.
+       * =====================================================
+       */
+
+      if (resultado.pdfBase64) {
+
+        mostrarVistaPreviaPDF(
+          resultado.pdfBase64,
+          resultado.pdfNombre ||
+          'Comprobante-Grúa-Parqueadero.pdf'
+        );
+
+      }
+
+      else {
+
+        mostrarAlerta(
+          'La información fue guardada correctamente, pero el servidor no devolvió el PDF.',
+          'warning'
+        );
+
+      }
+
+
+      /*
+       * Limpiar formulario después
+       * de generar correctamente.
+       */
+
+      limpiarFormulario();
+
     }
-  });
+
+    catch (error) {
+
+      console.error(
+        'Error:',
+        error
+      );
+
+
+      mostrarAlerta(
+        error.message ||
+        'Ocurrió un error al guardar la información.',
+        'danger'
+      );
+
+    }
+
+    finally {
+
+      mostrarLoading(false);
+
+      boton.disabled = false;
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   VISTA PREVIA PDF
+========================================================= */
+
+function mostrarVistaPreviaPDF(
+  base64,
+  nombreArchivo
+) {
+
+  try {
+
+    if (!base64) {
+
+      throw new Error(
+        'El PDF no contiene información.'
+      );
+
+    }
+
+
+    pdfBase64Actual =
+      base64;
+
+    pdfNombreActual =
+      nombreArchivo ||
+      'documento.pdf';
+
+
+    /*
+     * Liberar URL anterior.
+     */
+
+    if (pdfBlobUrlActual) {
+
+      URL.revokeObjectURL(
+        pdfBlobUrlActual
+      );
+
+      pdfBlobUrlActual = '';
+
+    }
+
+
+    /*
+     * Convertir Base64
+     * a Blob PDF.
+     */
+
+    const byteCharacters =
+      atob(base64);
+
+
+    const byteArrays = [];
+
+    const sliceSize = 1024;
+
+
+    for (
+      let offset = 0;
+      offset < byteCharacters.length;
+      offset += sliceSize
+    ) {
+
+      const slice =
+        byteCharacters.slice(
+          offset,
+          offset + sliceSize
+        );
+
+
+      const byteNumbers =
+        new Array(slice.length);
+
+
+      for (
+        let i = 0;
+        i < slice.length;
+        i++
+      ) {
+
+        byteNumbers[i] =
+          slice.charCodeAt(i);
+
+      }
+
+
+      const byteArray =
+        new Uint8Array(
+          byteNumbers
+        );
+
+
+      byteArrays.push(
+        byteArray
+      );
+
+    }
+
+
+    const blob =
+      new Blob(
+        byteArrays,
+        {
+          type: 'application/pdf'
+        }
+      );
+
+
+    pdfBlobUrlActual =
+      URL.createObjectURL(blob);
+
+
+    /*
+     * Mostrar PDF dentro del iframe.
+     */
+
+    document.getElementById(
+      'visorPDF'
+    ).src =
+      pdfBlobUrlActual;
+
+
+    /*
+     * Abrir modal.
+     */
+
+    modalPDF.show();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      'Error mostrando PDF:',
+      error
+    );
+
+
+    mostrarAlerta(
+      'No fue posible mostrar la vista previa del PDF.',
+      'danger'
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   DESCARGAR PDF
+========================================================= */
+
+function descargarPDF() {
+
+  if (!pdfBase64Actual) {
+
+    mostrarAlerta(
+      'No hay un PDF disponible para descargar.',
+      'warning'
+    );
+
+    return;
+
+  }
+
+
+  const enlace =
+    document.createElement('a');
+
+
+  enlace.href =
+    pdfBlobUrlActual ||
+    (
+      'data:application/pdf;base64,' +
+      pdfBase64Actual
+    );
+
+
+  enlace.download =
+    pdfNombreActual ||
+    'documento.pdf';
+
+
+  document.body.appendChild(
+    enlace
+  );
+
+
+  enlace.click();
+
+
+  document.body.removeChild(
+    enlace
+  );
+
+}
+
+
+/* =========================================================
+   IMPRIMIR PDF
+========================================================= */
+
+function imprimirPDF() {
+
+  const visor =
+    document.getElementById(
+      'visorPDF'
+    );
+
+
+  if (
+    !visor ||
+    !visor.contentWindow
+  ) {
+
+    mostrarAlerta(
+      'No se pudo abrir la ventana de impresión.',
+      'warning'
+    );
+
+    return;
+
+  }
+
+
+  try {
+
+    visor.contentWindow.focus();
+
+    visor.contentWindow.print();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      'Error imprimiendo:',
+      error
+    );
+
+
+    /*
+     * Como alternativa,
+     * abrir el PDF en una pestaña.
+     */
+
+    if (pdfBlobUrlActual) {
+
+      window.open(
+        pdfBlobUrlActual,
+        '_blank'
+      );
+
+    }
+
+  }
+
+}
+
+
+/* =========================================================
+   CERRAR MODAL PDF
+========================================================= */
+
+document.getElementById(
+  'modalPDF'
+).addEventListener(
+  'hidden.bs.modal',
+  function () {
+
+    const visor =
+      document.getElementById(
+        'visorPDF'
+      );
+
+
+    visor.src =
+      'about:blank';
+
+
+    if (pdfBlobUrlActual) {
+
+      URL.revokeObjectURL(
+        pdfBlobUrlActual
+      );
+
+      pdfBlobUrlActual = '';
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   LIMPIAR FORMULARIO
+========================================================= */
+
+document.getElementById(
+  'btnLimpiar'
+).addEventListener(
+  'click',
+  function () {
+
+    limpiarFormulario();
+
+  }
+);
+
+
+function limpiarFormulario() {
+
+  const formulario =
+    document.getElementById(
+      'formulario'
+    );
+
+
+  formulario.reset();
+
+
+  formulario.classList.remove(
+    'was-validated'
+  );
+
+
+  /*
+   * Restaurar ciudad.
+   */
+
+  document.getElementById(
+    'ciudad'
+  ).value =
+    'La Ceja';
+
+
+  /*
+   * Restaurar valores.
+   */
+
+  document.getElementById(
+    'valorGrua'
+  ).value =
+    '0';
+
+
+  document.getElementById(
+    'valorParqueadero'
+  ).value =
+    '0';
+
+
+  document.getElementById(
+    'totalPagado'
+  ).value =
+    '0';
+
+
+  /*
+   * Restaurar fecha.
+   */
+
+  establecerFechaActual();
+
+
+  /*
+   * Limpiar estados de validación.
+   */
+
+  document
+    .querySelectorAll(
+      '.is-invalid'
+    )
+    .forEach(
+      function (elemento) {
+
+        elemento.classList.remove(
+          'is-invalid'
+        );
+
+      }
+    );
+
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+function mostrarLoading(mostrar) {
+
+  const loading =
+    document.getElementById(
+      'loading'
+    );
+
+
+  loading.style.display =
+    mostrar
+      ? 'flex'
+      : 'none';
+
+}
+
+
+/* =========================================================
+   ALERTAS
+========================================================= */
+
+function mostrarAlerta(
+  mensaje,
+  tipo = 'info'
+) {
+
+  const contenedor =
+    document.getElementById(
+      'alertas'
+    );
+
+
+  const alerta =
+    document.createElement(
+      'div'
+    );
+
+
+  alerta.className =
+    `alert alert-${tipo} alert-dismissible fade show shadow`;
+
+
+  alerta.setAttribute(
+    'role',
+    'alert'
+  );
+
+
+  alerta.innerHTML = `
+
+    <strong>
+      ${
+        tipo === 'success'
+          ? '<i class="fa-solid fa-circle-check me-2"></i>'
+          : tipo === 'danger'
+          ? '<i class="fa-solid fa-circle-exclamation me-2"></i>'
+          : '<i class="fa-solid fa-circle-info me-2"></i>'
+      }
+    </strong>
+
+    ${mensaje}
+
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert">
+    </button>
+
+  `;
+
+
+  contenedor.appendChild(
+    alerta
+  );
+
+
+  setTimeout(
+    function () {
+
+      if (alerta) {
+
+        alerta.remove();
+
+      }
+
+    },
+    6000
+  );
+
+}
+
+
+/* =========================================================
+   FORMATEAR CAMPOS
+========================================================= */
+
+document.getElementById(
+  'placa'
+).addEventListener(
+  'input',
+  function () {
+
+    this.value =
+      this.value
+        .toUpperCase();
+
+  }
+);
+
+
+/* =========================================================
+   LIMPIAR ESPACIOS
+========================================================= */
+
+[
+  'nombre',
+  'cedulaInfractor',
+  'cedulaPagador',
+  'direccion',
+  'ciudad',
+  'telefono',
+  'correo',
+  'comparendo'
+].forEach(
+  function (id) {
+
+    const campo =
+      document.getElementById(id);
+
+
+    if (!campo) return;
+
+
+    campo.addEventListener(
+      'blur',
+      function () {
+
+        this.value =
+          this.value.trim();
+
+      }
+    );
+
+  }
+);
+
+
+/* =========================================================
+   VALIDACIÓN EN TIEMPO REAL DEL CORREO
+========================================================= */
+
+document.getElementById(
+  'correo'
+).addEventListener(
+  'input',
+  function () {
+
+    const valor =
+      this.value.trim();
+
+
+    if (!valor) {
+
+      this.classList.remove(
+        'is-valid',
+        'is-invalid'
+      );
+
+      return;
+
+    }
+
+
+    if (
+      validarCorreo(valor)
+    ) {
+
+      this.classList.remove(
+        'is-invalid'
+      );
+
+      this.classList.add(
+        'is-valid'
+      );
+
+    }
+
+    else {
+
+      this.classList.remove(
+        'is-valid'
+      );
+
+      this.classList.add(
+        'is-invalid'
+      );
+
+    }
+
+  }
+);
+
 </script>
 
 </body>
