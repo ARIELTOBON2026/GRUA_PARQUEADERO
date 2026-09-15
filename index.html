@@ -2,3766 +2,1096 @@
 <html lang="es">
 
 <head>
-
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Pagos - Grúa y Parqueadero</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>
-    Registro de Pagos - Grúa y Parqueadero
-  </title>
-
-  <!-- Bootstrap -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  >
-
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-    rel="stylesheet"
-  >
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
   <!-- Google Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-
     :root {
-
       --primary: #0a3d62;
       --primary-light: #1e5a8e;
       --primary-dark: #062540;
-
       --accent: #d4a24c;
       --accent-light: #f4c675;
-
       --surface: #ffffff;
       --surface-alt: #f5f7fa;
-
       --border: #e1e8ed;
-
       --text: #1a2b3c;
       --text-muted: #6b7a8f;
-
       --success: #10b981;
       --danger: #ef4444;
       --warning: #f59e0b;
-
-      --shadow-sm:
-        0 1px 3px rgba(10, 61, 98, 0.08);
-
-      --shadow-md:
-        0 4px 16px rgba(10, 61, 98, 0.10);
-
-      --shadow-lg:
-        0 12px 40px rgba(10, 61, 98, 0.15);
-
+      --shadow-sm: 0 1px 3px rgba(10, 61, 98, 0.08);
+      --shadow-md: 0 4px 16px rgba(10, 61, 98, 0.10);
+      --shadow-lg: 0 12px 40px rgba(10, 61, 98, 0.15);
     }
 
-
-    * {
-      box-sizing: border-box;
-    }
-
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
-
-      background:
-        linear-gradient(
-          135deg,
-          #eef4fa 0%,
-          #d9e4f0 100%
-        );
-
+      background: linear-gradient(135deg, #eef4fa 0%, #d9e4f0 100%);
       background-attachment: fixed;
-
-      font-family:
-        'Inter',
-        sans-serif;
-
-      color:
-        var(--text);
-
-      min-height:
-        100vh;
-
-      padding:
-        2rem 0;
-
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 0;
     }
-
 
     body::before {
-
       content: "";
-
-      position:
-        fixed;
-
-      top:
-        0;
-
-      left:
-        0;
-
-      right:
-        0;
-
-      bottom:
-        0;
-
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
       background-image:
-
-        radial-gradient(
-          circle at 20% 30%,
-          rgba(212, 162, 76, 0.08) 0%,
-          transparent 50%
-        ),
-
-        radial-gradient(
-          circle at 80% 70%,
-          rgba(10, 61, 98, 0.08) 0%,
-          transparent 50%
-        );
-
-      pointer-events:
-        none;
-
-      z-index:
-        0;
-
+        radial-gradient(circle at 20% 30%, rgba(212, 162, 76, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(10, 61, 98, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
 
+    .container { position: relative; z-index: 1; }
 
-    .container {
+    .main-card {
+      border: none;
+      border-radius: 20px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      background: var(--surface);
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .header-title {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-title::before {
+      content: "";
+      position: absolute;
+      top: -50%; right: -10%;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(212, 162, 76, 0.20) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .header-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px; height: 58px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 15px;
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.20);
+      position: relative;
+      z-index: 2;
+    }
+
+    .header-title h3 {
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .header-title small {
+      opacity: 0.90;
+      font-weight: 400;
+      font-size: 0.875rem;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .card-body { padding: 2.5rem; }
+
+    @media (max-width: 576px) {
+      .card-body { padding: 1.4rem; }
+      body { padding: 0.75rem 0; }
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .section-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .section-header h5 {
+      margin: 0;
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 1.1rem;
+      flex-grow: 1;
+    }
+
+    .section-icon {
+      color: var(--accent);
+      font-size: 1.25rem;
+    }
+
+    .form-label {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .form-label i {
+      color: var(--primary-light);
+      font-size: 0.875rem;
+    }
+
+    .form-control, .form-select {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 0.68rem 0.9rem;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      background-color: var(--surface-alt);
+      color: var(--text);
+    }
+
+    .form-control:hover, .form-select:hover {
+      border-color: var(--primary-light);
+      background-color: white;
+    }
+
+    .form-control:focus, .form-select:focus {
+      border-color: var(--primary);
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(10, 61, 98, 0.10);
+      outline: none;
+    }
+
+    .form-control:disabled, .form-select:disabled {
+      background: #eef2f6;
+      cursor: not-allowed;
+    }
+
+    .input-group-text {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      font-weight: 700;
+      border-radius: 10px 0 0 10px !important;
+    }
+
+    .input-group .form-control {
+      border-left: none;
+      border-radius: 0 10px 10px 0 !important;
+    }
+
+    .required-dot {
+      color: var(--danger);
+      font-weight: bold;
+    }
+
+    .payment-field {
+      background: var(--surface-alt);
+      padding: 1.25rem;
+      border-radius: 14px;
+      border: 1.5px solid var(--border);
+      margin-bottom: 0.75rem;
+      transition: all 0.25s ease;
+    }
+
+    .payment-field:hover {
+      border-color: var(--primary-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .total-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      border-radius: 14px;
+      padding: 1.5rem;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .total-card::after {
+      content: "";
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(212, 162, 76, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .total-label {
+      font-size: 0.875rem;
+      opacity: 0.85;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .total-amount {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       position: relative;
       z-index: 1;
     }
 
-
-    /* =========================================================
-       TARJETA PRINCIPAL
-    ========================================================= */
-
-    .main-card {
-
-      border:
-        none;
-
-      border-radius:
-        20px;
-
-      box-shadow:
-        var(--shadow-lg);
-
-      overflow:
-        hidden;
-
-      background:
-        var(--surface);
-
-      animation:
-        fadeInUp 0.6s ease-out;
-
-    }
-
-
-    /* =========================================================
-       ENCABEZADO
-    ========================================================= */
-
-    .header-title {
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--primary-light) 100%
-        );
-
-      color:
-        white;
-
-      padding:
-        2.5rem 2rem;
-
-      position:
-        relative;
-
-      overflow:
-        hidden;
-
-    }
-
-
-    .header-title::before {
-
-      content:
-        "";
-
-      position:
-        absolute;
-
-      top:
-        -50%;
-
-      right:
-        -10%;
-
-      width:
-        300px;
-
-      height:
-        300px;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(212, 162, 76, 0.20) 0%,
-          transparent 70%
-        );
-
-      border-radius:
-        50%;
-
-    }
-
-
-    .header-icon {
-
-      display:
-        inline-flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-      width:
-        58px;
-
-      height:
-        58px;
-
-      background:
-        rgba(255,255,255,0.15);
-
-      border-radius:
-        15px;
-
-      font-size:
-        1.8rem;
-
-      margin-bottom:
-        1rem;
-
-      backdrop-filter:
-        blur(10px);
-
-      border:
-        1px solid rgba(255,255,255,0.20);
-
-      position:
-        relative;
-
-      z-index:
-        2;
-
-    }
-
-
-    .header-title h3 {
-
-      font-weight:
-        700;
-
-      letter-spacing:
-        0.5px;
-
-      margin-bottom:
-        0.5rem;
-
-      position:
-        relative;
-
-      z-index:
-        2;
-
-    }
-
-
-    .header-title small {
-
-      opacity:
-        0.90;
-
-      font-weight:
-        400;
-
-      font-size:
-        0.875rem;
-
-      position:
-        relative;
-
-      z-index:
-        2;
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-      gap:
-        0.5rem;
-
-    }
-
-
-    /* =========================================================
-       CUERPO
-    ========================================================= */
-
-    .card-body {
-
-      padding:
-        2.5rem;
-
-    }
-
-
-    @media (max-width: 576px) {
-
-      .card-body {
-        padding:
-          1.4rem;
-      }
-
-      body {
-        padding:
-          0.75rem 0;
-      }
-
-    }
-
-
-    /* =========================================================
-       SECCIONES
-    ========================================================= */
-
-    .section-header {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      gap:
-        0.75rem;
-
-      margin-bottom:
-        1.5rem;
-
-      padding-bottom:
-        0.75rem;
-
-      border-bottom:
-        2px solid var(--border);
-
-    }
-
-
-    .section-number {
-
-      display:
-        inline-flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-      width:
-        32px;
-
-      height:
-        32px;
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--primary-light) 100%
-        );
-
-      color:
-        white;
-
-      border-radius:
-        10px;
-
-      font-size:
-        0.875rem;
-
-      font-weight:
-        700;
-
-      flex-shrink:
-        0;
-
-    }
-
-
-    .section-header h5 {
-
-      margin:
-        0;
-
-      color:
-        var(--primary);
-
-      font-weight:
-        600;
-
-      font-size:
-        1.1rem;
-
-      flex-grow:
-        1;
-
-    }
-
-
-    .section-icon {
-
-      color:
-        var(--accent);
-
-      font-size:
-        1.25rem;
-
-    }
-
-
-    /* =========================================================
-       FORMULARIOS
-    ========================================================= */
-
-    .form-label {
-
-      font-size:
-        0.825rem;
-
-      font-weight:
-        600;
-
-      color:
-        var(--text);
-
-      margin-bottom:
-        0.5rem;
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      gap:
-        0.375rem;
-
-    }
-
-
-    .form-label i {
-
-      color:
-        var(--primary-light);
-
-      font-size:
-        0.875rem;
-
-    }
-
-
-    .form-control,
-    .form-select {
-
-      border:
-        1.5px solid var(--border);
-
-      border-radius:
-        10px;
-
-      padding:
-        0.68rem 0.9rem;
-
-      font-size:
-        0.95rem;
-
-      transition:
-        all 0.2s ease;
-
-      background-color:
-        var(--surface-alt);
-
-      color:
-        var(--text);
-
-    }
-
-
-    .form-control:hover,
-    .form-select:hover {
-
-      border-color:
-        var(--primary-light);
-
-      background-color:
-        white;
-
-    }
-
-
-    .form-control:focus,
-    .form-select:focus {
-
-      border-color:
-        var(--primary);
-
-      background-color:
-        white;
-
-      box-shadow:
-        0 0 0 3px rgba(10, 61, 98, 0.10);
-
-      outline:
-        none;
-
-    }
-
-
-    .form-control:disabled,
-    .form-select:disabled {
-
-      background:
-        #eef2f6;
-
-      cursor:
-        not-allowed;
-
-    }
-
-
-    .input-group-text {
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--primary-light) 100%
-        );
-
-      color:
-        white;
-
-      border:
-        none;
-
-      font-weight:
-        700;
-
-      border-radius:
-        10px 0 0 10px !important;
-
-    }
-
-
-    .input-group .form-control {
-
-      border-left:
-        none;
-
-      border-radius:
-        0 10px 10px 0 !important;
-
-    }
-
-
-    .required-dot {
-
-      color:
-        var(--danger);
-
-      font-weight:
-        bold;
-
-    }
-
-
-    /* =========================================================
-       CAMPOS DE PAGO
-    ========================================================= */
-
-    .payment-field {
-
-      background:
-        var(--surface-alt);
-
-      padding:
-        1.25rem;
-
-      border-radius:
-        14px;
-
-      border:
-        1.5px solid var(--border);
-
-      margin-bottom:
-        0.75rem;
-
-      transition:
-        all 0.25s ease;
-
-    }
-
-
-    .payment-field:hover {
-
-      border-color:
-        var(--primary-light);
-
-      transform:
-        translateY(-2px);
-
-      box-shadow:
-        var(--shadow-md);
-
-    }
-
-
-    /* =========================================================
-       TOTAL
-    ========================================================= */
-
-    .total-card {
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--primary-dark) 100%
-        );
-
-      border-radius:
-        14px;
-
-      padding:
-        1.5rem;
-
-      color:
-        white;
-
-      position:
-        relative;
-
-      overflow:
-        hidden;
-
-      margin-top:
-        1rem;
-
-    }
-
-
-    .total-card::after {
-
-      content:
-        "";
-
-      position:
-        absolute;
-
-      top:
-        -30px;
-
-      right:
-        -30px;
-
-      width:
-        120px;
-
-      height:
-        120px;
-
-      background:
-        radial-gradient(
-          circle,
-          rgba(212, 162, 76, 0.25) 0%,
-          transparent 70%
-        );
-
-      border-radius:
-        50%;
-
-    }
-
-
-    .total-label {
-
-      font-size:
-        0.875rem;
-
-      opacity:
-        0.85;
-
-      margin-bottom:
-        0.25rem;
-
-      text-transform:
-        uppercase;
-
-      letter-spacing:
-        1px;
-
-      font-weight:
-        500;
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      gap:
-        0.5rem;
-
-    }
-
-
-    .total-amount {
-
-      font-size:
-        2rem;
-
-      font-weight:
-        800;
-
-      letter-spacing:
-        -0.5px;
-
-      position:
-        relative;
-
-      z-index:
-        1;
-
-    }
-
-
     .total-amount::before {
-
-      content:
-        "$ ";
-
-      opacity:
-        0.80;
-
+      content: "$ ";
+      opacity: 0.80;
     }
-
-
-    /* =========================================================
-       BOTÓN
-    ========================================================= */
 
     .btn-primary-custom {
-
-      background:
-        linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--primary-light) 100%
-        );
-
-      color:
-        white;
-
-      border:
-        none;
-
-      border-radius:
-        12px;
-
-      padding:
-        1rem 2rem;
-
-      font-weight:
-        600;
-
-      font-size:
-        1rem;
-
-      letter-spacing:
-        0.3px;
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-      gap:
-        0.6rem;
-
-      transition:
-        all 0.3s ease;
-
-      box-shadow:
-        0 4px 14px rgba(10, 61, 98, 0.30);
-
-      width:
-        100%;
-
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(10, 61, 98, 0.30);
+      width: 100%;
     }
-
 
     .btn-primary-custom:hover:not(:disabled) {
-
-      transform:
-        translateY(-2px);
-
-      box-shadow:
-        0 8px 24px rgba(10, 61, 98, 0.40);
-
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(10, 61, 98, 0.40);
     }
-
 
     .btn-primary-custom:disabled {
-
-      opacity:
-        0.70;
-
-      cursor:
-        not-allowed;
-
+      opacity: 0.70;
+      cursor: not-allowed;
     }
-
-
-    /* =========================================================
-       ESTADO DE CARGA
-    ========================================================= */
 
     .loading-status {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      gap:
-        0.6rem;
-
-      font-size:
-        0.82rem;
-
-      color:
-        var(--text-muted);
-
-      margin-top:
-        0.45rem;
-
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 0.45rem;
     }
 
-
-    .loading-status.success {
-
-      color:
-        var(--success);
-
-    }
-
-
-    .loading-status.error {
-
-      color:
-        var(--danger);
-
-    }
-
+    .loading-status.success { color: var(--success); }
+    .loading-status.error { color: var(--danger); }
 
     .loading-dot {
-
-      width:
-        9px;
-
-      height:
-        9px;
-
-      border-radius:
-        50%;
-
-      background:
-        var(--warning);
-
-      animation:
-        pulse 1.2s infinite;
-
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--warning);
+      animation: pulse 1.2s infinite;
     }
 
-
-    .loading-dot.success {
-
-      background:
-        var(--success);
-
-      animation:
-        none;
-
-    }
-
-
-    .loading-dot.error {
-
-      background:
-        var(--danger);
-
-      animation:
-        none;
-
-    }
-
-
-    /* =========================================================
-       FOOTER
-    ========================================================= */
+    .loading-dot.success { background: var(--success); animation: none; }
+    .loading-dot.error { background: var(--danger); animation: none; }
 
     .form-footer {
-
-      background:
-        var(--surface-alt);
-
-      padding:
-        1rem 2.5rem;
-
-      border-top:
-        1px solid var(--border);
-
-      display:
-        flex;
-
-      justify-content:
-        space-between;
-
-      align-items:
-        center;
-
-      font-size:
-        0.8rem;
-
-      color:
-        var(--text-muted);
-
-      flex-wrap:
-        wrap;
-
-      gap:
-        0.5rem;
-
+      background: var(--surface-alt);
+      padding: 1rem 2.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
-
-    .form-footer i {
-
-      color:
-        var(--accent);
-
-    }
-
-
-    /* =========================================================
-       TOAST
-    ========================================================= */
+    .form-footer i { color: var(--accent); }
 
     .toast-container-custom {
-
-      position:
-        fixed;
-
-      top:
-        24px;
-
-      right:
-        24px;
-
-      z-index:
-        99999;
-
-      display:
-        flex;
-
-      flex-direction:
-        column;
-
-      gap:
-        12px;
-
-      pointer-events:
-        none;
-
+      position: fixed;
+      top: 24px; right: 24px;
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      pointer-events: none;
     }
-
 
     .custom-toast {
-
-      min-width:
-        340px;
-
-      max-width:
-        440px;
-
-      background:
-        white;
-
-      border-radius:
-        14px;
-
-      box-shadow:
-        0 12px 40px rgba(10,61,98,0.25);
-
-      overflow:
-        hidden;
-
-      display:
-        flex;
-
-      align-items:
-        stretch;
-
-      position:
-        relative;
-
-      pointer-events:
-        auto;
-
-      animation:
-        toastIn .4s ease;
-
+      min-width: 340px;
+      max-width: 440px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 12px 40px rgba(10,61,98,0.25);
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+      position: relative;
+      pointer-events: auto;
+      animation: toastIn .4s ease;
     }
 
-
-    .custom-toast.hiding {
-
-      animation:
-        toastOut .3s ease forwards;
-
-    }
-
+    .custom-toast.hiding { animation: toastOut .3s ease forwards; }
 
     .toast-icon {
-
-      display:
-        flex;
-
-      align-items:
-        center;
-
-      justify-content:
-        center;
-
-      width:
-        58px;
-
-      font-size:
-        1.6rem;
-
-      color:
-        white;
-
-      flex-shrink:
-        0;
-
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 58px;
+      font-size: 1.6rem;
+      color: white;
+      flex-shrink: 0;
     }
 
+    .toast-success .toast-icon { background: linear-gradient(135deg, #10b981, #059669); }
+    .toast-error .toast-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
 
-    .toast-success .toast-icon {
-
-      background:
-        linear-gradient(
-          135deg,
-          #10b981,
-          #059669
-        );
-
-    }
-
-
-    .toast-error .toast-icon {
-
-      background:
-        linear-gradient(
-          135deg,
-          #ef4444,
-          #dc2626
-        );
-
-    }
-
-
-    .toast-body-custom {
-
-      padding:
-        14px 16px;
-
-      flex-grow:
-        1;
-
-    }
-
+    .toast-body-custom { padding: 14px 16px; flex-grow: 1; }
 
     .toast-title {
-
-      font-weight:
-        700;
-
-      font-size:
-        0.95rem;
-
-      color:
-        var(--text);
-
-      margin-bottom:
-        2px;
-
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 2px;
     }
-
 
     .toast-message {
-
-      font-size:
-        0.85rem;
-
-      color:
-        var(--text-muted);
-
-      line-height:
-        1.4;
-
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
     }
-
 
     .toast-close {
-
-      background:
-        none;
-
-      border:
-        none;
-
-      color:
-        var(--text-muted);
-
-      padding:
-        10px 14px;
-
-      cursor:
-        pointer;
-
-      align-self:
-        flex-start;
-
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      padding: 10px 14px;
+      cursor: pointer;
+      align-self: flex-start;
     }
-
 
     .toast-progress {
-
-      position:
-        absolute;
-
-      bottom:
-        0;
-
-      left:
-        0;
-
-      height:
-        3px;
-
-      width:
-        100%;
-
-      animation:
-        toastProgress 4.5s linear forwards;
-
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 3px; width: 100%;
+      animation: toastProgress 4.5s linear forwards;
     }
 
-
-    .toast-success .toast-progress {
-      background:
-        var(--success);
-    }
-
-
-    .toast-error .toast-progress {
-      background:
-        var(--danger);
-    }
-
-
-    /* =========================================================
-       ANIMACIONES
-    ========================================================= */
+    .toast-success .toast-progress { background: var(--success); }
+    .toast-error .toast-progress { background: var(--danger); }
 
     @keyframes fadeInUp {
-
-      from {
-        opacity:
-          0;
-
-        transform:
-          translateY(20px);
-      }
-
-      to {
-        opacity:
-          1;
-
-        transform:
-          translateY(0);
-      }
-
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-
 
     @keyframes toastIn {
-
-      from {
-        opacity:
-          0;
-
-        transform:
-          translateX(120%);
-      }
-
-      to {
-        opacity:
-          1;
-
-        transform:
-          translateX(0);
-      }
-
+      from { opacity: 0; transform: translateX(120%); }
+      to { opacity: 1; transform: translateX(0); }
     }
-
 
     @keyframes toastOut {
-
-      from {
-        opacity:
-          1;
-
-        transform:
-          translateX(0);
-      }
-
-      to {
-        opacity:
-          0;
-
-        transform:
-          translateX(120%);
-      }
-
+      from { opacity: 1; transform: translateX(0); }
+      to { opacity: 0; transform: translateX(120%); }
     }
-
 
     @keyframes toastProgress {
-
-      from {
-        width:
-          100%;
-      }
-
-      to {
-        width:
-          0%;
-      }
-
+      from { width: 100%; }
+      to { width: 0%; }
     }
-
 
     @keyframes pulse {
-
-      0% {
-        opacity:
-          1;
-      }
-
-      50% {
-        opacity:
-          .35;
-      }
-
-      100% {
-        opacity:
-          1;
-      }
-
+      0% { opacity: 1; }
+      50% { opacity: .35; }
+      100% { opacity: 1; }
     }
-
-
-    /* =========================================================
-       RESPONSIVE
-    ========================================================= */
 
     @media (max-width: 576px) {
-
-      .toast-container-custom {
-
-        left:
-          16px;
-
-        right:
-          16px;
-
-      }
-
-
-      .custom-toast {
-
-        min-width:
-          0;
-
-        width:
-          100%;
-
-      }
-
-
-      .header-title {
-
-        padding:
-          2rem 1rem;
-
-      }
-
-
-      .total-amount {
-
-        font-size:
-          1.75rem;
-
-      }
-
+      .toast-container-custom { left: 16px; right: 16px; }
+      .custom-toast { min-width: 0; width: 100%; }
+      .header-title { padding: 2rem 1rem; }
+      .total-amount { font-size: 1.75rem; }
     }
-
   </style>
-
 </head>
-
 
 <body>
 
+  <!-- NOTIFICACIONES -->
+  <div class="toast-container-custom" id="toastContainer"></div>
 
-<!-- =========================================================
-     NOTIFICACIONES
-========================================================= -->
+  <!-- CONTENEDOR PRINCIPAL -->
+  <div class="container my-4">
+    <div class="main-card mx-auto" style="max-width: 850px;">
 
-<div
-  class="toast-container-custom"
-  id="toastContainer"
-></div>
-
-
-<!-- =========================================================
-     CONTENEDOR PRINCIPAL
-========================================================= -->
-
-<div class="container my-4">
-
-  <div
-    class="main-card mx-auto"
-    style="max-width: 850px;"
-  >
-
-
-    <!-- =====================================================
-         ENCABEZADO
-    ====================================================== -->
-
-    <div class="header-title text-center">
-
-      <div class="header-icon mx-auto">
-
-        <i class="bi bi-shield-check"></i>
-
+      <!-- ENCABEZADO -->
+      <div class="header-title text-center">
+        <div class="header-icon mx-auto">
+          <i class="bi bi-shield-check"></i>
+        </div>
+        <h3 class="mb-0">REGISTRO DE PAGOS</h3>
+        <small>
+          <i class="bi bi-geo-alt-fill"></i>
+          Secretaría de Movilidad - La Ceja, Antioquia
+        </small>
       </div>
 
+      <!-- CUERPO -->
+      <div class="card-body">
+        <form id="formRegistro" class="needs-validation" novalidate>
 
-      <h3 class="mb-0">
-
-        REGISTRO DE PAGOS
-
-      </h3>
-
-
-      <small>
-
-        <i class="bi bi-geo-alt-fill"></i>
-
-        Secretaría de Movilidad -
-        La Ceja, Antioquia
-
-      </small>
-
-    </div>
-
-
-    <!-- =====================================================
-         CUERPO
-    ====================================================== -->
-
-    <div class="card-body">
-
-
-      <form
-        id="formRegistro"
-        class="needs-validation"
-        novalidate
-      >
-
-
-        <!-- =================================================
-             SECCIÓN 1
-        ================================================== -->
-
-        <div class="section-header">
-
-          <span class="section-number">
-            1
-          </span>
-
-          <h5>
-            Datos del Solicitante e Infractor
-          </h5>
-
-          <i class="bi bi-person-badge section-icon"></i>
-
-        </div>
-
-
-        <div class="row g-3 mb-4">
-
-
-          <!-- NOMBRE -->
-
-          <div class="col-md-12">
-
-            <label
-              for="nombre"
-              class="form-label"
-            >
-
-              <i class="bi bi-person-fill"></i>
-
-              Nombre del Solicitante
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <input
-              type="text"
-              class="form-control"
-              id="nombre"
-              name="NOMBRE"
-              autocomplete="name"
-              required
-            >
-
+          <!-- SECCIÓN 1 -->
+          <div class="section-header">
+            <span class="section-number">1</span>
+            <h5>Datos del Solicitante e Infractor</h5>
+            <i class="bi bi-person-badge section-icon"></i>
           </div>
 
-
-          <!-- CÉDULA INFRACTOR -->
-
-          <div class="col-md-6">
-
-            <label
-              for="cedulaInfractor"
-              class="form-label"
-            >
-
-              <i class="bi bi-card-text"></i>
-
-              Cédula del Infractor
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <input
-              type="text"
-              class="form-control"
-              id="cedulaInfractor"
-              name="CÉDULA INFRACTOR"
-              inputmode="numeric"
-              autocomplete="off"
-              required
-            >
-
-          </div>
-
-
-          <!-- CÉDULA PAGADOR -->
-
-          <div class="col-md-6">
-
-            <label
-              for="cedulaPagador"
-              class="form-label"
-            >
-
-              <i class="bi bi-wallet2"></i>
-
-              Cédula del Pagador
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <input
-              type="text"
-              class="form-control"
-              id="cedulaPagador"
-              name="CÉDULA PAGADOR"
-              inputmode="numeric"
-              autocomplete="off"
-              required
-            >
-
-          </div>
-
-
-          <!-- DIRECCIÓN -->
-
-          <div class="col-md-6">
-
-            <label
-              for="direccion"
-              class="form-label"
-            >
-
-              <i class="bi bi-house-door"></i>
-
-              Dirección
-
-            </label>
-
-
-            <input
-              type="text"
-              class="form-control"
-              id="direccion"
-              name="DIRECCIÓN"
-            >
-
-          </div>
-
-
-          <!-- CIUDAD -->
-
-          <div class="col-md-6">
-
-            <label
-              for="ciudad"
-              class="form-label"
-            >
-
-              <i class="bi bi-geo-alt"></i>
-
-              Ciudad
-
-            </label>
-
-
-            <input
-              type="text"
-              class="form-control"
-              id="ciudad"
-              name="CIUDAD"
-              value="La Ceja"
-            >
-
-          </div>
-
-
-          <!-- TELÉFONO -->
-
-          <div class="col-md-6">
-
-            <label
-              for="telefono"
-              class="form-label"
-            >
-
-              <i class="bi bi-telephone"></i>
-
-              Teléfono
-
-            </label>
-
-
-            <input
-              type="tel"
-              class="form-control"
-              id="telefono"
-              name="TELÉFONO"
-              autocomplete="tel"
-            >
-
-          </div>
-
-
-          <!-- CORREO -->
-
-          <div class="col-md-6">
-
-            <label
-              for="correo"
-              class="form-label"
-            >
-
-              <i class="bi bi-envelope"></i>
-
-              Correo Electrónico
-
-            </label>
-
-
-            <input
-              type="email"
-              class="form-control"
-              id="correo"
-              name="CORREO ELECTRÓNICO"
-              autocomplete="email"
-            >
-
-          </div>
-
-
-        </div>
-
-
-        <!-- =================================================
-             SECCIÓN 2
-        ================================================== -->
-
-        <div class="section-header">
-
-          <span class="section-number">
-            2
-          </span>
-
-          <h5>
-            Datos de la Infracción
-          </h5>
-
-          <i class="bi bi-exclamation-triangle section-icon"></i>
-
-        </div>
-
-
-        <div class="row g-3 mb-4">
-
-
-          <!-- PLACA -->
-
-          <div class="col-md-4">
-
-            <label
-              for="placa"
-              class="form-label"
-            >
-
-              <i class="bi bi-car-front"></i>
-
-              Placa
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <input
-              type="text"
-              class="form-control text-uppercase"
-              id="placa"
-              name="PLACA"
-              maxlength="6"
-              autocomplete="off"
-              required
-            >
-
-          </div>
-
-
-          <!-- TIPO DE INFRACCIÓN -->
-
-          <div class="col-md-8">
-
-            <label
-              for="tipoInfraccion"
-              class="form-label"
-            >
-
-              <i class="bi bi-list-check"></i>
-
-              Tipo de Infracción
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <select
-              class="form-select"
-              id="tipoInfraccion"
-              name="TIPO DE INFRACCIÓN"
-              required
-            >
-
-              <option value="">
-                Cargando opciones...
-              </option>
-
-            </select>
-
-
-            <div
-              id="estadoInfracciones"
-              class="loading-status"
-            >
-
-              <span class="loading-dot"></span>
-
-              Cargando tipos de infracción...
-
+          <div class="row g-3 mb-4">
+            <div class="col-md-12">
+              <label for="nombre" class="form-label">
+                <i class="bi bi-person-fill"></i> Nombre del Solicitante <span class="required-dot">*</span>
+              </label>
+              <input type="text" class="form-control" id="nombre" name="NOMBRE" autocomplete="name" required>
             </div>
 
-          </div>
-
-
-          <!-- COMPARENDO -->
-
-          <div class="col-md-6">
-
-            <label
-              for="nroComparendo"
-              class="form-label"
-            >
-
-              <i class="bi bi-file-earmark-text"></i>
-
-              Nro. Comparendo
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <input
-              type="text"
-              class="form-control"
-              id="nroComparendo"
-              name="NRO COMPARENDO"
-              autocomplete="off"
-              required
-            >
-
-          </div>
-
-
-          <!-- FECHA -->
-
-          <div class="col-md-6">
-
-            <label
-              for="fecha"
-              class="form-label"
-            >
-
-              <i class="bi bi-calendar-event"></i>
-
-              Fecha
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <input
-              type="date"
-              class="form-control"
-              id="fecha"
-              name="FECHA"
-              required
-            >
-
-          </div>
-
-
-        </div>
-
-
-        <!-- =================================================
-             SECCIÓN 3
-        ================================================== -->
-
-        <div class="section-header">
-
-          <span class="section-number">
-            3
-          </span>
-
-          <h5>
-            Liquidación de Pagos
-          </h5>
-
-          <i class="bi bi-calculator section-icon"></i>
-
-        </div>
-
-
-        <!-- GRÚA -->
-
-        <div class="payment-field">
-
-          <label
-            for="valorGrua"
-            class="form-label"
-          >
-
-            <i class="bi bi-truck"></i>
-
-            Valor Pagado Grúa
-
-            <span class="required-dot">*</span>
-
-          </label>
-
-
-          <div class="input-group">
-
-            <span class="input-group-text">
-              $
-            </span>
-
-
-            <input
-              type="number"
-              class="form-control val-calculo"
-              id="valorGrua"
-              name="VALOR PAGADO GRÚA"
-              min="0"
-              step="100"
-              value="0"
-              required
-            >
-
-          </div>
-
-        </div>
-
-
-        <!-- PARQUEADERO -->
-
-        <div class="payment-field">
-
-          <label
-            for="valorParqueadero"
-            class="form-label"
-          >
-
-            <i class="bi bi-p-square"></i>
-
-            Valor Pagado Parqueadero
-
-            <span class="required-dot">*</span>
-
-          </label>
-
-
-          <div class="input-group">
-
-            <span class="input-group-text">
-              $
-            </span>
-
-
-            <input
-              type="number"
-              class="form-control val-calculo"
-              id="valorParqueadero"
-              name="VALOR PAGADO PARQUEADERO"
-              min="0"
-              step="100"
-              value="0"
-              required
-            >
-
-          </div>
-
-        </div>
-
-
-        <!-- TOTAL -->
-
-        <div class="total-card">
-
-          <div class="total-label">
-
-            <i class="bi bi-receipt"></i>
-
-            Total Pagado
-
-          </div>
-
-
-          <div
-            class="total-amount"
-            id="totalPagado"
-          >
-            0
-          </div>
-
-
-          <input
-            type="hidden"
-            id="totalPagadoHidden"
-            name="TOTAL PAGADO"
-            value="0"
-          >
-
-        </div>
-
-
-        <!-- =================================================
-             SECCIÓN 4
-        ================================================== -->
-
-        <div class="section-header mt-4">
-
-          <span class="section-number">
-            4
-          </span>
-
-          <h5>
-            Soportes y Registro
-          </h5>
-
-          <i class="bi bi-folder-check section-icon"></i>
-
-        </div>
-
-
-        <div class="row g-3 mb-4">
-
-
-          <!-- FOTOCOPIA -->
-
-          <div class="col-md-6">
-
-            <label
-              for="fotocopia"
-              class="form-label"
-            >
-
-              <i class="bi bi-file-earmark-person"></i>
-
-              Fotocopia Documento Identidad
-
-            </label>
-
-
-            <select
-              class="form-select"
-              id="fotocopia"
-              name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD"
-            >
-
-              <option value="SI">
-                ✓ SI
-              </option>
-
-              <option value="NO">
-                ✗ NO
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- CONSIGNACIONES -->
-
-          <div class="col-md-6">
-
-            <label
-              for="consignaciones"
-              class="form-label"
-            >
-
-              <i class="bi bi-cash-stack"></i>
-
-              Consignaciones Originales
-
-            </label>
-
-
-            <select
-              class="form-select"
-              id="consignaciones"
-              name="CONSIGNACIONES ORIGINALES"
-            >
-
-              <option value="SI">
-                ✓ SI
-              </option>
-
-              <option value="NO">
-                ✗ NO
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- FUNCIONARIO -->
-
-          <div class="col-md-12">
-
-            <label
-              for="nombreFuncionario"
-              class="form-label"
-            >
-
-              <i class="bi bi-person-workspace"></i>
-
-              Nombre del Funcionario
-
-              <span class="required-dot">*</span>
-
-            </label>
-
-
-            <select
-              class="form-select"
-              id="nombreFuncionario"
-              name="NOMBRE FUNCIONARIO"
-              required
-            >
-
-              <option value="">
-                Cargando funcionarios...
-              </option>
-
-            </select>
-
-
-            <div
-              id="estadoFuncionarios"
-              class="loading-status"
-            >
-
-              <span class="loading-dot"></span>
-
-              Cargando funcionarios...
-
+            <div class="col-md-6">
+              <label for="cedulaInfractor" class="form-label">
+                <i class="bi bi-card-text"></i> Cédula del Infractor <span class="required-dot">*</span>
+              </label>
+              <input type="text" class="form-control" id="cedulaInfractor" name="CÉDULA INFRACTOR" inputmode="numeric" autocomplete="off" required>
             </div>
 
+            <div class="col-md-6">
+              <label for="cedulaPagador" class="form-label">
+                <i class="bi bi-wallet2"></i> Cédula del Pagador <span class="required-dot">*</span>
+              </label>
+              <input type="text" class="form-control" id="cedulaPagador" name="CÉDULA PAGADOR" inputmode="numeric" autocomplete="off" required>
+            </div>
+
+            <div class="col-md-6">
+              <label for="direccion" class="form-label">
+                <i class="bi bi-house-door"></i> Dirección
+              </label>
+              <input type="text" class="form-control" id="direccion" name="DIRECCIÓN">
+            </div>
+
+            <div class="col-md-6">
+              <label for="ciudad" class="form-label">
+                <i class="bi bi-geo-alt"></i> Ciudad
+              </label>
+              <input type="text" class="form-control" id="ciudad" name="CIUDAD" value="La Ceja">
+            </div>
+
+            <div class="col-md-6">
+              <label for="telefono" class="form-label">
+                <i class="bi bi-telephone"></i> Teléfono
+              </label>
+              <input type="tel" class="form-control" id="telefono" name="TELÉFONO" autocomplete="tel">
+            </div>
+
+            <div class="col-md-6">
+              <label for="correo" class="form-label">
+                <i class="bi bi-envelope"></i> Correo Electrónico
+              </label>
+              <input type="email" class="form-control" id="correo" name="CORREO ELECTRÓNICO" autocomplete="email">
+            </div>
           </div>
 
+          <!-- SECCIÓN 2 -->
+          <div class="section-header">
+            <span class="section-number">2</span>
+            <h5>Datos de la Infracción</h5>
+            <i class="bi bi-exclamation-triangle section-icon"></i>
+          </div>
 
-        </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <label for="placa" class="form-label">
+                <i class="bi bi-car-front"></i> Placa <span class="required-dot">*</span>
+              </label>
+              <input type="text" class="form-control text-uppercase" id="placa" name="PLACA" maxlength="6" autocomplete="off" required>
+            </div>
 
+            <div class="col-md-8">
+              <label for="tipoInfraccion" class="form-label">
+                <i class="bi bi-list-check"></i> Tipo de Infracción <span class="required-dot">*</span>
+              </label>
+              <select class="form-select" id="tipoInfraccion" name="TIPO DE INFRACCIÓN" required>
+                <option value="">Cargando opciones...</option>
+              </select>
+              <div id="estadoInfracciones" class="loading-status">
+                <span class="loading-dot"></span> Cargando tipos de infracción...
+              </div>
+            </div>
 
-        <!-- =================================================
-             BOTÓN GUARDAR
-        ================================================== -->
+            <div class="col-md-6">
+              <label for="nroComparendo" class="form-label">
+                <i class="bi bi-file-earmark-text"></i> Nro. Comparendo <span class="required-dot">*</span>
+              </label>
+              <input type="text" class="form-control" id="nroComparendo" name="NRO COMPARENDO" autocomplete="off" required>
+            </div>
 
-        <button
-          type="submit"
-          class="btn-primary-custom"
-          id="btnGuardar"
-        >
+            <div class="col-md-6">
+              <label for="fecha" class="form-label">
+                <i class="bi bi-calendar-event"></i> Fecha <span class="required-dot">*</span>
+              </label>
+              <input type="date" class="form-control" id="fecha" name="FECHA" required>
+            </div>
+          </div>
 
-          <i class="bi bi-file-earmark-pdf"></i>
+          <!-- SECCIÓN 3 -->
+          <div class="section-header">
+            <span class="section-number">3</span>
+            <h5>Liquidación de Pagos</h5>
+            <i class="bi bi-calculator section-icon"></i>
+          </div>
 
-          Guardar y Generar PDF
+          <div class="payment-field">
+            <label for="valorGrua" class="form-label">
+              <i class="bi bi-truck"></i> Valor Pagado Grúa <span class="required-dot">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control val-calculo" id="valorGrua" name="VALOR PAGADO GRÚA" min="0" step="100" value="0" required>
+            </div>
+          </div>
 
-        </button>
+          <div class="payment-field">
+            <label for="valorParqueadero" class="form-label">
+              <i class="bi bi-p-square"></i> Valor Pagado Parqueadero <span class="required-dot">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control val-calculo" id="valorParqueadero" name="VALOR PAGADO PARQUEADERO" min="0" step="100" value="0" required>
+            </div>
+          </div>
 
+          <div class="total-card">
+            <div class="total-label">
+              <i class="bi bi-receipt"></i> Total Pagado
+            </div>
+            <div class="total-amount" id="totalPagado">0</div>
+            <input type="hidden" id="totalPagadoHidden" name="TOTAL PAGADO" value="0">
+          </div>
 
-      </form>
+          <!-- SECCIÓN 4 -->
+          <div class="section-header mt-4">
+            <span class="section-number">4</span>
+            <h5>Soportes y Registro</h5>
+            <i class="bi bi-folder-check section-icon"></i>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label for="fotocopia" class="form-label">
+                <i class="bi bi-file-earmark-person"></i> Fotocopia Documento Identidad
+              </label>
+              <select class="form-select" id="fotocopia" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD">
+                <option value="SI">✓ SI</option>
+                <option value="NO">✗ NO</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label for="consignaciones" class="form-label">
+                <i class="bi bi-cash-stack"></i> Consignaciones Originales
+              </label>
+              <select class="form-select" id="consignaciones" name="CONSIGNACIONES ORIGINALES">
+                <option value="SI">✓ SI</option>
+                <option value="NO">✗ NO</option>
+              </select>
+            </div>
+
+            <div class="col-md-12">
+              <label for="nombreFuncionario" class="form-label">
+                <i class="bi bi-person-workspace"></i> Nombre del Funcionario <span class="required-dot">*</span>
+              </label>
+              <select class="form-select" id="nombreFuncionario" name="NOMBRE FUNCIONARIO" required>
+                <option value="">Cargando funcionarios...</option>
+              </select>
+              <div id="estadoFuncionarios" class="loading-status">
+                <span class="loading-dot"></span> Cargando funcionarios...
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTÓN GUARDAR -->
+          <button type="submit" class="btn-primary-custom" id="btnGuardar">
+            <i class="bi bi-file-earmark-pdf"></i> Guardar y Generar PDF
+          </button>
+
+        </form>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="form-footer">
+        <span><i class="bi bi-shield-lock-fill"></i> Datos protegidos · Sistema institucional</span>
+        <span>Secretaría de Movilidad · La Ceja © 2026</span>
+      </div>
 
     </div>
-
-
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
-
-    <div class="form-footer">
-
-      <span>
-
-        <i class="bi bi-shield-lock-fill"></i>
-
-        Datos protegidos · Sistema institucional
-
-      </span>
-
-
-      <span>
-
-        Secretaría de Movilidad · La Ceja © 2026
-
-      </span>
-
-    </div>
-
-
   </div>
 
-</div>
-
-
-<script>
-
-
-/* ============================================================
-   CONFIGURACIÓN
-============================================================ */
-
-const WEB_APP_URL =
-  'https://script.google.com/macros/s/AKfycbzP8rVia-Xg2vuJSqsRhjP5KfWGv5D25p9Mtg6cers9Z5bwpYuczi3GOTB9y4LUToXShA/exec';
-
-
-let pagadorModificadoManualmente =
-  false;
-
-
-/* ============================================================
-   TOAST
-============================================================ */
-
-function mostrarToast(
-  tipo,
-  titulo,
-  mensaje
-) {
-
-  const container =
-    document.getElementById(
-      'toastContainer'
-    );
-
-
-  if (!container) {
-    return;
-  }
-
-
-  const toast =
-    document.createElement(
-      'div'
-    );
-
-
-  toast.className =
-    `custom-toast toast-${tipo}`;
-
-
-  const icon =
-    tipo === 'success'
-      ? 'bi-check-circle-fill'
-      : 'bi-exclamation-triangle-fill';
-
-
-  toast.innerHTML = `
-
-    <div class="toast-icon">
-
-      <i class="bi ${icon}"></i>
-
-    </div>
-
-
-    <div class="toast-body-custom">
-
-      <div class="toast-title">
-        ${escaparHTML(titulo)}
+  <!-- =========================================================
+       MODAL DE VISTA PREVIA PDF (NUEVO)
+  ========================================================= -->
+  <div class="modal fade" id="pdfPreviewModal" tabindex="-1" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content" style="border-radius: 16px; overflow: hidden; border: none;">
+        <div class="modal-header" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none;">
+          <h5 class="modal-title" id="pdfPreviewModalLabel">
+            <i class="bi bi-eye-fill me-2"></i>Vista Previa del Documento
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-0" style="height: 65vh; background: #eef2f6;">
+          <iframe id="pdfPreviewFrame" src="about:blank" width="100%" height="100%" style="border: none;"></iframe>
+        </div>
+        <div class="modal-footer" style="background: var(--surface-alt); border-top: 1px solid var(--border);">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 10px;">
+            <i class="bi bi-x-circle me-1"></i> Cerrar
+          </button>
+          <button type="button" class="btn btn-success" id="btnDescargarPreview" style="border-radius: 10px; background: var(--success); border: none; color: white;">
+            <i class="bi bi-download me-1"></i> Descargar PDF
+          </button>
+        </div>
       </div>
-
-      <div class="toast-message">
-        ${escaparHTML(mensaje)}
-      </div>
-
     </div>
+  </div>
 
+  <!-- Bootstrap JS Bundle (Necesario para el Modal) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <button
-      type="button"
-      class="toast-close"
-      title="Cerrar"
-    >
+  <script>
+    /* ============================================================
+       CONFIGURACIÓN
+    ============================================================ */
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzP8rVia-Xg2vuJSqsRhjP5KfWGv5D25p9Mtg6cers9Z5bwpYuczi3GOTB9y4LUToXShA/exec';
 
-      <i class="bi bi-x-lg"></i>
+    let pagadorModificadoManualmente = false;
+    let pdfBase64Pendiente = '';
+    let pdfNombrePendiente = '';
 
-    </button>
+    /* ============================================================
+       TOAST
+    ============================================================ */
+    function mostrarToast(tipo, titulo, mensaje) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
 
+      const toast = document.createElement('div');
+      toast.className = `custom-toast toast-${tipo}`;
+      const icon = tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
 
-    <div class="toast-progress"></div>
+      toast.innerHTML = `
+        <div class="toast-icon"><i class="bi ${icon}"></i></div>
+        <div class="toast-body-custom">
+          <div class="toast-title">${escaparHTML(titulo)}</div>
+          <div class="toast-message">${escaparHTML(mensaje)}</div>
+        </div>
+        <button type="button" class="toast-close" title="Cerrar"><i class="bi bi-x-lg"></i></button>
+        <div class="toast-progress"></div>
+      `;
 
-  `;
+      const btnCerrar = toast.querySelector('.toast-close');
+      btnCerrar.addEventListener('click', function() { cerrarToast(toast); });
+      container.appendChild(toast);
 
-
-  const btnCerrar =
-    toast.querySelector(
-      '.toast-close'
-    );
-
-
-  btnCerrar.addEventListener(
-    'click',
-    function() {
-
-      cerrarToast(toast);
-
+      setTimeout(function() {
+        if (toast && toast.parentNode) cerrarToast(toast);
+      }, 4500);
     }
-  );
 
+    function cerrarToast(toast) {
+      if (!toast) return;
+      toast.classList.add('hiding');
+      setTimeout(function() {
+        if (toast && toast.parentNode) toast.remove();
+      }, 300);
+    }
 
-  container.appendChild(
-    toast
-  );
+    function escaparHTML(valor) {
+      return String(valor ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
 
+    /* ============================================================
+       FECHA ACTUAL
+    ============================================================ */
+    function establecerFechaActual() {
+      const campo = document.getElementById('fecha');
+      if (!campo) return;
+      const ahora = new Date();
+      const año = ahora.getFullYear();
+      const mes = String(ahora.getMonth() + 1).padStart(2, '0');
+      const dia = String(ahora.getDate()).padStart(2, '0');
+      campo.value = `${año}-${mes}-${dia}`;
+    }
 
-  setTimeout(
-    function() {
+    /* ============================================================
+       TOTAL (GRÚA + PARQUEADERO)
+    ============================================================ */
+    function calcularTotal() {
+      const campoGrua = document.getElementById('valorGrua');
+      const campoParqueadero = document.getElementById('valorParqueadero');
+      const totalVisible = document.getElementById('totalPagado');
+      const totalHidden = document.getElementById('totalPagadoHidden');
 
-      if (
-        toast &&
-        toast.parentNode
-      ) {
+      if (!campoGrua || !campoParqueadero || !totalVisible || !totalHidden) return;
 
-        cerrarToast(toast);
+      const grua = parseFloat(campoGrua.value) || 0;
+      const parqueadero = parseFloat(campoParqueadero.value) || 0;
+      const total = grua + parqueadero;
 
+      totalVisible.textContent = total.toLocaleString('es-CO');
+      totalHidden.value = total;
+    }
+
+    /* ============================================================
+       ESTADO DE CARGA
+    ============================================================ */
+    function actualizarEstadoCarga(id, tipo, mensaje) {
+      const elemento = document.getElementById(id);
+      if (!elemento) return;
+
+      let claseDot = 'loading-dot';
+      if (tipo === 'success') claseDot += ' success';
+      if (tipo === 'error') claseDot += ' error';
+
+      elemento.className = 'loading-status ' + (tipo === 'success' ? 'success' : tipo === 'error' ? 'error' : '');
+      elemento.innerHTML = `<span class="${claseDot}"></span> ${escaparHTML(mensaje)}`;
+    }
+
+    /* ============================================================
+       CARGAR DESPLEGABLES (JSONP)
+    ============================================================ */
+    function cargarDesplegables() {
+      const selectInf = document.getElementById('tipoInfraccion');
+      const selectFunc = document.getElementById('nombreFuncionario');
+
+      if (!selectInf || !selectFunc) {
+        console.error('No se encontraron los select del formulario.');
+        return;
       }
 
-    },
-    4500
-  );
+      selectInf.innerHTML = `<option value="">Cargando infracciones...</option>`;
+      selectFunc.innerHTML = `<option value="">Cargando funcionarios...</option>`;
 
-}
+      actualizarEstadoCarga('estadoInfracciones', 'loading', 'Cargando tipos de infracción...');
+      actualizarEstadoCarga('estadoFuncionarios', 'loading', 'Cargando funcionarios...');
 
+      const callbackName = 'recibirOpciones_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+      let script = null;
 
-/* ============================================================
-   CERRAR TOAST
-============================================================ */
-
-function cerrarToast(
-  toast
-) {
-
-  if (!toast) {
-    return;
-  }
-
-
-  toast.classList.add(
-    'hiding'
-  );
-
-
-  setTimeout(
-    function() {
-
-      if (
-        toast &&
-        toast.parentNode
-      ) {
-
-        toast.remove();
-
-      }
-
-    },
-    300
-  );
-
-}
-
-
-/* ============================================================
-   ESCAPAR HTML
-============================================================ */
-
-function escaparHTML(
-  valor
-) {
-
-  return String(
-    valor ?? ''
-  )
-
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-
-    .replace(
-      /</g,
-      '&lt;'
-    )
-
-    .replace(
-      />/g,
-      '&gt;'
-    )
-
-    .replace(
-      /"/g,
-      '&quot;'
-    )
-
-    .replace(
-      /'/g,
-      '&#039;'
-    );
-
-}
-
-
-/* ============================================================
-   FECHA ACTUAL
-============================================================ */
-
-function establecerFechaActual() {
-
-  const campo =
-    document.getElementById(
-      'fecha'
-    );
-
-
-  if (!campo) {
-    return;
-  }
-
-
-  const ahora =
-    new Date();
-
-
-  const año =
-    ahora.getFullYear();
-
-
-  const mes =
-    String(
-      ahora.getMonth() + 1
-    ).padStart(
-      2,
-      '0'
-    );
-
-
-  const dia =
-    String(
-      ahora.getDate()
-    ).padStart(
-      2,
-      '0'
-    );
-
-
-  campo.value =
-    `${año}-${mes}-${dia}`;
-
-}
-
-
-/* ============================================================
-   TOTAL
-   GRÚA + PARQUEADERO
-============================================================ */
-
-function calcularTotal() {
-
-  const campoGrua =
-    document.getElementById(
-      'valorGrua'
-    );
-
-
-  const campoParqueadero =
-    document.getElementById(
-      'valorParqueadero'
-    );
-
-
-  const totalVisible =
-    document.getElementById(
-      'totalPagado'
-    );
-
-
-  const totalHidden =
-    document.getElementById(
-      'totalPagadoHidden'
-    );
-
-
-  if (
-    !campoGrua ||
-    !campoParqueadero ||
-    !totalVisible ||
-    !totalHidden
-  ) {
-
-    return;
-
-  }
-
-
-  const grua =
-    parseFloat(
-      campoGrua.value
-    ) || 0;
-
-
-  const parqueadero =
-    parseFloat(
-      campoParqueadero.value
-    ) || 0;
-
-
-  /*
-   * LÓGICA DEL SISTEMA:
-   *
-   * TOTAL =
-   * GRÚA + PARQUEADERO
-   */
-  const total =
-    grua +
-    parqueadero;
-
-
-  totalVisible.textContent =
-    total.toLocaleString(
-      'es-CO'
-    );
-
-
-  totalHidden.value =
-    total;
-
-}
-
-
-/* ============================================================
-   ESTADO DE CARGA
-============================================================ */
-
-function actualizarEstadoCarga(
-  id,
-  tipo,
-  mensaje
-) {
-
-  const elemento =
-    document.getElementById(
-      id
-    );
-
-
-  if (!elemento) {
-    return;
-  }
-
-
-  let claseDot =
-    'loading-dot';
-
-
-  if (tipo === 'success') {
-
-    claseDot +=
-      ' success';
-
-  }
-
-
-  if (tipo === 'error') {
-
-    claseDot +=
-      ' error';
-
-  }
-
-
-  elemento.className =
-    'loading-status ' +
-    (
-      tipo === 'success'
-        ? 'success'
-        : tipo === 'error'
-          ? 'error'
-          : ''
-    );
-
-
-  elemento.innerHTML = `
-
-    <span class="${claseDot}"></span>
-
-    ${escaparHTML(mensaje)}
-
-  `;
-
-}
-
-
-/* ============================================================
-   CARGAR DESPLEGABLES
-   JSONP
-============================================================ */
-
-function cargarDesplegables() {
-
-  const selectInf =
-    document.getElementById(
-      'tipoInfraccion'
-    );
-
-
-  const selectFunc =
-    document.getElementById(
-      'nombreFuncionario'
-    );
-
-
-  if (
-    !selectInf ||
-    !selectFunc
-  ) {
-
-    console.error(
-      'No se encontraron los select del formulario.'
-    );
-
-    return;
-
-  }
-
-
-  /*
-   * Estado inicial
-   */
-  selectInf.innerHTML = `
-
-    <option value="">
-      Cargando infracciones...
-    </option>
-
-  `;
-
-
-  selectFunc.innerHTML = `
-
-    <option value="">
-      Cargando funcionarios...
-    </option>
-
-  `;
-
-
-  actualizarEstadoCarga(
-    'estadoInfracciones',
-    'loading',
-    'Cargando tipos de infracción...'
-  );
-
-
-  actualizarEstadoCarga(
-    'estadoFuncionarios',
-    'loading',
-    'Cargando funcionarios...'
-  );
-
-
-  /*
-   * Nombre único para la función callback.
-   */
-  const callbackName =
-    'recibirOpciones_' +
-    Date.now() +
-    '_' +
-    Math.floor(
-      Math.random() * 100000
-    );
-
-
-  let script = null;
-
-
-  /*
-   * CALLBACK GLOBAL
-   */
-  window[callbackName] =
-    function(respuesta) {
-
-      console.log(
-        'Respuesta de opciones:',
-        respuesta
-      );
-
-
-      try {
-
-        if (
-          !respuesta ||
-          respuesta.success !== true
-        ) {
-
-          throw new Error(
-            respuesta &&
-            respuesta.message
-              ? respuesta.message
-              : 'El servidor no devolvió las opciones.'
-          );
-
-        }
-
-
-        /*
-         * ============================
-         * INFRACCIONES
-         * ============================
-         */
-
-        const infracciones =
-          Array.isArray(
-            respuesta.infracciones
-          )
-            ? respuesta.infracciones
-            : [];
-
-
-        selectInf.innerHTML = `
-
-          <option value="">
-            Seleccione una opción...
-          </option>
-
-        `;
-
-
-        infracciones.forEach(
-          function(item) {
-
-            const texto =
-              String(
-                item || ''
-              ).trim();
-
-
-            if (!texto) {
-              return;
-            }
-
-
-            const option =
-              document.createElement(
-                'option'
-              );
-
-
-            option.value =
-              texto;
-
-
-            option.textContent =
-              texto;
-
-
-            selectInf.appendChild(
-              option
-            );
-
-          }
-        );
-
-
-        /*
-         * ============================
-         * FUNCIONARIOS
-         * ============================
-         */
-
-        const funcionarios =
-          Array.isArray(
-            respuesta.funcionarios
-          )
-            ? respuesta.funcionarios
-            : [];
-
-
-        selectFunc.innerHTML = `
-
-          <option value="">
-            Seleccione un funcionario...
-          </option>
-
-        `;
-
-
-        funcionarios.forEach(
-          function(item) {
-
-            const texto =
-              String(
-                item || ''
-              ).trim();
-
-
-            if (!texto) {
-              return;
-            }
-
-
-            const option =
-              document.createElement(
-                'option'
-              );
-
-
-            option.value =
-              texto;
-
-
-            option.textContent =
-              texto;
-
-
-            selectFunc.appendChild(
-              option
-            );
-
-          }
-        );
-
-
-        /*
-         * ============================
-         * ESTADOS
-         * ============================
-         */
-
-        if (
-          infracciones.length > 0
-        ) {
-
-          actualizarEstadoCarga(
-            'estadoInfracciones',
-            'success',
-            `${infracciones.length} opciones cargadas correctamente.`
-          );
-
-        } else {
-
-          selectInf.innerHTML = `
-
-            <option value="">
-              No hay infracciones registradas
-            </option>
-
-          `;
-
-
-          actualizarEstadoCarga(
-            'estadoInfracciones',
-            'error',
-            'No se encontraron infracciones.'
-          );
-
-        }
-
-
-        if (
-          funcionarios.length > 0
-        ) {
-
-          actualizarEstadoCarga(
-            'estadoFuncionarios',
-            'success',
-            `${funcionarios.length} funcionarios cargados correctamente.`
-          );
-
-        } else {
-
-          selectFunc.innerHTML = `
-
-            <option value="">
-              No hay funcionarios registrados
-            </option>
-
-          `;
-
-
-          actualizarEstadoCarga(
-            'estadoFuncionarios',
-            'error',
-            'No se encontraron funcionarios.'
-          );
-
-        }
-
-
-        console.log(
-          'Infracciones cargadas:',
-          infracciones.length
-        );
-
-
-        console.log(
-          'Funcionarios cargados:',
-          funcionarios.length
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          'Error procesando opciones:',
-          error
-        );
-
-
-        selectInf.innerHTML = `
-
-          <option value="">
-            Error al cargar infracciones
-          </option>
-
-        `;
-
-
-        selectFunc.innerHTML = `
-
-          <option value="">
-            Error al cargar funcionarios
-          </option>
-
-        `;
-
-
-        actualizarEstadoCarga(
-          'estadoInfracciones',
-          'error',
-          'Error cargando infracciones.'
-        );
-
-
-        actualizarEstadoCarga(
-          'estadoFuncionarios',
-          'error',
-          'Error cargando funcionarios.'
-        );
-
-
-        mostrarToast(
-          'error',
-          'Error cargando datos',
-          error.message ||
-          'No fue posible cargar las opciones.'
-        );
-
-      } finally {
-
-        /*
-         * Limpiar callback.
-         */
+      window[callbackName] = function(respuesta) {
         try {
-
-          delete window[
-            callbackName
-          ];
-
-        } catch (e) {
-
-          window[
-            callbackName
-          ] = undefined;
-
-        }
-
-
-        /*
-         * Eliminar script.
-         */
-        if (
-          script &&
-          script.parentNode
-        ) {
-
-          script.parentNode.removeChild(
-            script
-          );
-
-        }
-
-      }
-
-    };
-
-
-  /*
-   * CREAR SCRIPT JSONP
-   */
-  script =
-    document.createElement(
-      'script'
-    );
-
-
-  script.src =
-    WEB_APP_URL +
-    '?api=opciones&callback=' +
-    encodeURIComponent(
-      callbackName
-    );
-
-
-  script.async =
-    true;
-
-
-  /*
-   * ERROR DE CONEXIÓN
-   */
-  script.onerror =
-    function() {
-
-      console.error(
-        'No fue posible cargar las opciones mediante JSONP.'
-      );
-
-
-      selectInf.innerHTML = `
-
-        <option value="">
-          Error de conexión
-        </option>
-
-      `;
-
-
-      selectFunc.innerHTML = `
-
-        <option value="">
-          Error de conexión
-        </option>
-
-      `;
-
-
-      actualizarEstadoCarga(
-        'estadoInfracciones',
-        'error',
-        'No fue posible conectar con el servidor.'
-      );
-
-
-      actualizarEstadoCarga(
-        'estadoFuncionarios',
-        'error',
-        'No fue posible conectar con el servidor.'
-      );
-
-
-      mostrarToast(
-        'error',
-        'No se pudieron cargar los datos',
-        'Verifica que el Web App de Apps Script esté implementado correctamente.'
-      );
-
-
-      try {
-
-        delete window[
-          callbackName
-        ];
-
-      } catch (e) {
-
-        window[
-          callbackName
-        ] = undefined;
-
-      }
-
-
-      if (
-        script &&
-        script.parentNode
-      ) {
-
-        script.parentNode.removeChild(
-          script
-        );
-
-      }
-
-    };
-
-
-  /*
-   * AGREGAR SCRIPT AL DOCUMENTO
-   */
-  document.head.appendChild(
-    script
-  );
-
-}
-
-
-/* ============================================================
-   PREPARAR FORMULARIO
-============================================================ */
-
-document.addEventListener(
-  'DOMContentLoaded',
-  function() {
-
-    console.log(
-      'Sistema de Grúa y Parqueadero iniciado.'
-    );
-
-
-    /*
-     * Fecha actual
-     */
-    establecerFechaActual();
-
-
-    /*
-     * Elementos
-     */
-    const inputInfractor =
-      document.getElementById(
-        'cedulaInfractor'
-      );
-
-
-    const inputPagador =
-      document.getElementById(
-        'cedulaPagador'
-      );
-
-
-    /*
-     * CÉDULA PAGADOR
-     *
-     * Si el usuario no la modifica,
-     * permanece sincronizada con la del infractor.
-     */
-    if (
-      inputPagador
-    ) {
-
-      inputPagador.addEventListener(
-        'input',
-        function() {
-
-          pagadorModificadoManualmente =
-            true;
-
-        }
-      );
-
-    }
-
-
-    /*
-     * CÉDULA INFRACTOR
-     */
-    if (
-      inputInfractor &&
-      inputPagador
-    ) {
-
-      inputInfractor.addEventListener(
-        'input',
-        function(e) {
-
-          if (
-            !pagadorModificadoManualmente ||
-            inputPagador.value.trim() === ''
-          ) {
-
-            inputPagador.value =
-              e.target.value;
-
+          if (!respuesta || respuesta.success !== true) {
+            throw new Error(respuesta && respuesta.message ? respuesta.message : 'El servidor no devolvió las opciones.');
           }
 
-        }
-      );
+          const infracciones = Array.isArray(respuesta.infracciones) ? respuesta.infracciones : [];
+          selectInf.innerHTML = `<option value="">Seleccione una opción...</option>`;
+          infracciones.forEach(function(item) {
+            const texto = String(item || '').trim();
+            if (!texto) return;
+            const option = document.createElement('option');
+            option.value = texto;
+            option.textContent = texto;
+            selectInf.appendChild(option);
+          });
 
+          const funcionarios = Array.isArray(respuesta.funcionarios) ? respuesta.funcionarios : [];
+          selectFunc.innerHTML = `<option value="">Seleccione un funcionario...</option>`;
+          funcionarios.forEach(function(item) {
+            const texto = String(item || '').trim();
+            if (!texto) return;
+            const option = document.createElement('option');
+            option.value = texto;
+            option.textContent = texto;
+            selectFunc.appendChild(option);
+          });
+
+          if (infracciones.length > 0) {
+            actualizarEstadoCarga('estadoInfracciones', 'success', `${infracciones.length} opciones cargadas correctamente.`);
+          } else {
+            selectInf.innerHTML = `<option value="">No hay infracciones registradas</option>`;
+            actualizarEstadoCarga('estadoInfracciones', 'error', 'No se encontraron infracciones.');
+          }
+
+          if (funcionarios.length > 0) {
+            actualizarEstadoCarga('estadoFuncionarios', 'success', `${funcionarios.length} funcionarios cargados correctamente.`);
+          } else {
+            selectFunc.innerHTML = `<option value="">No hay funcionarios registrados</option>`;
+            actualizarEstadoCarga('estadoFuncionarios', 'error', 'No se encontraron funcionarios.');
+          }
+
+        } catch (error) {
+          console.error('Error procesando opciones:', error);
+          selectInf.innerHTML = `<option value="">Error al cargar infracciones</option>`;
+          selectFunc.innerHTML = `<option value="">Error al cargar funcionarios</option>`;
+          actualizarEstadoCarga('estadoInfracciones', 'error', 'Error cargando infracciones.');
+          actualizarEstadoCarga('estadoFuncionarios', 'error', 'Error cargando funcionarios.');
+          mostrarToast('error', 'Error cargando datos', error.message || 'No fue posible cargar las opciones.');
+        } finally {
+          try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+          if (script && script.parentNode) script.parentNode.removeChild(script);
+        }
+      };
+
+      script = document.createElement('script');
+      script.src = WEB_APP_URL + '?api=opciones&callback=' + encodeURIComponent(callbackName);
+      script.async = true;
+
+      script.onerror = function() {
+        console.error('No fue posible cargar las opciones mediante JSONP.');
+        selectInf.innerHTML = `<option value="">Error de conexión</option>`;
+        selectFunc.innerHTML = `<option value="">Error de conexión</option>`;
+        actualizarEstadoCarga('estadoInfracciones', 'error', 'No fue posible conectar con el servidor.');
+        actualizarEstadoCarga('estadoFuncionarios', 'error', 'No fue posible conectar con el servidor.');
+        mostrarToast('error', 'No se pudieron cargar los datos', 'Verifica que el Web App de Apps Script esté implementado correctamente.');
+        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
+        if (script && script.parentNode) script.parentNode.removeChild(script);
+      };
+
+      document.head.appendChild(script);
     }
 
+    /* ============================================================
+       PREPARAR FORMULARIO
+    ============================================================ */
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Sistema de Grúa y Parqueadero iniciado.');
+      establecerFechaActual();
 
-    /*
-     * CÁLCULO DE TOTAL
-     */
-    document
-      .querySelectorAll(
-        '.val-calculo'
-      )
-      .forEach(
-        function(input) {
+      const inputInfractor = document.getElementById('cedulaInfractor');
+      const inputPagador = document.getElementById('cedulaPagador');
 
-          input.addEventListener(
-            'input',
-            calcularTotal
-          );
+      if (inputPagador) {
+        inputPagador.addEventListener('input', function() { pagadorModificadoManualmente = true; });
+      }
 
+      if (inputInfractor && inputPagador) {
+        inputInfractor.addEventListener('input', function(e) {
+          if (!pagadorModificadoManualmente || inputPagador.value.trim() === '') {
+            inputPagador.value = e.target.value;
+          }
+        });
+      }
 
-          input.addEventListener(
-            'change',
-            calcularTotal
-          );
+      document.querySelectorAll('.val-calculo').forEach(function(input) {
+        input.addEventListener('input', calcularTotal);
+        input.addEventListener('change', calcularTotal);
+      });
 
+      const placa = document.getElementById('placa');
+      if (placa) {
+        placa.addEventListener('input', function() {
+          this.value = this.value.toUpperCase().replace(/\s/g, '');
+        });
+      }
+
+      calcularTotal();
+      cargarDesplegables();
+
+      // Listener para el botón de descarga del modal
+      document.getElementById('btnDescargarPreview').addEventListener('click', function() {
+        if (pdfBase64Pendiente && pdfNombrePendiente) {
+          descargarPDF(pdfBase64Pendiente, pdfNombrePendiente);
         }
-      );
+      });
 
+      // Liberar memoria al cerrar el modal
+      const modalEl = document.getElementById('pdfPreviewModal');
+      if (modalEl) {
+        modalEl.addEventListener('hidden.bs.modal', function () {
+          const iframe = document.getElementById('pdfPreviewFrame');
+          if (iframe) {
+            iframe.src = 'about:blank'; // Limpia el base64 de la memoria del navegador
+          }
+          pdfBase64Pendiente = '';
+          pdfNombrePendiente = '';
+        });
+      }
+    });
 
-    /*
-     * Placa en mayúsculas
-     */
-    const placa =
-      document.getElementById(
-        'placa'
-      );
-
-
-    if (placa) {
-
-      placa.addEventListener(
-        'input',
-        function() {
-
-          this.value =
-            this.value
-              .toUpperCase()
-              .replace(
-                /\s/g,
-                ''
-              );
-
-        }
-      );
-
-    }
-
-
-    /*
-     * Calcular total inicial
-     */
-    calcularTotal();
-
-
-    /*
-     * Cargar listas
-     */
-    cargarDesplegables();
-
-  }
-);
-
-
-/* ============================================================
-   ENVÍO DEL FORMULARIO
-============================================================ */
-
-document
-  .getElementById(
-    'formRegistro'
-  )
-  .addEventListener(
-    'submit',
-    async function(e) {
-
+    /* ============================================================
+       ENVÍO DEL FORMULARIO
+    ============================================================ */
+    document.getElementById('formRegistro').addEventListener('submit', async function(e) {
       e.preventDefault();
-
-
       e.stopPropagation();
 
+      const formulario = this;
 
-      const formulario =
-        this;
-
-
-      /*
-       * Validación HTML5
-       */
-      if (
-        !formulario.checkValidity()
-      ) {
-
-        formulario.classList.add(
-          'was-validated'
-        );
-
-
-        mostrarToast(
-          'error',
-          'Campos incompletos',
-          'Por favor diligencia todos los campos obligatorios marcados con *.'
-        );
-
-
+      if (!formulario.checkValidity()) {
+        formulario.classList.add('was-validated');
+        mostrarToast('error', 'Campos incompletos', 'Por favor diligencia todos los campos obligatorios marcados con *.');
         return;
-
       }
 
-
-      /*
-       * Asegurar cálculo final
-       */
       calcularTotal();
 
-
-      /*
-       * Botón
-       */
-      const btnGuardar =
-        document.getElementById(
-          'btnGuardar'
-        );
-
-
-      btnGuardar.disabled =
-        true;
-
-
-      btnGuardar.innerHTML = `
-
-        <span
-          class="spinner-border spinner-border-sm"
-          role="status"
-          aria-hidden="true"
-        ></span>
-
-        Procesando y generando PDF...
-
-      `;
-
+      const btnGuardar = document.getElementById('btnGuardar');
+      btnGuardar.disabled = true;
+      btnGuardar.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando y generando PDF...`;
 
       try {
+        const formData = new FormData(formulario);
+        const dataObj = {};
+        formData.forEach(function(value, key) { dataObj[key] = value; });
 
+        dataObj['VALOR PAGADO GRÚA'] = parseFloat(document.getElementById('valorGrua').value) || 0;
+        dataObj['VALOR PAGADO PARQUEADERO'] = parseFloat(document.getElementById('valorParqueadero').value) || 0;
+        dataObj['TOTAL PAGADO'] = parseFloat(document.getElementById('totalPagadoHidden').value) || 0;
+        dataObj['PLACA'] = String(dataObj['PLACA'] || '').trim().toUpperCase();
 
-        /* ===================================================
-           RECOPILAR FORMULARIO
-        =================================================== */
+        const response = await fetch(WEB_APP_URL, {
+          method: 'POST',
+          mode: 'cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(dataObj)
+        });
 
-        const formData =
-          new FormData(
-            formulario
-          );
+        if (!response.ok) throw new Error('El servidor respondió con HTTP ' + response.status);
 
-
-        const dataObj =
-          {};
-
-
-        formData.forEach(
-          function(value, key) {
-
-            dataObj[key] =
-              value;
-
-          }
-        );
-
-
-        /*
-         * Asegurar valores numéricos
-         */
-        dataObj[
-          'VALOR PAGADO GRÚA'
-        ] =
-          parseFloat(
-            document.getElementById(
-              'valorGrua'
-            ).value
-          ) || 0;
-
-
-        dataObj[
-          'VALOR PAGADO PARQUEADERO'
-        ] =
-          parseFloat(
-            document.getElementById(
-              'valorParqueadero'
-            ).value
-          ) || 0;
-
-
-        dataObj[
-          'TOTAL PAGADO'
-        ] =
-          parseFloat(
-            document.getElementById(
-              'totalPagadoHidden'
-            ).value
-          ) || 0;
-
-
-        /*
-         * Normalizar placa
-         */
-        dataObj['PLACA'] =
-          String(
-            dataObj['PLACA'] || ''
-          )
-            .trim()
-            .toUpperCase();
-
-
-        console.log(
-          'Datos a enviar:',
-          dataObj
-        );
-
-
-        /* ===================================================
-           ENVIAR AL WEB APP
-        =================================================== */
-
-        const response =
-          await fetch(
-            WEB_APP_URL,
-            {
-
-              method:
-                'POST',
-
-              mode:
-                'cors',
-
-              headers: {
-
-                'Content-Type':
-                  'text/plain;charset=utf-8'
-
-              },
-
-              body:
-                JSON.stringify(
-                  dataObj
-                )
-
-            }
-          );
-
-
-        console.log(
-          'HTTP status:',
-          response.status
-        );
-
-
-        if (
-          !response.ok
-        ) {
-
-          throw new Error(
-            'El servidor respondió con HTTP ' +
-            response.status
-          );
-
-        }
-
-
-        /*
-         * Leer como texto primero.
-         *
-         * Esto permite detectar respuestas inesperadas.
-         */
-        const textoRespuesta =
-          await response.text();
-
-
-        console.log(
-          'Respuesta del servidor:',
-          textoRespuesta
-        );
-
-
+        const textoRespuesta = await response.text();
         let resultado;
-
-
         try {
-
-          resultado =
-            JSON.parse(
-              textoRespuesta
-            );
-
+          resultado = JSON.parse(textoRespuesta);
         } catch (errorJSON) {
-
-          console.error(
-            'Respuesta no JSON:',
-            textoRespuesta
-          );
-
-
-          throw new Error(
-            'El servidor no devolvió una respuesta JSON válida.'
-          );
-
+          throw new Error('El servidor no devolvió una respuesta JSON válida.');
         }
 
+        if (resultado.success === true) {
+          mostrarToast('success', '¡Registro guardado!', 'Los datos fueron almacenados correctamente.');
 
-        /* ===================================================
-           RESPUESTA EXITOSA
-        =================================================== */
+          if (resultado.pdfBase64) {
+            pdfBase64Pendiente = resultado.pdfBase64;
+            pdfNombrePendiente = resultado.pdfNombre || 'Registro_Pago.pdf';
 
-        if (
-          resultado.success === true
-        ) {
+            // Mostrar vista previa en el modal
+            const iframe = document.getElementById('pdfPreviewFrame');
+            if (iframe) {
+              iframe.src = 'about:blank'; // Previene parpadeos o renderizado previo
+              setTimeout(() => {
+                iframe.src = 'data:application/pdf;base64,' + pdfBase64Pendiente;
+              }, 50);
+            }
 
-
-          mostrarToast(
-            'success',
-            '¡Registro guardado!',
-            'Los datos fueron almacenados correctamente y el PDF fue generado.'
-          );
-
-
-          /*
-           * DESCARGAR PDF
-           */
-          if (
-            resultado.pdfBase64
-          ) {
-
-            descargarPDF(
-              resultado.pdfBase64,
-              resultado.pdfNombre ||
-              'Registro_Pago.pdf'
-            );
-
+            // Abrir modal de Bootstrap
+            const modalElement = document.getElementById('pdfPreviewModal');
+            if (modalElement) {
+              const modal = new bootstrap.Modal(modalElement);
+              modal.show();
+            }
           }
 
-
-          /*
-           * LIMPIAR FORMULARIO
-           */
+          // LIMPIAR FORMULARIO
           formulario.reset();
-
-
-          formulario.classList.remove(
-            'was-validated'
-          );
-
-
-          /*
-           * Restaurar ciudad
-           */
-          document.getElementById(
-            'ciudad'
-          ).value =
-            'La Ceja';
-
-
-          /*
-           * Restaurar fecha
-           */
+          formulario.classList.remove('was-validated');
+          document.getElementById('ciudad').value = 'La Ceja';
           establecerFechaActual();
-
-
-          /*
-           * Restaurar valores
-           */
-          document.getElementById(
-            'valorGrua'
-          ).value =
-            '0';
-
-
-          document.getElementById(
-            'valorParqueadero'
-          ).value =
-            '0';
-
-
-          /*
-           * Restaurar total
-           */
+          document.getElementById('valorGrua').value = '0';
+          document.getElementById('valorParqueadero').value = '0';
           calcularTotal();
-
-
-          /*
-           * Reiniciar sincronización de cédulas
-           */
-          pagadorModificadoManualmente =
-            false;
-
-
-          /*
-           * Restaurar opciones
-           *
-           * No hacemos nueva consulta porque
-           * las listas no han cambiado.
-           */
+          pagadorModificadoManualmente = false;
           mostrarEstadoListas();
 
+        } else {
+          throw new Error(resultado.message || 'El servidor rechazó el registro.');
         }
-
-
-        /* ===================================================
-           ERROR DEL SERVIDOR
-        =================================================== */
-
-        else {
-
-          throw new Error(
-            resultado.message ||
-            'El servidor rechazó el registro.'
-          );
-
-        }
-
 
       } catch (error) {
-
-
-        console.error(
-          'Error enviando datos:',
-          error
-        );
-
-
-        mostrarToast(
-          'error',
-          'Ocurrió un error',
-          error.message ||
-          'No fue posible guardar el registro.'
-        );
-
-
+        console.error('Error enviando datos:', error);
+        mostrarToast('error', 'Ocurrió un error', error.message || 'No fue posible guardar el registro.');
       } finally {
-
-
-        /*
-         * Reactivar botón
-         */
-        btnGuardar.disabled =
-          false;
-
-
-        btnGuardar.innerHTML = `
-
-          <i class="bi bi-file-earmark-pdf"></i>
-
-          Guardar y Generar PDF
-
-        `;
-
+        btnGuardar.disabled = false;
+        btnGuardar.innerHTML = `<i class="bi bi-file-earmark-pdf"></i> Guardar y Generar PDF`;
       }
+    });
 
-    }
-  );
-
-
-/* ============================================================
-   DESCARGAR PDF
-============================================================ */
-
-function descargarPDF(
-  base64,
-  nombre
-) {
-
-  try {
-
-    const enlace =
-      document.createElement(
-        'a'
-      );
-
-
-    enlace.href =
-      'data:application/pdf;base64,' +
-      base64;
-
-
-    enlace.download =
-      nombre ||
-      'Registro_Pago.pdf';
-
-
-    enlace.style.display =
-      'none';
-
-
-    document.body.appendChild(
-      enlace
-    );
-
-
-    enlace.click();
-
-
-    document.body.removeChild(
-      enlace
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      'Error descargando PDF:',
-      error
-    );
-
-
-    mostrarToast(
-      'error',
-      'PDF generado',
-      'El registro fue guardado, pero no fue posible iniciar automáticamente la descarga del PDF.'
-    );
-
-  }
-
-}
-
-
-/* ============================================================
-   MOSTRAR ESTADO DE LISTAS DESPUÉS DE GUARDAR
-============================================================ */
-
-function mostrarEstadoListas() {
-
-  const selectInf =
-    document.getElementById(
-      'tipoInfraccion'
-    );
-
-
-  const selectFunc =
-    document.getElementById(
-      'nombreFuncionario'
-    );
-
-
-  if (
-    selectInf &&
-    selectInf.options.length > 1
-  ) {
-
-    selectInf.selectedIndex =
-      0;
-
-  }
-
-
-  if (
-    selectFunc &&
-    selectFunc.options.length > 1
-  ) {
-
-    selectFunc.selectedIndex =
-      0;
-
-  }
-
-}
-
-
-/* ============================================================
-   EVITAR ENVÍO CON ENTER EN ALGUNOS CAMPOS
-============================================================ */
-
-document.addEventListener(
-  'keydown',
-  function(e) {
-
-    if (
-      e.key !== 'Enter'
-    ) {
-
-      return;
-
+    /* ============================================================
+       DESCARGAR PDF
+    ============================================================ */
+    function descargarPDF(base64, nombre) {
+      try {
+        const enlace = document.createElement('a');
+        enlace.href = 'data:application/pdf;base64,' + base64;
+        enlace.download = nombre || 'Registro_Pago.pdf';
+        enlace.style.display = 'none';
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+      } catch (error) {
+        console.error('Error descargando PDF:', error);
+        mostrarToast('error', 'Error en descarga', 'No fue posible descargar el PDF.');
+      }
     }
 
-
-    const elemento =
-      e.target;
-
-
-    if (
-      elemento &&
-      elemento.tagName === 'INPUT' &&
-      elemento.type !== 'submit'
-    ) {
-
-      /*
-       * No impedir Enter en textarea,
-       * pero aquí no existen actualmente.
-       */
-      e.preventDefault();
-
+    /* ============================================================
+       MOSTRAR ESTADO DE LISTAS DESPUÉS DE GUARDAR
+    ============================================================ */
+    function mostrarEstadoListas() {
+      const selectInf = document.getElementById('tipoInfraccion');
+      const selectFunc = document.getElementById('nombreFuncionario');
+      if (selectInf && selectInf.options.length > 1) selectInf.selectedIndex = 0;
+      if (selectFunc && selectFunc.options.length > 1) selectFunc.selectedIndex = 0;
     }
 
-  }
-);
-
-
-</script>
-
+    /* ============================================================
+       EVITAR ENVÍO CON ENTER EN ALGUNOS CAMPOS
+    ============================================================ */
+    document.addEventListener('keydown', function(e) {
+      if (e.key !== 'Enter') return;
+      const elemento = e.target;
+      if (elemento && elemento.tagName === 'INPUT' && elemento.type !== 'submit') {
+        e.preventDefault();
+      }
+    });
+  </script>
 
 </body>
-
 </html>
