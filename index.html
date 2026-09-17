@@ -509,30 +509,30 @@
 
             <div class="col-md-6">
               <label for="direccion" class="form-label">
-                <i class="bi bi-house-door"></i> Dirección
+                <i class="bi bi-house-door"></i> Dirección <span class="required-dot">*</span>
               </label>
-              <input type="text" class="form-control" id="direccion" name="DIRECCIÓN">
+              <input type="text" class="form-control" id="direccion" name="DIRECCIÓN" autocomplete="street-address" required>
             </div>
 
             <div class="col-md-6">
               <label for="ciudad" class="form-label">
-                <i class="bi bi-geo-alt"></i> Ciudad
+                <i class="bi bi-geo-alt"></i> Ciudad <span class="required-dot">*</span>
               </label>
-              <input type="text" class="form-control" id="ciudad" name="CIUDAD" value="La Ceja">
+              <input type="text" class="form-control" id="ciudad" name="CIUDAD" value="La Ceja" autocomplete="address-level2" required>
             </div>
 
             <div class="col-md-6">
               <label for="telefono" class="form-label">
-                <i class="bi bi-telephone"></i> Teléfono
+                <i class="bi bi-telephone"></i> Teléfono <span class="required-dot">*</span>
               </label>
-              <input type="tel" class="form-control" id="telefono" name="TELÉFONO" autocomplete="tel">
+              <input type="tel" class="form-control" id="telefono" name="TELÉFONO" autocomplete="tel" required>
             </div>
 
             <div class="col-md-6">
               <label for="correo" class="form-label">
-                <i class="bi bi-envelope"></i> Correo Electrónico
+                <i class="bi bi-envelope"></i> Correo Electrónico <span class="required-dot">*</span>
               </label>
-              <input type="email" class="form-control" id="correo" name="CORREO ELECTRÓNICO" autocomplete="email">
+              <input type="email" class="form-control" id="correo" name="CORREO ELECTRÓNICO" autocomplete="email" required>
             </div>
           </div>
 
