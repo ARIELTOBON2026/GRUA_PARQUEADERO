@@ -198,8 +198,9 @@
       outline: none;
     }
 
-    .form-control:disabled, .form-select:disabled {
+    .form-control:disabled, .form-select:disabled, .form-control[readonly] {
       background: #eef2f6;
+      color: #6b7a8f;
       cursor: not-allowed;
     }
 
@@ -490,7 +491,8 @@
               <label for="nombre" class="form-label">
                 <i class="bi bi-person-fill"></i> Nombre del Solicitante <span class="required-dot">*</span>
               </label>
-              <input type="text" class="form-control" id="nombre" name="NOMBRE" autocomplete="name" required>
+              <!-- CAMBIO: Conversión automática a MAYÚSCULAS -->
+              <input type="text" class="form-control" id="nombre" name="NOMBRE" oninput="this.value = this.value.toUpperCase()" autocomplete="name" required>
             </div>
 
             <div class="col-md-6">
@@ -555,7 +557,8 @@
               <label for="tipoInfraccion" class="form-label">
                 <i class="bi bi-list-check"></i> Tipo de Infracción <span class="required-dot">*</span>
               </label>
-              <select class="form-select" id="tipoInfraccion" name="TIPO DE INFRACCIÓN" required>
+              <!-- CAMBIO: Evento onchange para manejar la lógica condicional -->
+              <select class="form-select" id="tipoInfraccion" name="TIPO DE INFRACCIÓN" onchange="manejarTipoInfraccion(this.value)" required>
                 <option value="">Cargando opciones...</option>
               </select>
               <div id="estadoInfracciones" class="loading-status">
@@ -671,9 +674,7 @@
     </div>
   </div>
 
-  <!-- =========================================================
-       MODAL DE VISTA PREVIA PDF (NUEVO)
-  ========================================================= -->
+  <!-- MODAL DE VISTA PREVIA PDF -->
   <div class="modal fade" id="pdfPreviewModal" tabindex="-1" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content" style="border-radius: 16px; overflow: hidden; border: none;">
@@ -698,7 +699,7 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS Bundle (Necesario para el Modal) -->
+  <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
@@ -812,10 +813,7 @@
       const selectInf = document.getElementById('tipoInfraccion');
       const selectFunc = document.getElementById('nombreFuncionario');
 
-      if (!selectInf || !selectFunc) {
-        console.error('No se encontraron los select del formulario.');
-        return;
-      }
+      if (!selectInf || !selectFunc) return;
 
       selectInf.innerHTML = `<option value="">Cargando infracciones...</option>`;
       selectFunc.innerHTML = `<option value="">Cargando funcionarios...</option>`;
@@ -900,6 +898,40 @@
     }
 
     /* ============================================================
+       LÓGICA CONDICIONAL: ACCIDENTE vs COMPARENDO
+    ============================================================ */
+    function manejarTipoInfraccion(valor) {
+      const campoComparendo = document.getElementById('nroComparendo');
+      if (!campoComparendo) return;
+
+      const valorNormalizado = String(valor || '').trim().toUpperCase();
+
+      if (valorNormalizado === 'ACCIDENTE') {
+        campoComparendo.value = 'ACCIDENTE';
+        campoComparendo.readOnly = true;
+        campoComparendo.style.backgroundColor = '#eef2f6';
+        campoComparendo.style.color = '#6b7a8f';
+        campoComparendo.removeAttribute('required');
+      } 
+      else if (valorNormalizado === 'COMPARENDO') {
+        campoComparendo.value = '0537600000005758';
+        campoComparendo.readOnly = false;
+        campoComparendo.style.backgroundColor = '#ffffff';
+        campoComparendo.style.color = '#1a2b3c';
+        campoComparendo.setAttribute('required', 'required');
+        campoComparendo.focus();
+        setTimeout(() => campoComparendo.select(), 50);
+      } 
+      else {
+        campoComparendo.value = '';
+        campoComparendo.readOnly = false;
+        campoComparendo.style.backgroundColor = '#ffffff';
+        campoComparendo.style.color = '#1a2b3c';
+        campoComparendo.setAttribute('required', 'required');
+      }
+    }
+
+    /* ============================================================
        PREPARAR FORMULARIO
     ============================================================ */
     document.addEventListener('DOMContentLoaded', function() {
@@ -936,20 +968,18 @@
       calcularTotal();
       cargarDesplegables();
 
-      // Listener para el botón de descarga del modal
       document.getElementById('btnDescargarPreview').addEventListener('click', function() {
         if (pdfBase64Pendiente && pdfNombrePendiente) {
           descargarPDF(pdfBase64Pendiente, pdfNombrePendiente);
         }
       });
 
-      // Liberar memoria al cerrar el modal
       const modalEl = document.getElementById('pdfPreviewModal');
       if (modalEl) {
         modalEl.addEventListener('hidden.bs.modal', function () {
           const iframe = document.getElementById('pdfPreviewFrame');
           if (iframe) {
-            iframe.src = 'about:blank'; // Limpia el base64 de la memoria del navegador
+            iframe.src = 'about:blank';
           }
           pdfBase64Pendiente = '';
           pdfNombrePendiente = '';
@@ -1012,16 +1042,14 @@
             pdfBase64Pendiente = resultado.pdfBase64;
             pdfNombrePendiente = resultado.pdfNombre || 'Registro_Pago.pdf';
 
-            // Mostrar vista previa en el modal
             const iframe = document.getElementById('pdfPreviewFrame');
             if (iframe) {
-              iframe.src = 'about:blank'; // Previene parpadeos o renderizado previo
+              iframe.src = 'about:blank';
               setTimeout(() => {
                 iframe.src = 'data:application/pdf;base64,' + pdfBase64Pendiente;
               }, 50);
             }
 
-            // Abrir modal de Bootstrap
             const modalElement = document.getElementById('pdfPreviewModal');
             if (modalElement) {
               const modal = new bootstrap.Modal(modalElement);
@@ -1029,7 +1057,6 @@
             }
           }
 
-          // LIMPIAR FORMULARIO
           formulario.reset();
           formulario.classList.remove('was-validated');
           document.getElementById('ciudad').value = 'La Ceja';
