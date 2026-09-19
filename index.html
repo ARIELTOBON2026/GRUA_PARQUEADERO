@@ -491,7 +491,6 @@
               <label for="nombre" class="form-label">
                 <i class="bi bi-person-fill"></i> Nombre del Solicitante <span class="required-dot">*</span>
               </label>
-              <!-- CAMBIO: Conversión automática a MAYÚSCULAS -->
               <input type="text" class="form-control" id="nombre" name="NOMBRE" oninput="this.value = this.value.toUpperCase()" autocomplete="name" required>
             </div>
 
@@ -557,7 +556,6 @@
               <label for="tipoInfraccion" class="form-label">
                 <i class="bi bi-list-check"></i> Tipo de Infracción <span class="required-dot">*</span>
               </label>
-              <!-- CAMBIO: Evento onchange para manejar la lógica condicional -->
               <select class="form-select" id="tipoInfraccion" name="TIPO DE INFRACCIÓN" onchange="manejarTipoInfraccion(this.value)" required>
                 <option value="">Cargando opciones...</option>
               </select>
@@ -1004,6 +1002,16 @@
 
       calcularTotal();
 
+      // --- NUEVA VALIDACIÓN: Evitar guardar si ambos valores son cero ---
+      const valorGrua = parseFloat(document.getElementById('valorGrua').value) || 0;
+      const valorParqueadero = parseFloat(document.getElementById('valorParqueadero').value) || 0;
+
+      if (valorGrua === 0 && valorParqueadero === 0) {
+        mostrarToast('error', 'Valores inválidos', 'El valor de Grúa y el valor de Parqueadero no pueden ser cero al mismo tiempo. Por favor ingrese al menos un valor a pagar.');
+        return; // Detiene la ejecución y no permite guardar
+      }
+      // -------------------------------------------------------------------
+
       const btnGuardar = document.getElementById('btnGuardar');
       btnGuardar.disabled = true;
       btnGuardar.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando y generando PDF...`;
@@ -1013,8 +1021,8 @@
         const dataObj = {};
         formData.forEach(function(value, key) { dataObj[key] = value; });
 
-        dataObj['VALOR PAGADO GRÚA'] = parseFloat(document.getElementById('valorGrua').value) || 0;
-        dataObj['VALOR PAGADO PARQUEADERO'] = parseFloat(document.getElementById('valorParqueadero').value) || 0;
+        dataObj['VALOR PAGADO GRÚA'] = valorGrua;
+        dataObj['VALOR PAGADO PARQUEADERO'] = valorParqueadero;
         dataObj['TOTAL PAGADO'] = parseFloat(document.getElementById('totalPagadoHidden').value) || 0;
         dataObj['PLACA'] = String(dataObj['PLACA'] || '').trim().toUpperCase();
 
