@@ -6,1026 +6,806 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Pagos - Grúa y Parqueadero</title>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- BOOTSTRAP 5.3 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FONT AWESOME 6.5 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <!-- GOOGLE FONT: INTER -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary: #0a3d62;
-      --primary-light: #1e5a8e;
-      --primary-dark: #062540;
-      --accent: #d4a24c;
-      --accent-light: #f4c675;
-      --surface: #ffffff;
-      --surface-alt: #f5f7fa;
-      --border: #e1e8ed;
-      --text: #1a2b3c;
-      --text-muted: #6b7a8f;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --shadow-sm: 0 1px 3px rgba(10, 61, 98, 0.08);
-      --shadow-md: 0 4px 16px rgba(10, 61, 98, 0.10);
-      --shadow-lg: 0 12px 40px rgba(10, 61, 98, 0.15);
+      --azul: #0d6efd;
+      --azul-oscuro: #084298;
+      --verde: #198754;
+      --rojo: #dc3545;
+      --gris: #6c757d;
+      --borde: #dfe5ec;
+      --blanco: #ffffff;
+      --sombra: 0 10px 30px rgba(0, 0, 0, .08);
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
     body {
-      background: linear-gradient(135deg, #eef4fa 0%, #d9e4f0 100%);
-      background-attachment: fixed;
-      font-family: 'Inter', sans-serif;
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 0;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(212, 162, 76, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(10, 61, 98, 0.08) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .container { position: relative; z-index: 1; }
-
-    .main-card {
-      border: none;
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
-      overflow: hidden;
-      background: var(--surface);
-      animation: fadeInUp 0.6s ease-out;
-    }
-
-    .header-title {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      padding: 2.5rem 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .header-title::before {
-      content: "";
-      position: absolute;
-      top: -50%; right: -10%;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(212, 162, 76, 0.20) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-
-    .header-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 58px; height: 58px;
-      background: rgba(255,255,255,0.15);
-      border-radius: 15px;
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.20);
-      position: relative;
-      z-index: 2;
-    }
-
-    .header-title h3 {
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      margin-bottom: 0.5rem;
-      position: relative;
-      z-index: 2;
-    }
-
-    .header-title small {
-      opacity: 0.90;
-      font-weight: 400;
-      font-size: 0.875rem;
-      position: relative;
-      z-index: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .card-body { padding: 2.5rem; }
-
-    @media (max-width: 576px) {
-      .card-body { padding: 1.4rem; }
-      body { padding: 0.75rem 0; }
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 2px solid var(--border);
-    }
-
-    .section-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px; height: 32px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      border-radius: 10px;
-      font-size: 0.875rem;
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-
-    .section-header h5 {
       margin: 0;
-      color: var(--primary);
-      font-weight: 600;
-      font-size: 1.1rem;
-      flex-grow: 1;
+      background: linear-gradient(135deg, #eef5ff 0%, #f8fbff 50%, #eef4f8 100%);
+      font-family: 'Inter', sans-serif;
+      color: #212529;
+      min-height: 100vh;
     }
+    .container-main { max-width: 1250px; margin: 30px auto; padding: 0 15px; }
 
-    .section-icon {
-      color: var(--accent);
-      font-size: 1.25rem;
+    .header-card {
+      background: linear-gradient(135deg, #0d6efd, #084298);
+      color: white;
+      border-radius: 20px;
+      padding: 25px 30px;
+      box-shadow: var(--sombra);
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
     }
-
-    .form-label {
-      font-size: 0.825rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.375rem;
+    .header-card::after {
+      content: ""; position: absolute; width: 230px; height: 230px;
+      border-radius: 50%; background: rgba(255,255,255,.08); right: -70px; top: -90px;
     }
+    .header-content { position: relative; z-index: 2; display: flex; align-items: center; gap: 20px; }
+    .logo { width: 82px; height: 82px; object-fit: contain; background: white; padding: 7px; border-radius: 16px; }
+    .header-icon { font-size: 45px; opacity: .95; }
+    .header-title { font-size: 28px; font-weight: 800; margin: 0; letter-spacing: -.5px; }
+    .header-subtitle { margin: 5px 0 0; opacity: .9; font-size: 15px; }
 
-    .form-label i {
-      color: var(--primary-light);
-      font-size: 0.875rem;
+    .search-card {
+      background: white; border-radius: 18px; padding: 20px;
+      box-shadow: var(--sombra); margin-bottom: 20px; border: 1px solid rgba(13,110,253,.08);
     }
+    .search-title { font-weight: 800; color: var(--azul-oscuro); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .search-help { font-size: 12px; color: var(--gris); margin-top: 6px; }
+    .search-input { text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
 
+    #modoEdicion {
+      display: none; background: linear-gradient(135deg, #fff3cd, #ffe69c);
+      border: 1px solid #ffda6a; color: #664d03; border-radius: 14px;
+      padding: 13px 17px; margin-bottom: 20px; font-weight: 700;
+      box-shadow: 0 5px 15px rgba(0,0,0,.05);
+    }
+    #modoEdicion i { margin-right: 8px; }
+
+    .section-card {
+      background: var(--blanco); border: 1px solid var(--borde);
+      border-radius: 18px; box-shadow: var(--sombra); margin-bottom: 20px; overflow: hidden;
+    }
+    .section-header {
+      padding: 15px 20px; background: linear-gradient(135deg, #f8fbff, #edf5ff);
+      border-bottom: 1px solid var(--borde); display: flex; align-items: center; gap: 10px;
+    }
+    .section-header i { color: var(--azul); font-size: 20px; }
+    .section-header h5 { margin: 0; font-weight: 800; color: #17365d; font-size: 16px; }
+    .section-body { padding: 22px; }
+
+    .form-label { font-size: 12px; font-weight: 800; color: #495057; margin-bottom: 6px; text-transform: uppercase; }
+    .required::after { content: " *"; color: var(--rojo); }
     .form-control, .form-select {
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 0.68rem 0.9rem;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-      background-color: var(--surface-alt);
-      color: var(--text);
+      min-height: 44px; border: 1px solid #d7dee7; border-radius: 10px;
+      font-size: 14px; transition: all .2s ease;
     }
-
-    .form-control:hover, .form-select:hover {
-      border-color: var(--primary-light);
-      background-color: white;
-    }
-
     .form-control:focus, .form-select:focus {
-      border-color: var(--primary);
-      background-color: white;
-      box-shadow: 0 0 0 3px rgba(10, 61, 98, 0.10);
-      outline: none;
+      border-color: var(--azul); box-shadow: 0 0 0 .2rem rgba(13,110,253,.12);
+    }
+    .uppercase { text-transform: uppercase; }
+
+    .total-box {
+      background: linear-gradient(135deg, #e7f1ff, #dbeafe); border: 1px solid #b6d4fe;
+      border-radius: 14px; padding: 15px 18px; display: flex;
+      align-items: center; justify-content: space-between; height: 100%;
+    }
+    .total-label { font-size: 13px; font-weight: 800; color: #084298; }
+    .total-value { font-size: 25px; font-weight: 800; color: #084298; }
+
+    .btn { border-radius: 10px; font-weight: 700; min-height: 44px; }
+    .btn-primary { box-shadow: 0 5px 14px rgba(13,110,253,.18); }
+    .btn-success { box-shadow: 0 5px 14px rgba(25,135,84,.18); }
+    .button-area {
+      background: white; border-radius: 18px; padding: 20px;
+      box-shadow: var(--sombra); margin-bottom: 30px;
     }
 
-    .form-control:disabled, .form-select:disabled, .form-control[readonly] {
-      background: #eef2f6;
-      color: #6b7a8f;
-      cursor: not-allowed;
-    }
-
-    .input-group-text {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      border: none;
-      font-weight: 700;
-      border-radius: 10px 0 0 10px !important;
-    }
-
-    .input-group .form-control {
-      border-left: none;
-      border-radius: 0 10px 10px 0 !important;
-    }
-
-    .required-dot {
-      color: var(--danger);
-      font-weight: bold;
-    }
-
-    .payment-field {
-      background: var(--surface-alt);
-      padding: 1.25rem;
-      border-radius: 14px;
-      border: 1.5px solid var(--border);
-      margin-bottom: 0.75rem;
-      transition: all 0.25s ease;
-    }
-
-    .payment-field:hover {
-      border-color: var(--primary-light);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .total-card {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      border-radius: 14px;
-      padding: 1.5rem;
-      color: white;
-      position: relative;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-
-    .total-card::after {
-      content: "";
-      position: absolute;
-      top: -30px; right: -30px;
-      width: 120px; height: 120px;
-      background: radial-gradient(circle, rgba(212, 162, 76, 0.25) 0%, transparent 70%);
-      border-radius: 50%;
-    }
-
-    .total-label {
-      font-size: 0.875rem;
-      opacity: 0.85;
-      margin-bottom: 0.25rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .total-amount {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .total-amount::before {
-      content: "$ ";
-      opacity: 0.80;
-    }
-
-    .btn-primary-custom {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 1rem 2rem;
-      font-weight: 600;
-      font-size: 1rem;
-      letter-spacing: 0.3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 14px rgba(10, 61, 98, 0.30);
-      width: 100%;
-    }
-
-    .btn-primary-custom:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(10, 61, 98, 0.40);
-    }
-
-    .btn-primary-custom:disabled {
-      opacity: 0.70;
-      cursor: not-allowed;
-    }
-
-    .loading-status {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      margin-top: 0.45rem;
-    }
-
-    .loading-status.success { color: var(--success); }
-    .loading-status.error { color: var(--danger); }
-
-    .loading-dot {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      background: var(--warning);
-      animation: pulse 1.2s infinite;
-    }
-
-    .loading-dot.success { background: var(--success); animation: none; }
-    .loading-dot.error { background: var(--danger); animation: none; }
-
-    .form-footer {
-      background: var(--surface-alt);
-      padding: 1rem 2.5rem;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .form-footer i { color: var(--accent); }
-
-    .toast-container-custom {
-      position: fixed;
-      top: 24px; right: 24px;
-      z-index: 99999;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      pointer-events: none;
-    }
-
+    .custom-toast-container { position: fixed; top: 20px; right: 20px; z-index: 99999; width: min(400px, calc(100% - 40px)); }
     .custom-toast {
-      min-width: 340px;
-      max-width: 440px;
-      background: white;
-      border-radius: 14px;
-      box-shadow: 0 12px 40px rgba(10,61,98,0.25);
-      overflow: hidden;
-      display: flex;
-      align-items: stretch;
-      position: relative;
-      pointer-events: auto;
-      animation: toastIn .4s ease;
+      display: none; border-radius: 14px; padding: 15px 18px; margin-bottom: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.18); font-weight: 600; animation: slideIn .25s ease;
     }
+    .custom-toast.success { background: #d1e7dd; color: #0f5132; border-left: 5px solid #198754; }
+    .custom-toast.error { background: #f8d7da; color: #842029; border-left: 5px solid #dc3545; }
+    .custom-toast.warning { background: #fff3cd; color: #664d03; border-left: 5px solid #ffc107; }
+    .custom-toast.info { background: #cff4fc; color: #055160; border-left: 5px solid #0dcaf0; }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
 
-    .custom-toast.hiding { animation: toastOut .3s ease forwards; }
-
-    .toast-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 58px;
-      font-size: 1.6rem;
-      color: white;
-      flex-shrink: 0;
+    .loading-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(255,255,255,.85);
+      backdrop-filter: blur(4px); z-index: 99998; align-items: center; justify-content: center;
     }
-
-    .toast-success .toast-icon { background: linear-gradient(135deg, #10b981, #059669); }
-    .toast-error .toast-icon { background: linear-gradient(135deg, #ef4444, #dc2626); }
-
-    .toast-body-custom { padding: 14px 16px; flex-grow: 1; }
-
-    .toast-title {
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: var(--text);
-      margin-bottom: 2px;
+    .loading-box {
+      background: white; border-radius: 18px; padding: 30px 40px; text-align: center;
+      box-shadow: 0 15px 45px rgba(0,0,0,.15); min-width: 280px;
     }
+    .loading-box .spinner-border { width: 45px; height: 45px; }
+    .loading-text { margin-top: 15px; font-weight: 700; color: #17365d; }
 
-    .toast-message {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
+    #modalPDF .modal-dialog { max-width: 1100px; }
+    #visorPDF { width: 100%; height: 72vh; border: none; background: #f1f3f5; }
 
-    .toast-close {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      padding: 10px 14px;
-      cursor: pointer;
-      align-self: flex-start;
-    }
-
-    .toast-progress {
-      position: absolute;
-      bottom: 0; left: 0;
-      height: 3px; width: 100%;
-      animation: toastProgress 4.5s linear forwards;
-    }
-
-    .toast-success .toast-progress { background: var(--success); }
-    .toast-error .toast-progress { background: var(--danger); }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(120%); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    @keyframes toastOut {
-      from { opacity: 1; transform: translateX(0); }
-      to { opacity: 0; transform: translateX(120%); }
-    }
-
-    @keyframes toastProgress {
-      from { width: 100%; }
-      to { width: 0%; }
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: .35; }
-      100% { opacity: 1; }
-    }
-
-    @media (max-width: 576px) {
-      .toast-container-custom { left: 16px; right: 16px; }
-      .custom-toast { min-width: 0; width: 100%; }
-      .header-title { padding: 2rem 1rem; }
-      .total-amount { font-size: 1.75rem; }
+    @media (max-width: 768px) {
+      .container-main { margin-top: 15px; }
+      .header-card { padding: 20px; }
+      .header-content { align-items: flex-start; }
+      .logo { width: 62px; height: 62px; }
+      .header-title { font-size: 20px; }
+      .header-icon { display: none; }
+      .section-body { padding: 16px; }
+      .total-box { margin-top: 10px; }
+      #visorPDF { height: 65vh; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- NOTIFICACIONES -->
-  <div class="toast-container-custom" id="toastContainer"></div>
+  <!-- TOASTS -->
+  <div class="custom-toast-container" id="toastContainer"></div>
 
-  <!-- CONTENEDOR PRINCIPAL -->
-  <div class="container my-4">
-    <div class="main-card mx-auto" style="max-width: 850px;">
+  <!-- LOADING -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-box">
+      <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div>
+      <div class="loading-text" id="loadingText">Procesando...</div>
+    </div>
+  </div>
 
-      <!-- ENCABEZADO -->
-      <div class="header-title text-center">
-        <div class="header-icon mx-auto">
-          <i class="bi bi-shield-check"></i>
+  <div class="container-main">
+
+    <!-- HEADER -->
+    <div class="header-card">
+      <div class="header-content">
+        <img src="https://arieltobon2026.github.io/logo.png" class="logo" alt="Logo">
+        <div>
+          <div class="d-flex align-items-center gap-3">
+            <i class="fa-solid fa-truck-ramp-box header-icon"></i>
+            <div>
+              <h1 class="header-title">REGISTRO DE PAGOS</h1>
+              <p class="header-subtitle">Secretaría de Movilidad - La Ceja, Antioquia</p>
+            </div>
+          </div>
         </div>
-        <h3 class="mb-0">REGISTRO DE PAGOS</h3>
-        <small>
-          <i class="bi bi-geo-alt-fill"></i>
-          Secretaría de Movilidad - La Ceja, Antioquia
-        </small>
       </div>
+    </div>
 
-      <!-- CUERPO -->
-      <div class="card-body">
-        <form id="formRegistro" class="needs-validation" novalidate>
+    <!-- BUSCADOR UNIFICADO (PLACA O CÉDULA) -->
+    <div class="search-card">
+      <div class="search-title">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Buscar registro</span>
+      </div>
+      <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+          <label class="form-label" for="tipoBusqueda">TIPO DE BÚSQUEDA</label>
+          <select id="tipoBusqueda" class="form-select">
+            <option value="placa">Por Placa</option>
+            <option value="cedula">Por Cédula</option>
+          </select>
+        </div>
+        <div class="col-md-5">
+          <label class="form-label" for="buscarValor">VALOR A BUSCAR</label>
+          <input type="text" id="buscarValor" class="form-control search-input" placeholder="Ejemplo: ABC123" maxlength="10" autocomplete="off">
+          <div class="search-help" id="searchHelp">Ingrese la placa para consultar el registro más reciente.</div>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-primary w-100" id="btnBuscar">
+            <i class="fa-solid fa-search me-1"></i> BUSCAR
+          </button>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-outline-secondary w-100" id="btnNuevo">
+            <i class="fa-solid fa-plus me-1"></i> NUEVO
+          </button>
+        </div>
+      </div>
+    </div>
 
-          <!-- SECCIÓN 1 -->
-          <div class="section-header">
-            <span class="section-number">1</span>
-            <h5>Datos del Solicitante e Infractor</h5>
-            <i class="bi bi-person-badge section-icon"></i>
-          </div>
+    <!-- MODO EDICIÓN -->
+    <div id="modoEdicion">
+      <i class="fa-solid fa-pen-to-square"></i>
+      <span>MODO EDICIÓN</span>
+      <span id="textoRegistroEditando"></span>
+    </div>
 
-          <div class="row g-3 mb-4">
-            <div class="col-md-12">
-              <label for="nombre" class="form-label">
-                <i class="bi bi-person-fill"></i> Nombre del Solicitante <span class="required-dot">*</span>
-              </label>
-              <input type="text" class="form-control" id="nombre" name="NOMBRE" oninput="this.value = this.value.toUpperCase()" autocomplete="name" required>
-            </div>
+    <!-- FORMULARIO -->
+    <form id="formulario" novalidate>
+      <input type="hidden" id="filaRegistro" name="_rowIndex">
 
+      <!-- DATOS DEL SOLICITANTE E INFRACTOR -->
+      <div class="section-card">
+        <div class="section-header"><i class="fa-solid fa-user"></i><h5>Datos del Solicitante e Infractor</h5></div>
+        <div class="section-body">
+          <div class="row g-3">
             <div class="col-md-6">
-              <label for="cedulaInfractor" class="form-label">
-                <i class="bi bi-card-text"></i> Cédula del Infractor <span class="required-dot">*</span>
-              </label>
-              <input type="text" class="form-control" id="cedulaInfractor" name="CÉDULA INFRACTOR" inputmode="numeric" autocomplete="off" required>
+              <label for="nombre" class="form-label required">NOMBRE</label>
+              <input type="text" id="nombre" name="NOMBRE" class="form-control uppercase" required autocomplete="off">
             </div>
-
-            <div class="col-md-6">
-              <label for="cedulaPagador" class="form-label">
-                <i class="bi bi-wallet2"></i> Cédula del Pagador <span class="required-dot">*</span>
-              </label>
-              <input type="text" class="form-control" id="cedulaPagador" name="CÉDULA PAGADOR" inputmode="numeric" autocomplete="off" required>
+            <div class="col-md-3">
+              <label for="cedulaInfractor" class="form-label required">CÉDULA INFRACTOR</label>
+              <input type="text" id="cedulaInfractor" name="CÉDULA INFRACTOR" class="form-control" required autocomplete="off">
             </div>
-
-            <div class="col-md-6">
-              <label for="direccion" class="form-label">
-                <i class="bi bi-house-door"></i> Dirección <span class="required-dot">*</span>
-              </label>
-              <input type="text" class="form-control" id="direccion" name="DIRECCIÓN" autocomplete="street-address" required>
+            <div class="col-md-3">
+              <label for="cedulaPagador" class="form-label required">CÉDULA PAGADOR</label>
+              <input type="text" id="cedulaPagador" name="CÉDULA PAGADOR" class="form-control" required autocomplete="off">
             </div>
-
-            <div class="col-md-6">
-              <label for="ciudad" class="form-label">
-                <i class="bi bi-geo-alt"></i> Ciudad <span class="required-dot">*</span>
-              </label>
-              <input type="text" class="form-control" id="ciudad" name="CIUDAD" value="La Ceja" autocomplete="address-level2" required>
+            <div class="col-md-5">
+              <label for="direccion" class="form-label required">DIRECCIÓN</label>
+              <input type="text" id="direccion" name="DIRECCIÓN" class="form-control" required autocomplete="off">
             </div>
-
-            <div class="col-md-6">
-              <label for="telefono" class="form-label">
-                <i class="bi bi-telephone"></i> Teléfono <span class="required-dot">*</span>
-              </label>
-              <input type="tel" class="form-control" id="telefono" name="TELÉFONO" autocomplete="tel" required>
+            <div class="col-md-3">
+              <label for="ciudad" class="form-label required">CIUDAD</label>
+              <input type="text" id="ciudad" name="CIUDAD" class="form-control" value="La Ceja" required autocomplete="off">
             </div>
-
-            <div class="col-md-6">
-              <label for="correo" class="form-label">
-                <i class="bi bi-envelope"></i> Correo Electrónico <span class="required-dot">*</span>
-              </label>
-              <input type="email" class="form-control" id="correo" name="CORREO ELECTRÓNICO" autocomplete="email" required>
-            </div>
-          </div>
-
-          <!-- SECCIÓN 2 -->
-          <div class="section-header">
-            <span class="section-number">2</span>
-            <h5>Datos de la Infracción</h5>
-            <i class="bi bi-exclamation-triangle section-icon"></i>
-          </div>
-
-          <div class="row g-3 mb-4">
             <div class="col-md-4">
-              <label for="placa" class="form-label">
-                <i class="bi bi-car-front"></i> Placa <span class="required-dot">*</span>
-              </label>
-              <input type="text" class="form-control text-uppercase" id="placa" name="PLACA" maxlength="6" autocomplete="off" required>
+              <label for="telefono" class="form-label required">TELÉFONO</label>
+              <input type="text" id="telefono" name="TELÉFONO" class="form-control" required autocomplete="off">
             </div>
-
-            <div class="col-md-8">
-              <label for="tipoInfraccion" class="form-label">
-                <i class="bi bi-list-check"></i> Tipo de Infracción <span class="required-dot">*</span>
-              </label>
-              <select class="form-select" id="tipoInfraccion" name="TIPO DE INFRACCIÓN" onchange="manejarTipoInfraccion(this.value)" required>
-                <option value="">Cargando opciones...</option>
-              </select>
-              <div id="estadoInfracciones" class="loading-status">
-                <span class="loading-dot"></span> Cargando tipos de infracción...
-              </div>
-            </div>
-
             <div class="col-md-6">
-              <label for="nroComparendo" class="form-label">
-                <i class="bi bi-file-earmark-text"></i> Nro. Comparendo <span class="required-dot">*</span>
-              </label>
-              <input type="text" class="form-control" id="nroComparendo" name="NRO COMPARENDO" autocomplete="off" required>
-            </div>
-
-            <div class="col-md-6">
-              <label for="fecha" class="form-label">
-                <i class="bi bi-calendar-event"></i> Fecha de pago <span class="required-dot">*</span>
-              </label>
-              <input type="date" class="form-control" id="fecha" name="FECHA" required>
+              <label for="correo" class="form-label required">CORREO ELECTRÓNICO</label>
+              <input type="email" id="correo" name="CORREO ELECTRÓNICO" class="form-control" required autocomplete="off">
             </div>
           </div>
-
-          <!-- SECCIÓN 3 -->
-          <div class="section-header">
-            <span class="section-number">3</span>
-            <h5>Liquidación de Pagos</h5>
-            <i class="bi bi-calculator section-icon"></i>
-          </div>
-
-          <div class="payment-field">
-            <label for="valorGrua" class="form-label">
-              <i class="bi bi-truck"></i> Valor Pagado Grúa <span class="required-dot">*</span>
-            </label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="number" class="form-control val-calculo" id="valorGrua" name="VALOR PAGADO GRÚA" min="0" step="100" value="0" required>
-            </div>
-          </div>
-
-          <div class="payment-field">
-            <label for="valorParqueadero" class="form-label">
-              <i class="bi bi-p-square"></i> Valor Pagado Parqueadero <span class="required-dot">*</span>
-            </label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input type="number" class="form-control val-calculo" id="valorParqueadero" name="VALOR PAGADO PARQUEADERO" min="0" step="100" value="0" required>
-            </div>
-          </div>
-
-          <div class="total-card">
-            <div class="total-label">
-              <i class="bi bi-receipt"></i> Total Pagado
-            </div>
-            <div class="total-amount" id="totalPagado">0</div>
-            <input type="hidden" id="totalPagadoHidden" name="TOTAL PAGADO" value="0">
-          </div>
-
-          <!-- SECCIÓN 4 -->
-          <div class="section-header mt-4">
-            <span class="section-number">4</span>
-            <h5>Soportes y Registro</h5>
-            <i class="bi bi-folder-check section-icon"></i>
-          </div>
-
-          <div class="row g-3 mb-4">
-            <div class="col-md-6">
-              <label for="fotocopia" class="form-label">
-                <i class="bi bi-file-earmark-person"></i> Fotocopia Documento Identidad
-              </label>
-              <select class="form-select" id="fotocopia" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD">
-                <option value="SI">✓ SI</option>
-                <option value="NO">✗ NO</option>
-              </select>
-            </div>
-
-            <div class="col-md-6">
-              <label for="consignaciones" class="form-label">
-                <i class="bi bi-cash-stack"></i> Consignaciones Originales
-              </label>
-              <select class="form-select" id="consignaciones" name="CONSIGNACIONES ORIGINALES">
-                <option value="SI">✓ SI</option>
-                <option value="NO">✗ NO</option>
-              </select>
-            </div>
-
-            <div class="col-md-12">
-              <label for="nombreFuncionario" class="form-label">
-                <i class="bi bi-person-workspace"></i> Nombre del Funcionario <span class="required-dot">*</span>
-              </label>
-              <select class="form-select" id="nombreFuncionario" name="NOMBRE FUNCIONARIO" required>
-                <option value="">Cargando funcionarios...</option>
-              </select>
-              <div id="estadoFuncionarios" class="loading-status">
-                <span class="loading-dot"></span> Cargando funcionarios...
-              </div>
-            </div>
-          </div>
-
-          <!-- BOTÓN GUARDAR -->
-          <button type="submit" class="btn-primary-custom" id="btnGuardar">
-            <i class="bi bi-file-earmark-pdf"></i> Guardar y Generar PDF
-          </button>
-
-        </form>
+        </div>
       </div>
 
-      <!-- FOOTER -->
-      <div class="form-footer">
-        <span><i class="bi bi-shield-lock-fill"></i> Datos protegidos · Sistema institucional</span>
-        <span>Secretaría de Movilidad · La Ceja © 2026</span>
+      <!-- DATOS DE LA INFRACCIÓN -->
+      <div class="section-card">
+        <div class="section-header"><i class="fa-solid fa-car"></i><h5>Datos de la Infracción</h5></div>
+        <div class="section-body">
+          <div class="row g-3">
+            <div class="col-md-3">
+              <label for="placa" class="form-label required">PLACA</label>
+              <input type="text" id="placa" name="PLACA" class="form-control uppercase" maxlength="10" required autocomplete="off">
+            </div>
+            <div class="col-md-5">
+              <label for="tipoInfraccion" class="form-label required">TIPO DE INFRACCIÓN</label>
+              <select id="tipoInfraccion" name="TIPO DE INFRACCIÓN" class="form-select" required>
+                <option value="">Cargando...</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="nroComparendo" class="form-label required">NRO COMPARENDO</label>
+              <input type="text" id="nroComparendo" name="NRO COMPARENDO" class="form-control" required autocomplete="off">
+            </div>
+            <div class="col-md-4">
+              <label for="fecha" class="form-label required">FECHA</label>
+              <input type="date" id="fecha" name="FECHA" class="form-control" required>
+            </div>
+          </div>
+        </div>
       </div>
 
-    </div>
+      <!-- LIQUIDACIÓN -->
+      <div class="section-card">
+        <div class="section-header"><i class="fa-solid fa-money-bill-wave"></i><h5>Liquidación de Pagos</h5></div>
+        <div class="section-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="valorGrua" class="form-label">VALOR PAGADO GRÚA</label>
+              <input type="number" id="valorGrua" name="VALOR PAGADO GRÚA" class="form-control" min="0" step="1" value="0">
+            </div>
+            <div class="col-md-4">
+              <label for="valorParqueadero" class="form-label">VALOR PAGADO PARQUEADERO</label>
+              <input type="number" id="valorParqueadero" name="VALOR PAGADO PARQUEADERO" class="form-control" min="0" step="1" value="0">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">TOTAL PAGADO</label>
+              <div class="total-box">
+                <div class="total-label">TOTAL</div>
+                <div class="total-value" id="totalPagadoVisual">$ 0</div>
+              </div>
+              <input type="hidden" id="totalPagado" name="TOTAL PAGADO" value="0">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SOPORTES -->
+      <div class="section-card">
+        <div class="section-header"><i class="fa-solid fa-file-circle-check"></i><h5>Soportes y Registro</h5></div>
+        <div class="section-body">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label for="fotocopia" class="form-label">FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD</label>
+              <select id="fotocopia" name="FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD" class="form-select">
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="consignaciones" class="form-label">CONSIGNACIONES ORIGINALES</label>
+              <select id="consignaciones" name="CONSIGNACIONES ORIGINALES" class="form-select">
+                <option value="SI">SI</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="nombreFuncionario" class="form-label required">NOMBRE FUNCIONARIO</label>
+              <select id="nombreFuncionario" name="NOMBRE FUNCIONARIO" class="form-select" required>
+                <option value="">Cargando...</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTONES -->
+      <div class="button-area">
+        <div class="row g-2">
+          <div class="col-md-4">
+            <button type="button" class="btn btn-outline-secondary w-100" id="btnNuevoInferior">
+              <i class="fa-solid fa-file-circle-plus me-1"></i> NUEVO REGISTRO
+            </button>
+          </div>
+          <div class="col-md-8">
+            <button type="submit" class="btn btn-primary w-100" id="btnGuardar">
+              <i class="fa-solid fa-file-pdf me-1"></i> GUARDAR Y GENERAR PDF
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 
-  <!-- MODAL DE VISTA PREVIA PDF -->
-  <div class="modal fade" id="pdfPreviewModal" tabindex="-1" aria-labelledby="pdfPreviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-      <div class="modal-content" style="border-radius: 16px; overflow: hidden; border: none;">
-        <div class="modal-header" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none;">
-          <h5 class="modal-title" id="pdfPreviewModalLabel">
-            <i class="bi bi-eye-fill me-2"></i>Vista Previa del Documento
-          </h5>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+  <!-- MODAL PDF -->
+  <div class="modal fade" id="modalPDF" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-file-pdf text-danger me-2"></i> Vista previa del documento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-body p-0" style="height: 65vh; background: #eef2f6;">
-          <iframe id="pdfPreviewFrame" src="about:blank" width="100%" height="100%" style="border: none;"></iframe>
+        <div class="modal-body p-0">
+          <iframe id="visorPDF" title="Vista previa PDF"></iframe>
         </div>
-        <div class="modal-footer" style="background: var(--surface-alt); border-top: 1px solid var(--border);">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 10px;">
-            <i class="bi bi-x-circle me-1"></i> Cerrar
-          </button>
-          <button type="button" class="btn btn-success" id="btnDescargarPreview" style="border-radius: 10px; background: var(--success); border: none; color: white;">
-            <i class="bi bi-download me-1"></i> Descargar PDF
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">CERRAR</button>
+          <button type="button" class="btn btn-danger" id="btnDescargarPDF">
+            <i class="fa-solid fa-download me-1"></i> DESCARGAR PDF
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- BOOTSTRAP JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    /* ============================================================
+    /* =========================================================
        CONFIGURACIÓN
-    ============================================================ */
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxaRg-BKpWGAyuSNjp6yp_bwsDyEfrkqEHKUOQiFxObYH_M4ByxBYqgpGjVrHkfN3Ac1A/exec';
+    ========================================================== */
+    // ⚠️ IMPORTANTE: Si hiciste una "Nueva implementación", actualiza esta URL.
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwrN0c595R_vaXV8MdhRHz--VAxPO7zeaBjyZmwwu7EPqzRMv8xDhpMWntwcQFVYzxeTA/exec';
 
-    let pagadorModificadoManualmente = false;
-    let pdfBase64Pendiente = '';
-    let pdfNombrePendiente = '';
+    /* =========================================================
+       VARIABLES DE ESTADO
+    ========================================================== */
+    let modoEdicion = false;
+    let filaRegistroEditando = null;
+    let placaRegistroEditando = '';
+    let pdfBase64Actual = '';
+    let pdfNombreActual = 'documento.pdf';
 
-    /* ============================================================
-       TOAST
-    ============================================================ */
-    function mostrarToast(tipo, titulo, mensaje) {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
+    /* =========================================================
+       ELEMENTOS DEL DOM
+    ========================================================== */
+    const formulario = document.getElementById('formulario');
+    const btnGuardar = document.getElementById('btnGuardar');
+    const btnBuscar = document.getElementById('btnBuscar');
+    const btnNuevo = document.getElementById('btnNuevo');
+    const btnNuevoInferior = document.getElementById('btnNuevoInferior');
+    
+    const tipoBusqueda = document.getElementById('tipoBusqueda');
+    const buscarValor = document.getElementById('buscarValor');
+    const searchHelp = document.getElementById('searchHelp');
 
-      const toast = document.createElement('div');
-      toast.className = `custom-toast toast-${tipo}`;
-      const icon = tipo === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-triangle-fill';
+    const placa = document.getElementById('placa');
+    const modoEdicionDiv = document.getElementById('modoEdicion');
+    const textoRegistroEditando = document.getElementById('textoRegistroEditando');
+    const filaRegistro = document.getElementById('filaRegistro');
+    const tipoInfraccion = document.getElementById('tipoInfraccion');
+    const nroComparendo = document.getElementById('nroComparendo');
+    const valorGrua = document.getElementById('valorGrua');
+    const valorParqueadero = document.getElementById('valorParqueadero');
+    const totalPagado = document.getElementById('totalPagado');
+    const totalPagadoVisual = document.getElementById('totalPagadoVisual');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingText = document.getElementById('loadingText');
+    const visorPDF = document.getElementById('visorPDF');
+    const btnDescargarPDF = document.getElementById('btnDescargarPDF');
 
-      toast.innerHTML = `
-        <div class="toast-icon"><i class="bi ${icon}"></i></div>
-        <div class="toast-body-custom">
-          <div class="toast-title">${escaparHTML(titulo)}</div>
-          <div class="toast-message">${escaparHTML(mensaje)}</div>
-        </div>
-        <button type="button" class="toast-close" title="Cerrar"><i class="bi bi-x-lg"></i></button>
-        <div class="toast-progress"></div>
-      `;
-
-      const btnCerrar = toast.querySelector('.toast-close');
-      btnCerrar.addEventListener('click', function() { cerrarToast(toast); });
-      container.appendChild(toast);
-
-      setTimeout(function() {
-        if (toast && toast.parentNode) cerrarToast(toast);
-      }, 4500);
-    }
-
-    function cerrarToast(toast) {
-      if (!toast) return;
-      toast.classList.add('hiding');
-      setTimeout(function() {
-        if (toast && toast.parentNode) toast.remove();
-      }, 300);
-    }
-
-    function escaparHTML(valor) {
-      return String(valor ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    /* ============================================================
-       FECHA ACTUAL
-    ============================================================ */
-    function establecerFechaActual() {
-      const campo = document.getElementById('fecha');
-      if (!campo) return;
-      const ahora = new Date();
-      const año = ahora.getFullYear();
-      const mes = String(ahora.getMonth() + 1).padStart(2, '0');
-      const dia = String(ahora.getDate()).padStart(2, '0');
-      campo.value = `${año}-${mes}-${dia}`;
-    }
-
-    /* ============================================================
-       TOTAL (GRÚA + PARQUEADERO)
-    ============================================================ */
-    function calcularTotal() {
-      const campoGrua = document.getElementById('valorGrua');
-      const campoParqueadero = document.getElementById('valorParqueadero');
-      const totalVisible = document.getElementById('totalPagado');
-      const totalHidden = document.getElementById('totalPagadoHidden');
-
-      if (!campoGrua || !campoParqueadero || !totalVisible || !totalHidden) return;
-
-      const grua = parseFloat(campoGrua.value) || 0;
-      const parqueadero = parseFloat(campoParqueadero.value) || 0;
-      const total = grua + parqueadero;
-
-      totalVisible.textContent = total.toLocaleString('es-CO');
-      totalHidden.value = total;
-    }
-
-    /* ============================================================
-       ESTADO DE CARGA
-    ============================================================ */
-    function actualizarEstadoCarga(id, tipo, mensaje) {
-      const elemento = document.getElementById(id);
-      if (!elemento) return;
-
-      let claseDot = 'loading-dot';
-      if (tipo === 'success') claseDot += ' success';
-      if (tipo === 'error') claseDot += ' error';
-
-      elemento.className = 'loading-status ' + (tipo === 'success' ? 'success' : tipo === 'error' ? 'error' : '');
-      elemento.innerHTML = `<span class="${claseDot}"></span> ${escaparHTML(mensaje)}`;
-    }
-
-    /* ============================================================
-       CARGAR DESPLEGABLES (JSONP)
-    ============================================================ */
-    function cargarDesplegables() {
-      const selectInf = document.getElementById('tipoInfraccion');
-      const selectFunc = document.getElementById('nombreFuncionario');
-
-      if (!selectInf || !selectFunc) return;
-
-      selectInf.innerHTML = `<option value="">Cargando infracciones...</option>`;
-      selectFunc.innerHTML = `<option value="">Cargando funcionarios...</option>`;
-
-      actualizarEstadoCarga('estadoInfracciones', 'loading', 'Cargando tipos de infracción...');
-      actualizarEstadoCarga('estadoFuncionarios', 'loading', 'Cargando funcionarios...');
-
-      const callbackName = 'recibirOpciones_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
-      let script = null;
-
-      window[callbackName] = function(respuesta) {
-        try {
-          if (!respuesta || respuesta.success !== true) {
-            throw new Error(respuesta && respuesta.message ? respuesta.message : 'El servidor no devolvió las opciones.');
-          }
-
-          const infracciones = Array.isArray(respuesta.infracciones) ? respuesta.infracciones : [];
-          selectInf.innerHTML = `<option value="">Seleccione una opción...</option>`;
-          infracciones.forEach(function(item) {
-            const texto = String(item || '').trim();
-            if (!texto) return;
-            const option = document.createElement('option');
-            option.value = texto;
-            option.textContent = texto;
-            selectInf.appendChild(option);
-          });
-
-          const funcionarios = Array.isArray(respuesta.funcionarios) ? respuesta.funcionarios : [];
-          selectFunc.innerHTML = `<option value="">Seleccione un funcionario...</option>`;
-          funcionarios.forEach(function(item) {
-            const texto = String(item || '').trim();
-            if (!texto) return;
-            const option = document.createElement('option');
-            option.value = texto;
-            option.textContent = texto;
-            selectFunc.appendChild(option);
-          });
-
-          if (infracciones.length > 0) {
-            actualizarEstadoCarga('estadoInfracciones', 'success', `${infracciones.length} opciones cargadas correctamente.`);
-          } else {
-            selectInf.innerHTML = `<option value="">No hay infracciones registradas</option>`;
-            actualizarEstadoCarga('estadoInfracciones', 'error', 'No se encontraron infracciones.');
-          }
-
-          if (funcionarios.length > 0) {
-            actualizarEstadoCarga('estadoFuncionarios', 'success', `${funcionarios.length} funcionarios cargados correctamente.`);
-          } else {
-            selectFunc.innerHTML = `<option value="">No hay funcionarios registrados</option>`;
-            actualizarEstadoCarga('estadoFuncionarios', 'error', 'No se encontraron funcionarios.');
-          }
-
-        } catch (error) {
-          console.error('Error procesando opciones:', error);
-          selectInf.innerHTML = `<option value="">Error al cargar infracciones</option>`;
-          selectFunc.innerHTML = `<option value="">Error al cargar funcionarios</option>`;
-          actualizarEstadoCarga('estadoInfracciones', 'error', 'Error cargando infracciones.');
-          actualizarEstadoCarga('estadoFuncionarios', 'error', 'Error cargando funcionarios.');
-          mostrarToast('error', 'Error cargando datos', error.message || 'No fue posible cargar las opciones.');
-        } finally {
-          try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
-          if (script && script.parentNode) script.parentNode.removeChild(script);
-        }
-      };
-
-      script = document.createElement('script');
-      script.src = WEB_APP_URL + '?api=opciones&callback=' + encodeURIComponent(callbackName);
-      script.async = true;
-
-      script.onerror = function() {
-        console.error('No fue posible cargar las opciones mediante JSONP.');
-        selectInf.innerHTML = `<option value="">Error de conexión</option>`;
-        selectFunc.innerHTML = `<option value="">Error de conexión</option>`;
-        actualizarEstadoCarga('estadoInfracciones', 'error', 'No fue posible conectar con el servidor.');
-        actualizarEstadoCarga('estadoFuncionarios', 'error', 'No fue posible conectar con el servidor.');
-        mostrarToast('error', 'No se pudieron cargar los datos', 'Verifica que el Web App de Apps Script esté implementado correctamente.');
-        try { delete window[callbackName]; } catch (e) { window[callbackName] = undefined; }
-        if (script && script.parentNode) script.parentNode.removeChild(script);
-      };
-
-      document.head.appendChild(script);
-    }
-
-    /* ============================================================
-       LÓGICA CONDICIONAL: ACCIDENTE vs COMPARENDO
-    ============================================================ */
-    function manejarTipoInfraccion(valor) {
-      const campoComparendo = document.getElementById('nroComparendo');
-      if (!campoComparendo) return;
-
-      const valorNormalizado = String(valor || '').trim().toUpperCase();
-
-      if (valorNormalizado === 'ACCIDENTE') {
-        campoComparendo.value = 'ACCIDENTE';
-        campoComparendo.readOnly = true;
-        campoComparendo.style.backgroundColor = '#eef2f6';
-        campoComparendo.style.color = '#6b7a8f';
-        campoComparendo.removeAttribute('required');
-      } 
-      else if (valorNormalizado === 'COMPARENDO') {
-        campoComparendo.value = '0537600000005758';
-        campoComparendo.readOnly = false;
-        campoComparendo.style.backgroundColor = '#ffffff';
-        campoComparendo.style.color = '#1a2b3c';
-        campoComparendo.setAttribute('required', 'required');
-        campoComparendo.focus();
-        setTimeout(() => campoComparendo.select(), 50);
-      } 
-      else {
-        campoComparendo.value = '';
-        campoComparendo.readOnly = false;
-        campoComparendo.style.backgroundColor = '#ffffff';
-        campoComparendo.style.color = '#1a2b3c';
-        campoComparendo.setAttribute('required', 'required');
-      }
-    }
-
-    /* ============================================================
-       PREPARAR FORMULARIO
-    ============================================================ */
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Sistema de Grúa y Parqueadero iniciado.');
+    /* =========================================================
+       INICIALIZACIÓN
+    ========================================================== */
+    document.addEventListener('DOMContentLoaded', () => {
       establecerFechaActual();
-
-      const inputInfractor = document.getElementById('cedulaInfractor');
-      const inputPagador = document.getElementById('cedulaPagador');
-
-      if (inputPagador) {
-        inputPagador.addEventListener('input', function() { pagadorModificadoManualmente = true; });
-      }
-
-      if (inputInfractor && inputPagador) {
-        inputInfractor.addEventListener('input', function(e) {
-          if (!pagadorModificadoManualmente || inputPagador.value.trim() === '') {
-            inputPagador.value = e.target.value;
-          }
-        });
-      }
-
-      document.querySelectorAll('.val-calculo').forEach(function(input) {
-        input.addEventListener('input', calcularTotal);
-        input.addEventListener('change', calcularTotal);
-      });
-
-      const placa = document.getElementById('placa');
-      if (placa) {
-        placa.addEventListener('input', function() {
-          this.value = this.value.toUpperCase().replace(/\s/g, '');
-        });
-      }
-
-      calcularTotal();
+      configurarEventos();
       cargarDesplegables();
-
-      document.getElementById('btnDescargarPreview').addEventListener('click', function() {
-        if (pdfBase64Pendiente && pdfNombrePendiente) {
-          descargarPDF(pdfBase64Pendiente, pdfNombrePendiente);
-        }
-      });
-
-      const modalEl = document.getElementById('pdfPreviewModal');
-      if (modalEl) {
-        modalEl.addEventListener('hidden.bs.modal', function () {
-          const iframe = document.getElementById('pdfPreviewFrame');
-          if (iframe) {
-            iframe.src = 'about:blank';
-          }
-          pdfBase64Pendiente = '';
-          pdfNombrePendiente = '';
-        });
-      }
+      calcularTotal();
     });
 
-    /* ============================================================
-       ENVÍO DEL FORMULARIO
-    ============================================================ */
-    document.getElementById('formRegistro').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      e.stopPropagation();
+    /* =========================================================
+       EVENTOS
+    ========================================================== */
+    function configurarEventos() {
+      formulario.addEventListener('submit', manejarSubmit);
+      btnBuscar.addEventListener('click', buscarRegistro);
+      btnNuevo.addEventListener('click', prepararNuevoRegistro);
+      btnNuevoInferior.addEventListener('click', prepararNuevoRegistro);
 
-      const formulario = this;
+      tipoBusqueda.addEventListener('change', function() {
+        if (this.value === 'placa') {
+          buscarValor.placeholder = 'Ejemplo: ABC123';
+          buscarValor.maxLength = 10;
+          searchHelp.textContent = 'Ingrese la placa para consultar el registro más reciente.';
+        } else {
+          buscarValor.placeholder = 'Ejemplo: 123456789';
+          buscarValor.maxLength = 15;
+          searchHelp.textContent = 'Ingrese la cédula del infractor o pagador para consultar.';
+        }
+        buscarValor.value = '';
+        buscarValor.focus();
+      });
 
-      if (!formulario.checkValidity()) {
-        formulario.classList.add('was-validated');
-        mostrarToast('error', 'Campos incompletos', 'Por favor diligencia todos los campos obligatorios marcados con *.');
+      buscarValor.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          buscarRegistro();
+        }
+      });
+
+      buscarValor.addEventListener('input', function() {
+        if (tipoBusqueda.value === 'placa') {
+          this.value = this.value.toUpperCase().replace(/\s/g, '');
+        } else {
+          this.value = this.value.replace(/\D/g, ''); // Solo números para cédula
+        }
+      });
+
+      placa.addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/\s/g, '');
+      });
+
+      document.getElementById('nombre').addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+      });
+
+      document.getElementById('cedulaInfractor').addEventListener('input', sincronizarCedulaPagador);
+
+      valorGrua.addEventListener('input', calcularTotal);
+      valorParqueadero.addEventListener('input', calcularTotal);
+      tipoInfraccion.addEventListener('change', manejarTipoInfraccion);
+      
+      // Limpiar validación visual al escribir
+      formulario.addEventListener('input', function() {
+        if (formulario.classList.contains('was-validated')) {
+          formulario.classList.remove('was-validated');
+        }
+      });
+    }
+
+    function establecerFechaActual() {
+      const campo = document.getElementById('fecha');
+      if (campo.value) return;
+      const ahora = new Date();
+      const yyyy = ahora.getFullYear();
+      const mm = String(ahora.getMonth() + 1).padStart(2, '0');
+      const dd = String(ahora.getDate()).padStart(2, '0');
+      campo.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    /* =========================================================
+       CARGAR DESPLEGABLES (JSONP)
+    ========================================================== */
+    function cargarDesplegables() {
+      const callback = 'callbackOpciones_' + Date.now();
+      window[callback] = function(resultado) {
+        try {
+          if (!resultado || !resultado.success) {
+            throw new Error(resultado?.message || 'No fue posible cargar las opciones.');
+          }
+          cargarTipos(resultado.tipos || resultado.infracciones || []);
+          cargarFuncionarios(resultado.funcionarios || []);
+        } catch (error) {
+          mostrarToast(error.message, 'error');
+        } finally {
+          try { delete window[callback]; } catch (e) {}
+          const script = document.getElementById(callback);
+          if (script) script.remove();
+        }
+      };
+
+      const script = document.createElement('script');
+      script.id = callback;
+      script.src = WEB_APP_URL + '?api=opciones&callback=' + encodeURIComponent(callback);
+      script.onerror = function() {
+        mostrarToast('No fue posible cargar las listas desplegables.', 'error');
+        try { delete window[callback]; } catch (e) {}
+        script.remove();
+      };
+      document.body.appendChild(script);
+    }
+
+    function cargarTipos(lista) {
+      tipoInfraccion.innerHTML = '<option value="">Seleccione...</option>';
+      lista.forEach(item => {
+        let valor = typeof item === 'string' ? item : (item.nombre || item.descripcion || item.valor || item.tipo || '');
+        if (!valor) return;
+        const option = document.createElement('option');
+        option.value = valor;
+        option.textContent = valor;
+        tipoInfraccion.appendChild(option);
+      });
+    }
+
+    function cargarFuncionarios(lista) {
+      const select = document.getElementById('nombreFuncionario');
+      select.innerHTML = '<option value="">Seleccione...</option>';
+      lista.forEach(item => {
+        let valor = typeof item === 'string' ? item : (item.nombre || item.NOMBRE || item.funcionario || item.valor || '');
+        if (!valor) return;
+        const option = document.createElement('option');
+        option.value = valor;
+        option.textContent = valor;
+        select.appendChild(option);
+      });
+    }
+
+    /* =========================================================
+       LÓGICA DEL FORMULARIO
+    ========================================================== */
+    function sincronizarCedulaPagador() {
+      const infractor = document.getElementById('cedulaInfractor');
+      const pagador = document.getElementById('cedulaPagador');
+      if (!pagador.value || pagador.dataset.auto === 'true') {
+        pagador.value = infractor.value;
+        pagador.dataset.auto = 'true';
+      }
+    }
+    document.getElementById('cedulaPagador').addEventListener('input', function() {
+      this.dataset.auto = 'false';
+    });
+
+    function manejarTipoInfraccion() {
+      const tipo = String(tipoInfraccion.value || '').trim().toUpperCase();
+      if (tipo === 'ACCIDENTE') {
+        nroComparendo.value = 'ACCIDENTE';
+        nroComparendo.readOnly = true;
+        nroComparendo.required = false;
+        nroComparendo.classList.add('bg-light');
+      } else {
+        nroComparendo.readOnly = false;
+        nroComparendo.required = true;
+        nroComparendo.classList.remove('bg-light');
+        if (tipo === 'COMPARENDO' && (!nroComparendo.value || nroComparendo.value === 'ACCIDENTE')) {
+          nroComparendo.value = '0537600000005758';
+        }
+        if (tipo !== 'COMPARENDO' && nroComparendo.value === 'ACCIDENTE') {
+          nroComparendo.value = '';
+        }
+      }
+    }
+
+    function calcularTotal() {
+      const grua = Number(valorGrua.value) || 0;
+      const parqueadero = Number(valorParqueadero.value) || 0;
+      const total = grua + parqueadero;
+      totalPagado.value = total;
+      totalPagadoVisual.textContent = formatearMoneda(total);
+    }
+
+    function formatearMoneda(valor) {
+      return '$ ' + Number(valor || 0).toLocaleString('es-CO', { maximumFractionDigits: 0 });
+    }
+
+    /* =========================================================
+       BÚSQUEDA (PLACA O CÉDULA)
+    ========================================================== */
+    async function buscarRegistro() {
+      const valorBuscado = String(buscarValor.value || '').trim().toUpperCase().replace(/\s/g, '');
+      const tipo = tipoBusqueda.value;
+
+      if (!valorBuscado) {
+        mostrarToast(`Ingrese un valor para realizar la búsqueda.`, 'warning');
+        buscarValor.focus();
         return;
       }
 
-      calcularTotal();
-
-      // --- NUEVA VALIDACIÓN: Evitar guardar si ambos valores son cero ---
-      const valorGrua = parseFloat(document.getElementById('valorGrua').value) || 0;
-      const valorParqueadero = parseFloat(document.getElementById('valorParqueadero').value) || 0;
-
-      if (valorGrua === 0 && valorParqueadero === 0) {
-        mostrarToast('error', 'Valores inválidos', 'El valor de Grúa y el valor de Parqueadero no pueden ser cero al mismo tiempo. Por favor ingrese al menos un valor a pagar.');
-        return; // Detiene la ejecución y no permite guardar
-      }
-      // -------------------------------------------------------------------
-
-      const btnGuardar = document.getElementById('btnGuardar');
-      btnGuardar.disabled = true;
-      btnGuardar.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Procesando y generando PDF...`;
+      mostrarLoading('Buscando registro...');
 
       try {
-        const formData = new FormData(formulario);
-        const dataObj = {};
-        formData.forEach(function(value, key) { dataObj[key] = value; });
+        // CORREGIDO: usa 'valor' como parámetro, coincidiendo con el backend
+        const url = WEB_APP_URL + `?api=buscar_${tipo}&valor=${encodeURIComponent(valorBuscado)}`;
 
-        dataObj['VALOR PAGADO GRÚA'] = valorGrua;
-        dataObj['VALOR PAGADO PARQUEADERO'] = valorParqueadero;
-        dataObj['TOTAL PAGADO'] = parseFloat(document.getElementById('totalPagadoHidden').value) || 0;
-        dataObj['PLACA'] = String(dataObj['PLACA'] || '').trim().toUpperCase();
+        const response = await fetch(url, { method: 'GET', cache: 'no-store' });
+        if (!response.ok) throw new Error('No fue posible comunicarse con el servidor.');
 
+        const resultado = await response.json();
+        if (!resultado || resultado.success === false) {
+          throw new Error(resultado?.message || resultado?.error || 'Error durante la búsqueda.');
+        }
+
+        if (!resultado.encontrado || !resultado.data) {
+          prepararNuevoRegistro();
+          buscarValor.value = valorBuscado; 
+          mostrarToast(`No se encontró un registro para el valor buscado.`, 'warning');
+          return;
+        }
+
+        cargarRegistroEnFormulario(resultado.data);
+        mostrarToast(`Registro encontrado exitosamente.`, 'success');
+
+      } catch (error) {
+        console.error(error);
+        mostrarToast('No fue posible realizar la búsqueda: ' + error.message, 'error');
+      } finally {
+        ocultarLoading();
+      }
+    }
+
+    function cargarRegistroEnFormulario(data) {
+      modoEdicion = true;
+      filaRegistroEditando = data._rowIndex || data.fila || null;
+      placaRegistroEditando = String(data.PLACA || '').trim().toUpperCase();
+      filaRegistro.value = filaRegistroEditando || '';
+
+      asignarValor('nombre', data.NOMBRE);
+      asignarValor('cedulaInfractor', data['CÉDULA INFRACTOR']);
+      asignarValor('cedulaPagador', data['CÉDULA PAGADOR']);
+      document.getElementById('cedulaPagador').dataset.auto = 'false';
+      asignarValor('direccion', data['DIRECCIÓN']);
+      asignarValor('ciudad', data.CIUDAD || 'La Ceja');
+      asignarValor('telefono', data['TELÉFONO']);
+      asignarValor('correo', data['CORREO ELECTRÓNICO']);
+      asignarValor('placa', data.PLACA);
+
+      if (tipoBusqueda.value === 'placa') {
+        buscarValor.value = String(data.PLACA || '').trim().toUpperCase();
+      } else {
+        buscarValor.value = String(data['CÉDULA INFRACTOR'] || data['CÉDULA PAGADOR'] || '').trim();
+      }
+
+      seleccionarValor(tipoInfraccion, data['TIPO DE INFRACCIÓN']);
+      asignarValor('nroComparendo', data['NRO COMPARENDO']);
+      document.getElementById('fecha').value = convertirFechaParaInput(data.FECHA || data['FECHA DE PAGO']);
+      asignarValor('valorGrua', numeroSeguro(data['VALOR PAGADO GRÚA']));
+      asignarValor('valorParqueadero', numeroSeguro(data['VALOR PAGADO PARQUEADERO']));
+      seleccionarValor(document.getElementById('fotocopia'), data['FOTOCOPIA DEL DOCUMENTO DE IDENTIDAD']);
+      seleccionarValor(document.getElementById('consignaciones'), data['CONSIGNACIONES ORIGINALES']);
+      seleccionarValor(document.getElementById('nombreFuncionario'), data['NOMBRE FUNCIONARIO']);
+
+      manejarTipoInfraccion();
+      calcularTotal();
+      actualizarInterfazEdicion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function asignarValor(id, valor) {
+      const elemento = document.getElementById(id);
+      if (!elemento) return;
+      elemento.value = valor === null || valor === undefined ? '' : valor;
+    }
+
+    function seleccionarValor(select, valor) {
+      if (!select || valor === null || valor === undefined) return;
+      const valorTexto = String(valor);
+      const existe = Array.from(select.options).some(option => option.value === valorTexto);
+      if (!existe && valorTexto) {
+        const option = document.createElement('option');
+        option.value = valorTexto;
+        option.textContent = valorTexto;
+        select.appendChild(option);
+      }
+      select.value = valorTexto;
+    }
+
+    function numeroSeguro(valor) {
+      if (valor === null || valor === undefined || valor === '') return 0;
+      if (typeof valor === 'number') return valor;
+      let texto = String(valor).replace(/\$/g, '').replace(/\s/g, '').replace(/\./g, '').replace(',', '.');
+      const numero = Number(texto);
+      return Number.isFinite(numero) ? numero : 0;
+    }
+
+    function convertirFechaParaInput(valor) {
+      if (!valor) return '';
+      const texto = String(valor).trim();
+      if (/^\d{4}-\d{2}-\d{2}$/.test(texto)) return texto;
+      let match = texto.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+      if (match) {
+        const dia = String(match[1]).padStart(2, '0');
+        const mes = String(match[2]).padStart(2, '0');
+        return `${match[3]}-${mes}-${dia}`;
+      }
+      if (texto.includes('T')) {
+        const fecha = new Date(texto);
+        if (!isNaN(fecha.getTime())) {
+          return [fecha.getFullYear(), String(fecha.getMonth() + 1).padStart(2, '0'), String(fecha.getDate()).padStart(2, '0')].join('-');
+        }
+      }
+      return '';
+    }
+
+    function actualizarInterfazEdicion() {
+      if (modoEdicion) {
+        modoEdicionDiv.style.display = 'block';
+        textoRegistroEditando.textContent = placaRegistroEditando ? ` — PLACA: ${placaRegistroEditando}` : '';
+        btnGuardar.classList.remove('btn-primary');
+        btnGuardar.classList.add('btn-success');
+        btnGuardar.innerHTML = '<i class="fa-solid fa-rotate me-1"></i> ACTUALIZAR Y GENERAR PDF';
+      } else {
+        modoEdicionDiv.style.display = 'none';
+        textoRegistroEditando.textContent = '';
+        btnGuardar.classList.remove('btn-success');
+        btnGuardar.classList.add('btn-primary');
+        btnGuardar.innerHTML = '<i class="fa-solid fa-file-pdf me-1"></i> GUARDAR Y GENERAR PDF';
+      }
+    }
+
+    function prepararNuevoRegistro() {
+      modoEdicion = false;
+      filaRegistroEditando = null;
+      placaRegistroEditando = '';
+      formulario.reset();
+      formulario.classList.remove('was-validated');
+      filaRegistro.value = '';
+      buscarValor.value = '';
+      document.getElementById('ciudad').value = 'La Ceja';
+      document.getElementById('valorGrua').value = '0';
+      document.getElementById('valorParqueadero').value = '0';
+      document.getElementById('fotocopia').value = 'SI';
+      document.getElementById('consignaciones').value = 'SI';
+      document.getElementById('cedulaPagador').dataset.auto = 'true';
+      establecerFechaActual();
+      manejarTipoInfraccion();
+      calcularTotal();
+      actualizarInterfazEdicion();
+      document.getElementById('nombre').focus();
+    }
+
+    /* =========================================================
+       ENVÍO DEL FORMULARIO (POST)
+    ========================================================== */
+    async function manejarSubmit(event) {
+      event.preventDefault();
+      calcularTotal();
+
+      if (!formulario.checkValidity()) {
+        formulario.classList.add('was-validated');
+        mostrarToast('Complete todos los campos obligatorios.', 'warning');
+        return;
+      }
+
+      const grua = Number(valorGrua.value) || 0;
+      const parqueadero = Number(valorParqueadero.value) || 0;
+
+      if (grua <= 0 && parqueadero <= 0) {
+        mostrarToast('Debe registrar un valor pagado en grúa o parqueadero.', 'warning');
+        return;
+      }
+
+      const dataObj = construirObjetoFormulario();
+      if (modoEdicion) {
+        dataObj.action = 'actualizar';
+        dataObj._rowIndex = filaRegistroEditando;
+      }
+
+      mostrarLoading(modoEdicion ? 'Actualizando registro y generando PDF...' : 'Guardando registro y generando PDF...');
+
+      try {
         const response = await fetch(WEB_APP_URL, {
           method: 'POST',
           mode: 'cors',
@@ -1033,100 +813,139 @@
           body: JSON.stringify(dataObj)
         });
 
-        if (!response.ok) throw new Error('El servidor respondió con HTTP ' + response.status);
-
-        const textoRespuesta = await response.text();
-        let resultado;
-        try {
-          resultado = JSON.parse(textoRespuesta);
-        } catch (errorJSON) {
-          throw new Error('El servidor no devolvió una respuesta JSON válida.');
+        if (!response.ok) throw new Error('El servidor devolvió un error.');
+        const resultado = await response.json();
+        
+        if (!resultado || resultado.success === false) {
+          throw new Error(resultado?.message || 'No fue posible guardar el registro.');
         }
 
-        if (resultado.success === true) {
-          mostrarToast('success', '¡Registro guardado!', 'Los datos fueron almacenados correctamente.');
+        if (resultado.pdfBase64) {
+          mostrarPDF(resultado.pdfBase64, resultado.pdfNombre || 'registro.pdf');
+        }
 
-          if (resultado.pdfBase64) {
-            pdfBase64Pendiente = resultado.pdfBase64;
-            pdfNombrePendiente = resultado.pdfNombre || 'Registro_Pago.pdf';
+        mostrarToast(modoEdicion ? 'Registro actualizado correctamente.' : 'Registro guardado correctamente.', 'success');
 
-            const iframe = document.getElementById('pdfPreviewFrame');
-            if (iframe) {
-              iframe.src = 'about:blank';
-              setTimeout(() => {
-                iframe.src = 'data:application/pdf;base64,' + pdfBase64Pendiente;
-              }, 50);
-            }
-
-            const modalElement = document.getElementById('pdfPreviewModal');
-            if (modalElement) {
-              const modal = new bootstrap.Modal(modalElement);
-              modal.show();
-            }
-          }
-
-          formulario.reset();
-          formulario.classList.remove('was-validated');
-          document.getElementById('ciudad').value = 'La Ceja';
-          establecerFechaActual();
-          document.getElementById('valorGrua').value = '0';
-          document.getElementById('valorParqueadero').value = '0';
-          calcularTotal();
-          pagadorModificadoManualmente = false;
-          mostrarEstadoListas();
-
+        if (modoEdicion) {
+          filaRegistroEditando = resultado.fila || filaRegistroEditando;
+          filaRegistro.value = filaRegistroEditando || '';
         } else {
-          throw new Error(resultado.message || 'El servidor rechazó el registro.');
+          prepararNuevoRegistro();
         }
-
       } catch (error) {
-        console.error('Error enviando datos:', error);
-        mostrarToast('error', 'Ocurrió un error', error.message || 'No fue posible guardar el registro.');
+        console.error(error);
+        mostrarToast(error.message || 'Ocurrió un error al procesar el registro.', 'error');
       } finally {
-        btnGuardar.disabled = false;
-        btnGuardar.innerHTML = `<i class="bi bi-file-earmark-pdf"></i> Guardar y Generar PDF`;
+        ocultarLoading();
       }
-    });
+    }
 
-    /* ============================================================
-       DESCARGAR PDF
-    ============================================================ */
-    function descargarPDF(base64, nombre) {
+    function construirObjetoFormulario() {
+      const datos = new FormData(formulario);
+      const obj = {};
+      datos.forEach((valor, clave) => {
+        obj[clave] = typeof valor === 'string' ? valor.trim() : valor;
+      });
+      obj.NOMBRE = String(obj.NOMBRE || '').toUpperCase();
+      obj.PLACA = String(obj.PLACA || '').toUpperCase().replace(/\s/g, '');
+      obj['CÉDULA PAGADOR'] = obj['CÉDULA PAGADOR'] || obj['CÉDULA INFRACTOR'];
+      obj['VALOR PAGADO GRÚA'] = Number(obj['VALOR PAGADO GRÚA']) || 0;
+      obj['VALOR PAGADO PARQUEADERO'] = Number(obj['VALOR PAGADO PARQUEADERO']) || 0;
+      obj['TOTAL PAGADO'] = obj['VALOR PAGADO GRÚA'] + obj['VALOR PAGADO PARQUEADERO'];
+      if (modoEdicion) obj._rowIndex = filaRegistroEditando;
+      return obj;
+    }
+
+    /* =========================================================
+       MANEJO DE PDF
+    ========================================================== */
+    function mostrarPDF(base64, nombre) {
+      pdfBase64Actual = base64;
+      pdfNombreActual = nombre || 'registro.pdf';
       try {
-        const enlace = document.createElement('a');
-        enlace.href = 'data:application/pdf;base64,' + base64;
-        enlace.download = nombre || 'Registro_Pago.pdf';
-        enlace.style.display = 'none';
-        document.body.appendChild(enlace);
-        enlace.click();
-        document.body.removeChild(enlace);
+        const byteCharacters = atob(base64);
+        const byteArrays = [];
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) byteNumbers[i] = slice.charCodeAt(i);
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+        const blob = new Blob(byteArrays, { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        visorPDF.src = url;
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalPDF'));
+        modal.show();
       } catch (error) {
-        console.error('Error descargando PDF:', error);
-        mostrarToast('error', 'Error en descarga', 'No fue posible descargar el PDF.');
+        console.error(error);
+        mostrarToast('No fue posible mostrar la vista previa del PDF.', 'error');
       }
     }
 
-    /* ============================================================
-       MOSTRAR ESTADO DE LISTAS DESPUÉS DE GUARDAR
-    ============================================================ */
-    function mostrarEstadoListas() {
-      const selectInf = document.getElementById('tipoInfraccion');
-      const selectFunc = document.getElementById('nombreFuncionario');
-      if (selectInf && selectInf.options.length > 1) selectInf.selectedIndex = 0;
-      if (selectFunc && selectFunc.options.length > 1) selectFunc.selectedIndex = 0;
-    }
-
-    /* ============================================================
-       EVITAR ENVÍO CON ENTER EN ALGUNOS CAMPOS
-    ============================================================ */
-    document.addEventListener('keydown', function(e) {
-      if (e.key !== 'Enter') return;
-      const elemento = e.target;
-      if (elemento && elemento.tagName === 'INPUT' && elemento.type !== 'submit') {
-        e.preventDefault();
+    btnDescargarPDF.addEventListener('click', function() {
+      if (!pdfBase64Actual) {
+        mostrarToast('No hay un PDF disponible para descargar.', 'warning');
+        return;
+      }
+      try {
+        const byteCharacters = atob(pdfBase64Actual);
+        const byteArrays = [];
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) byteNumbers[i] = slice.charCodeAt(i);
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+        const blob = new Blob(byteArrays, { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = pdfNombreActual;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } catch (error) {
+        console.error(error);
+        mostrarToast('No fue posible descargar el PDF.', 'error');
       }
     });
-  </script>
 
+    /* =========================================================
+       UTILIDADES
+    ========================================================== */
+    function mostrarLoading(texto) {
+      loadingText.textContent = texto || 'Procesando...';
+      loadingOverlay.style.display = 'flex';
+    }
+    function ocultarLoading() {
+      loadingOverlay.style.display = 'none';
+    }
+
+    function mostrarToast(mensaje, tipo = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'custom-toast ' + tipo;
+      let icono = 'fa-circle-info';
+      if (tipo === 'success') icono = 'fa-circle-check';
+      else if (tipo === 'error') icono = 'fa-circle-xmark';
+      else if (tipo === 'warning') icono = 'fa-triangle-exclamation';
+
+      toast.innerHTML = `<div class="d-flex align-items-start gap-2"><i class="fa-solid ${icono} mt-1"></i><div>${escapeHTML(mensaje)}</div></div>`;
+      container.appendChild(toast);
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(30px)';
+        setTimeout(() => toast.remove(), 250);
+      }, 4500);
+    }
+
+    function escapeHTML(texto) {
+      const div = document.createElement('div');
+      div.textContent = texto;
+      return div.innerHTML;
+    }
+  </script>
 </body>
 </html>
